@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.javabin.cn/"/>
-  <updated>2019-09-03T16:58:53.610Z</updated>
+  <updated>2019-09-03T17:27:17.587Z</updated>
   <id>http://www.javabin.cn/</id>
   
   <author>
@@ -17,11 +17,33 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>【第三方库分享】使用invoke简单执行系统任务</title>
+    <link href="http://www.javabin.cn/2019/invoke_pypi.html"/>
+    <id>http://www.javabin.cn/2019/invoke_pypi.html</id>
+    <published>2019-09-03T18:25:24.000Z</published>
+    <updated>2019-09-03T17:27:17.587Z</updated>
+    
+    <content type="html"><![CDATA[<p>使用invoke python库简单执行系统任务，很方便。<br><a id="more"></a></p><h2 id="是什么"><a href="#是什么" class="headerlink" title="是什么"></a>是什么</h2><p>invoke是一个python第三方库，和fabric类似。可以方便的执行系统任务，对于日常运维很方便。</p><h2 id="如何使用"><a href="#如何使用" class="headerlink" title="如何使用"></a>如何使用</h2><h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p><code>sudo pip install invoke</code></p><h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><p>被invoke.task装饰的方法，均可使用inv 直接调用<br>编写<code>tasks.py</code>文件，注意名称必须为<code>tasks.py</code></p><pre><code>```python# coding: utf-8&quot;&quot;&quot;test invoke# 在命令行执行下面命令即可inv -l # 查看所有支持的操作inv funcinv add 1 2inv listdir --path=/&quot;&quot;&quot;import invoke@invoke.taskdef func():    &quot;&quot;&quot;    test task    :return:    &quot;&quot;&quot;    print 123@invoke.taskdef add(a, b):  # pylint: disable=invalid-name    &quot;&quot;&quot;    add    :param a:    :param b:    :return:    &quot;&quot;&quot;    print int(a) + int(b)@invoke.taskdef listdir(path):    invoke.run(&quot;ls {}&quot;.format(path))</code></pre><p><code>`</code></p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;使用invoke python库简单执行系统任务，很方便。&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="python" scheme="http://www.javabin.cn/tags/python/"/>
+    
+      <category term="总结" scheme="http://www.javabin.cn/tags/%E6%80%BB%E7%BB%93/"/>
+    
+  </entry>
+  
+  <entry>
     <title>简简单单，明明白白得使用git</title>
     <link href="http://www.javabin.cn/2019/git_command.html"/>
     <id>http://www.javabin.cn/2019/git_command.html</id>
     <published>2019-09-03T16:25:24.000Z</published>
-    <updated>2019-09-03T16:58:53.610Z</updated>
+    <updated>2019-09-03T17:01:10.890Z</updated>
     
     <content type="html"><![CDATA[<p>简简单单，明明白白得使用git</p><p>git基本概念和常用命令<br><a id="more"></a></p><h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><ul><li>工作区<code>在git文件夹里，但是还没有加入版本控制</code></li><li>暂存区<code>已加入版本控制</code></li><li>对象区<code>已提交到本地仓库</code></li><li>远程服务<code>已提交到云端</code></li></ul><h2 id="常用操作"><a href="#常用操作" class="headerlink" title="常用操作"></a>常用操作</h2><ul><li>克隆分支到本地 <code>git clone xxxx.git</code> </li><li>查看当前分支<code>git branch</code></li><li>查看所有分支<code>git branch -a</code></li><li>创建分支<code>git branch dev</code></li><li>切换分支<code>git checkout dev</code></li><li>查看文件状态<code>git status</code></li><li>添加文件到版本控制<code>git add 1.txt</code></li><li>提交文件到本地仓库<code>git commit -m &quot;fix encode error&quot;</code></li><li>改变基线，从master同步过来<code>git rebase master</code></li><li>解决变基冲突，直接使用远程代码<code>git rebase --skip</code></li><li>解决变基冲突，手动解决冲突后<code>git add .</code>, <code>git rebase --continue</code></li><li>解决变基冲突，撤销变基<code>git rebase --abort</code></li><li>提交文件到远程仓库<code>git push</code></li><li>更新远程分支变动到本地<code>git pull</code></li><li>查看提交日志<code>git log</code></li><li>同步其他分支的变更<code>git merge master</code></li><li>撤销git add <code>git rm --cached 1.txt</code>或者<code>git reset 1.txt</code></li><li>回滚到某次提交<code>git reset --hard commit_id</code></li></ul><h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><ul><li>rebase不能在自由分支执行，就是只在自己分支rebase</li><li>reset前注意备份</li></ul>]]></content>
     
@@ -36,28 +58,6 @@
       <category term="总结" scheme="http://www.javabin.cn/tags/%E6%80%BB%E7%BB%93/"/>
     
       <category term="git" scheme="http://www.javabin.cn/tags/git/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>我的书单[2019]</title>
-    <link href="http://www.javabin.cn/2019/book_list.html"/>
-    <id>http://www.javabin.cn/2019/book_list.html</id>
-    <published>2019-08-23T15:10:54.000Z</published>
-    <updated>2019-09-02T18:16:13.477Z</updated>
-    
-    <content type="html"><![CDATA[<p>我的2019书单<br><a id="more"></a></p><h2 id="Java并发编程的艺术"><a href="#Java并发编程的艺术" class="headerlink" title="Java并发编程的艺术"></a><del>Java并发编程的艺术</del></h2><p>java并发编程相关的多线程，锁优化，虚拟机都有讲到。</p><h2 id="穷爸爸富爸爸"><a href="#穷爸爸富爸爸" class="headerlink" title="穷爸爸富爸爸"></a><del>穷爸爸富爸爸</del></h2><p>讲财商的，不想一辈子搬砖的话可以了解一下。</p><h2 id="卡耐基沟通与人际关系"><a href="#卡耐基沟通与人际关系" class="headerlink" title="卡耐基沟通与人际关系"></a><del>卡耐基沟通与人际关系</del></h2><p>卡耐基系列，讲如何更好得与别人相处。</p><h2 id="重来2"><a href="#重来2" class="headerlink" title="重来2"></a>重来2</h2><p>关于远程工作</p><h2 id="暗时间"><a href="#暗时间" class="headerlink" title="暗时间"></a><del>暗时间</del></h2><p>程序员总结的一些知识，心理学，学习，编程</p><h2 id="程序员的呐喊"><a href="#程序员的呐喊" class="headerlink" title="程序员的呐喊"></a><del>程序员的呐喊</del></h2><p>程序员的总结，让学习编译原理，操作系统，学习其他语言。学习lisp和EMACS。</p><h2 id="黑客与画家"><a href="#黑客与画家" class="headerlink" title="黑客与画家"></a><del>黑客与画家</del></h2><p>关于创业。</p><h2 id="两周自制脚本语言"><a href="#两周自制脚本语言" class="headerlink" title="两周自制脚本语言"></a>两周自制脚本语言</h2><p>编译原理</p><h2 id="代码整洁之道"><a href="#代码整洁之道" class="headerlink" title="代码整洁之道"></a>代码整洁之道</h2><p>保证写的代码易维护</p><h2 id="代码大全"><a href="#代码大全" class="headerlink" title="代码大全"></a>代码大全</h2><p>看了一部分。编写代码中遇到的各种问题的处理方式。</p><h2 id="机器学习实战"><a href="#机器学习实战" class="headerlink" title="机器学习实战"></a>机器学习实战</h2><p>机器学习相关的算法的Python实现</p><h2 id="大型网站技术架构"><a href="#大型网站技术架构" class="headerlink" title="大型网站技术架构"></a><del>大型网站技术架构</del></h2><p>标题即内容。</p><h2 id="python-cookbook"><a href="#python-cookbook" class="headerlink" title="python cookbook"></a><del>python cookbook</del></h2><p>Python必看。</p><h2 id="流畅的python"><a href="#流畅的python" class="headerlink" title="流畅的python"></a><del>流畅的python</del></h2><p>Python必看</p><h2 id="金字塔原理"><a href="#金字塔原理" class="headerlink" title="金字塔原理"></a><del>金字塔原理</del></h2><p>讲 写文章的逻辑，说话的逻辑。</p><h2 id="tensorflow-实战google深度学习框架"><a href="#tensorflow-实战google深度学习框架" class="headerlink" title="tensorflow 实战google深度学习框架"></a><del>tensorflow 实战google深度学习框架</del></h2><p>学习tensorflow非常棒的一本书，从是什么到为什么，再到怎么做。又避开了部分冗长的数学证明。初学者可以一边看一边实战，入门很棒。</p><h2 id="重构-改善既有代码的设计"><a href="#重构-改善既有代码的设计" class="headerlink" title="重构 :改善既有代码的设计"></a>重构 :改善既有代码的设计</h2><p>如何对现有系统进行重构，接手他人项目的话，这本书很有帮助。</p><h2 id="大型网站技术架构-核心原理与案例分析"><a href="#大型网站技术架构-核心原理与案例分析" class="headerlink" title="大型网站技术架构:核心原理与案例分析"></a><del>大型网站技术架构:核心原理与案例分析</del></h2><p>标题即内容</p><h2 id="系统之美"><a href="#系统之美" class="headerlink" title="系统之美"></a>系统之美</h2><p>未看</p><h2 id="HeadFirst设计模式"><a href="#HeadFirst设计模式" class="headerlink" title="HeadFirst设计模式"></a>HeadFirst设计模式</h2><p>只看了几个常用的，书太厚。</p><h2 id="编程珠玑"><a href="#编程珠玑" class="headerlink" title="编程珠玑"></a>编程珠玑</h2><p>算法和数据结构之美</p><h2 id="软技能-代码之外的生存指南"><a href="#软技能-代码之外的生存指南" class="headerlink" title="软技能: 代码之外的生存指南"></a><del>软技能: 代码之外的生存指南</del></h2><p>程序员必读，世界观修正</p><h2 id="程序员修炼之道-从小工到专家"><a href="#程序员修炼之道-从小工到专家" class="headerlink" title="程序员修炼之道:从小工到专家"></a>程序员修炼之道:从小工到专家</h2><p>未看</p><h2 id="计算机程序的构造和解释"><a href="#计算机程序的构造和解释" class="headerlink" title="计算机程序的构造和解释"></a>计算机程序的构造和解释</h2><p>未看</p><h2 id="人月神话"><a href="#人月神话" class="headerlink" title="人月神话"></a>人月神话</h2><p>软件管理相关的。</p><h2 id="时间的形状-相对论史话"><a href="#时间的形状-相对论史话" class="headerlink" title="时间的形状-相对论史话"></a><del>时间的形状-相对论史话</del></h2><p>关于经典物理学和现代物理学发展的。从低速到高速，从宇宙到量子，从非惯性系到非惯性系，从经典物理学到量子物理学，两个字 神奇。</p><h2 id="人性的弱点"><a href="#人性的弱点" class="headerlink" title="人性的弱点"></a><del>人性的弱点</del></h2><p>卡耐基的书，讲与人交往的，包括与朋友，父母，孩子等。</p><h2 id="算法第四版"><a href="#算法第四版" class="headerlink" title="算法第四版"></a>算法第四版</h2><p>只看了红黑树之前</p><h2 id="算法的java实现"><a href="#算法的java实现" class="headerlink" title="算法的java实现"></a>算法的java实现</h2><p>只看了红黑树之前</p><h2 id="三体1-2-3"><a href="#三体1-2-3" class="headerlink" title="三体1/2/3"></a><del>三体1/2/3</del></h2><p>脑洞大开。科幻巨著。</p><h2 id="Rabbitmq实战指南"><a href="#Rabbitmq实战指南" class="headerlink" title="Rabbitmq实战指南"></a><del>Rabbitmq实战指南</del></h2><p>一书搞懂rabbitmq</p><h2 id="Linux-shell命令和编辑器？"><a href="#Linux-shell命令和编辑器？" class="headerlink" title="Linux shell命令和编辑器？"></a><del>Linux shell命令和编辑器？</del></h2><p>刚看完，貌似叫这个名字。linux命令一锅炖了，顺便讲了自带的几种编辑器的用法。</p><h2 id="erlang程序设计"><a href="#erlang程序设计" class="headerlink" title="erlang程序设计"></a>erlang程序设计</h2><p>打算看。以并发编程的模式思考问题。</p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;我的2019书单&lt;br&gt;
-    
-    </summary>
-    
-    
-      <category term="书单" scheme="http://www.javabin.cn/tags/%E4%B9%A6%E5%8D%95/"/>
-    
-      <category term="看书" scheme="http://www.javabin.cn/tags/%E7%9C%8B%E4%B9%A6/"/>
     
   </entry>
   
@@ -80,6 +80,28 @@
       <category term="总结" scheme="http://www.javabin.cn/tags/%E6%80%BB%E7%BB%93/"/>
     
       <category term="面试" scheme="http://www.javabin.cn/tags/%E9%9D%A2%E8%AF%95/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>我的书单[2019]</title>
+    <link href="http://www.javabin.cn/2019/book_list.html"/>
+    <id>http://www.javabin.cn/2019/book_list.html</id>
+    <published>2019-08-23T15:10:54.000Z</published>
+    <updated>2019-09-02T18:16:13.477Z</updated>
+    
+    <content type="html"><![CDATA[<p>我的2019书单<br><a id="more"></a></p><h2 id="Java并发编程的艺术"><a href="#Java并发编程的艺术" class="headerlink" title="Java并发编程的艺术"></a><del>Java并发编程的艺术</del></h2><p>java并发编程相关的多线程，锁优化，虚拟机都有讲到。</p><h2 id="穷爸爸富爸爸"><a href="#穷爸爸富爸爸" class="headerlink" title="穷爸爸富爸爸"></a><del>穷爸爸富爸爸</del></h2><p>讲财商的，不想一辈子搬砖的话可以了解一下。</p><h2 id="卡耐基沟通与人际关系"><a href="#卡耐基沟通与人际关系" class="headerlink" title="卡耐基沟通与人际关系"></a><del>卡耐基沟通与人际关系</del></h2><p>卡耐基系列，讲如何更好得与别人相处。</p><h2 id="重来2"><a href="#重来2" class="headerlink" title="重来2"></a>重来2</h2><p>关于远程工作</p><h2 id="暗时间"><a href="#暗时间" class="headerlink" title="暗时间"></a><del>暗时间</del></h2><p>程序员总结的一些知识，心理学，学习，编程</p><h2 id="程序员的呐喊"><a href="#程序员的呐喊" class="headerlink" title="程序员的呐喊"></a><del>程序员的呐喊</del></h2><p>程序员的总结，让学习编译原理，操作系统，学习其他语言。学习lisp和EMACS。</p><h2 id="黑客与画家"><a href="#黑客与画家" class="headerlink" title="黑客与画家"></a><del>黑客与画家</del></h2><p>关于创业。</p><h2 id="两周自制脚本语言"><a href="#两周自制脚本语言" class="headerlink" title="两周自制脚本语言"></a>两周自制脚本语言</h2><p>编译原理</p><h2 id="代码整洁之道"><a href="#代码整洁之道" class="headerlink" title="代码整洁之道"></a>代码整洁之道</h2><p>保证写的代码易维护</p><h2 id="代码大全"><a href="#代码大全" class="headerlink" title="代码大全"></a>代码大全</h2><p>看了一部分。编写代码中遇到的各种问题的处理方式。</p><h2 id="机器学习实战"><a href="#机器学习实战" class="headerlink" title="机器学习实战"></a>机器学习实战</h2><p>机器学习相关的算法的Python实现</p><h2 id="大型网站技术架构"><a href="#大型网站技术架构" class="headerlink" title="大型网站技术架构"></a><del>大型网站技术架构</del></h2><p>标题即内容。</p><h2 id="python-cookbook"><a href="#python-cookbook" class="headerlink" title="python cookbook"></a><del>python cookbook</del></h2><p>Python必看。</p><h2 id="流畅的python"><a href="#流畅的python" class="headerlink" title="流畅的python"></a><del>流畅的python</del></h2><p>Python必看</p><h2 id="金字塔原理"><a href="#金字塔原理" class="headerlink" title="金字塔原理"></a><del>金字塔原理</del></h2><p>讲 写文章的逻辑，说话的逻辑。</p><h2 id="tensorflow-实战google深度学习框架"><a href="#tensorflow-实战google深度学习框架" class="headerlink" title="tensorflow 实战google深度学习框架"></a><del>tensorflow 实战google深度学习框架</del></h2><p>学习tensorflow非常棒的一本书，从是什么到为什么，再到怎么做。又避开了部分冗长的数学证明。初学者可以一边看一边实战，入门很棒。</p><h2 id="重构-改善既有代码的设计"><a href="#重构-改善既有代码的设计" class="headerlink" title="重构 :改善既有代码的设计"></a>重构 :改善既有代码的设计</h2><p>如何对现有系统进行重构，接手他人项目的话，这本书很有帮助。</p><h2 id="大型网站技术架构-核心原理与案例分析"><a href="#大型网站技术架构-核心原理与案例分析" class="headerlink" title="大型网站技术架构:核心原理与案例分析"></a><del>大型网站技术架构:核心原理与案例分析</del></h2><p>标题即内容</p><h2 id="系统之美"><a href="#系统之美" class="headerlink" title="系统之美"></a>系统之美</h2><p>未看</p><h2 id="HeadFirst设计模式"><a href="#HeadFirst设计模式" class="headerlink" title="HeadFirst设计模式"></a>HeadFirst设计模式</h2><p>只看了几个常用的，书太厚。</p><h2 id="编程珠玑"><a href="#编程珠玑" class="headerlink" title="编程珠玑"></a>编程珠玑</h2><p>算法和数据结构之美</p><h2 id="软技能-代码之外的生存指南"><a href="#软技能-代码之外的生存指南" class="headerlink" title="软技能: 代码之外的生存指南"></a><del>软技能: 代码之外的生存指南</del></h2><p>程序员必读，世界观修正</p><h2 id="程序员修炼之道-从小工到专家"><a href="#程序员修炼之道-从小工到专家" class="headerlink" title="程序员修炼之道:从小工到专家"></a>程序员修炼之道:从小工到专家</h2><p>未看</p><h2 id="计算机程序的构造和解释"><a href="#计算机程序的构造和解释" class="headerlink" title="计算机程序的构造和解释"></a>计算机程序的构造和解释</h2><p>未看</p><h2 id="人月神话"><a href="#人月神话" class="headerlink" title="人月神话"></a>人月神话</h2><p>软件管理相关的。</p><h2 id="时间的形状-相对论史话"><a href="#时间的形状-相对论史话" class="headerlink" title="时间的形状-相对论史话"></a><del>时间的形状-相对论史话</del></h2><p>关于经典物理学和现代物理学发展的。从低速到高速，从宇宙到量子，从非惯性系到非惯性系，从经典物理学到量子物理学，两个字 神奇。</p><h2 id="人性的弱点"><a href="#人性的弱点" class="headerlink" title="人性的弱点"></a><del>人性的弱点</del></h2><p>卡耐基的书，讲与人交往的，包括与朋友，父母，孩子等。</p><h2 id="算法第四版"><a href="#算法第四版" class="headerlink" title="算法第四版"></a>算法第四版</h2><p>只看了红黑树之前</p><h2 id="算法的java实现"><a href="#算法的java实现" class="headerlink" title="算法的java实现"></a>算法的java实现</h2><p>只看了红黑树之前</p><h2 id="三体1-2-3"><a href="#三体1-2-3" class="headerlink" title="三体1/2/3"></a><del>三体1/2/3</del></h2><p>脑洞大开。科幻巨著。</p><h2 id="Rabbitmq实战指南"><a href="#Rabbitmq实战指南" class="headerlink" title="Rabbitmq实战指南"></a><del>Rabbitmq实战指南</del></h2><p>一书搞懂rabbitmq</p><h2 id="Linux-shell命令和编辑器？"><a href="#Linux-shell命令和编辑器？" class="headerlink" title="Linux shell命令和编辑器？"></a><del>Linux shell命令和编辑器？</del></h2><p>刚看完，貌似叫这个名字。linux命令一锅炖了，顺便讲了自带的几种编辑器的用法。</p><h2 id="erlang程序设计"><a href="#erlang程序设计" class="headerlink" title="erlang程序设计"></a>erlang程序设计</h2><p>打算看。以并发编程的模式思考问题。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;我的2019书单&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="书单" scheme="http://www.javabin.cn/tags/%E4%B9%A6%E5%8D%95/"/>
+    
+      <category term="看书" scheme="http://www.javabin.cn/tags/%E7%9C%8B%E4%B9%A6/"/>
     
   </entry>
   
@@ -127,9 +149,9 @@
     </summary>
     
     
-      <category term="linux" scheme="http://www.javabin.cn/tags/linux/"/>
-    
       <category term="总结" scheme="http://www.javabin.cn/tags/%E6%80%BB%E7%BB%93/"/>
+    
+      <category term="linux" scheme="http://www.javabin.cn/tags/linux/"/>
     
       <category term="正则表达式" scheme="http://www.javabin.cn/tags/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/"/>
     
@@ -485,36 +507,6 @@
       <category term="rabbitmq" scheme="http://www.javabin.cn/tags/rabbitmq/"/>
     
       <category term="消息队列" scheme="http://www.javabin.cn/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>rabbitmq+celeryworker处理业务中的异步任务</title>
-    <link href="http://www.javabin.cn/2019/rabbitmq.html"/>
-    <id>http://www.javabin.cn/2019/rabbitmq.html</id>
-    <published>2019-07-04T13:12:48.000Z</published>
-    <updated>2019-09-02T18:16:13.473Z</updated>
-    
-    <content type="html"><![CDATA[<p>在实际业务中，经常遇到耗时任务的处理，比如邮件的发送，第三方数据的获取，大规模消息的发送等。对于这些耗时任务，不能直接在web请求中处理，不然会导致经常性504失败，以及服务端block太多http请求。celery是一个简单，可靠的分布式任务队列，可以处理异步任务、延时任务。celery可以使用rabbitmq，redis作为broker。<a id="more"></a></p><h2 id="是什么？"><a href="#是什么？" class="headerlink" title="是什么？"></a>是什么？</h2><h3 id="rabbitmq"><a href="#rabbitmq" class="headerlink" title="rabbitmq"></a>rabbitmq</h3><p>rabbitmq是使用erlang开发的一个实现了AMQP（高级消息队列协议）协议的消息中间件，有着高可靠，高可用，易拓展的特点。消息中间件（Meassage Queue）是指利用高效可靠的消息传递机制进行与平台无关的数据交流，并基于数据通信来进行分布式系统的集成。</p><p>消息中间件在程序中有着解耦，冗余，可拓展，削峰，可恢复，缓冲，异步通信等特点。它有两种传递模式，点对点传递以及发布订阅模式的传递。点对点是基于队列的消息传递，生产者产生消息并扔到队列，消费者从队列取消息；发布订阅模式中消息生产者将消息发布到主题，订阅该主题的消费者可收到消息。</p><p><img src="/photos/rabbitmq.png" alt="rabbit基本概念"></p><p>如上图所示为rabbitmq的整体模型架构。其中：</p><ul><li><code>producer</code>,消息的生产者，产生消息，发出消息。</li><li><code>broker</code>,接收和分发消息的服务，消息中间件的服务节点。</li><li><code>consumer</code>,消息的消费者，接收消息。</li><li><code>vhost</code>,一种隔离机制，不同vhost下的exchange,queue不互通。可以实现对不同的业务进行隔离。</li><li><code>exchange</code>,交换器。实现消息的路由，即可以根据不同的规则将消息发送到不同的队列。</li><li><code>binding</code>,绑定交换器和队列。队列通过一个bindingkey绑定到exchange上，消息发送给exchange时需要一个routingkey,当routingkey 和 bindingkey 可以匹配时，exchange就会将消息路由到相应的队列。具体的匹配规则根据exchange类型的不同而不同。</li><li><code>connection</code>,链接。即一个TCP链接。消费者与broker通信渠道。</li><li><code>channel</code>,信道。一个TCP链接可以进行复用，可以让多个信道共用一个TCP链接，减少建立TCP消耗的资源和时间。</li></ul><h3 id="celery"><a href="#celery" class="headerlink" title="celery"></a>celery</h3><p>简单可靠的分布式任务队列。python接口。celery架构上分为三个部分：消息中间件，任务执行单元，任务结果存储。</p><ul><li>消息中间件，celery自己不提供消息服务，但可方便的和rabbitmq,redis,mongo等集成。</li><li>任务执行单元，worker，消息的消费者，负责执行队列上的任务。</li><li>任务结构存储，存储任务执行的结构，支持mongo,redis,django orm等</li></ul><h2 id="体验celery-rabbitmq之环境准备"><a href="#体验celery-rabbitmq之环境准备" class="headerlink" title="体验celery+rabbitmq之环境准备"></a>体验celery+rabbitmq之环境准备</h2><h3 id="安装erlang"><a href="#安装erlang" class="headerlink" title="安装erlang"></a>安装erlang</h3><p>rabbitmq使用erlang开发，需要安装erlang环境</p><pre><code class="shell">    wge thttp://www.erlang.org/download/otp_src_20.1.tar.gz    tar -xvf otp_src_20.1.tar.gz    cd opt_src_20.1    ./configure  --prefix=/usr/local/erlang --enable-smp-support  --enable-threads  --enable-sctp --enable-kernel-poll --enable-hipe  --with-ssl --without-javac    make &amp;&amp; make install    echo &quot;export PATH=\$PATH:/usr/local/erlang/bin&quot; | tee -a /etc/profile    source /etc/profile</code></pre><p>查看是否安装成功，没有报错则环境正常</p><pre><code class="shell">    erl</code></pre><h3 id="安装rabbitmq"><a href="#安装rabbitmq" class="headerlink" title="安装rabbitmq"></a>安装rabbitmq</h3><p>rabbitmq</p><pre><code class="shell">    wget https://github.com/rabbitmq/rabbitmq-server/releases/download/v3.7.0/rabbitmq-server-generic-unix-3.7.0.tar.xz    xz  -d rabbitmq-server-generic-unix-3.7.0.tar.xz    tar -xvf rabbitmq-server-generic-unix-3.7.0.tar    cd rabbitmq_server-3.7.0/sbin    # 查看所有插件    ./rabbitmq-plugins list    # 开启rabbitmq_management插件，可web管理    ./rabbitmq-plugins enable rabbitmq_management    # 启动    ./rabbitmq-server -detached    ## 验证后台服务进程是否存在    ps aux|grep rabbit </code></pre><p>报错</p><ul><li><p><code>line 32: exec: escript: not found</code></p><ul><li>环境变量配置错误，无法找到erlang目录。</li><li>将erlang加入PATH</li></ul></li><li><p><code>use of opcode 153; this emulator supports only up to 152</code></p><ul><li>系统中存在其他erl程序，<code>locate erlang</code>,定位程序位置，卸载不需要的<code>erlang</code>，<code>yum remove erlang*</code></li></ul></li></ul><h3 id="安装celery"><a href="#安装celery" class="headerlink" title="安装celery"></a>安装celery</h3><p>支持pip直接安装</p><pre><code>    pip install celery</code></pre><h2 id="在业务中如何使用"><a href="#在业务中如何使用" class="headerlink" title="在业务中如何使用"></a>在业务中如何使用</h2><h3 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h3><ul><li>机器A 192.168.0.2 consumer, 使用supervisor管理,安装celery</li><li>机器B 192.168.0.3 producer, 安装celery， rabbitmq,redis</li></ul><p>机器B同时做rabbitmq服务器</p><h4 id="机器A-配置"><a href="#机器A-配置" class="headerlink" title="机器A 配置"></a>机器A 配置</h4><p>安装<code>supervisor</code>管理消费者进程,</p><pre><code class="shell">    pip install supervisor</code></pre><p>安装<code>python redis client</code>,作为celery的结果存储</p><pre><code>    pip install redis</code></pre><p>编写<code>celeryconfig.py</code>，celery的配置文件</p><pre><code class="python">    CELERY_IMPORTS = (&quot;task.main&quot;, ) # 会从这些文件里找@task注解标记的任务    BROKER_HOST = &quot;192.168.0.3&quot; # rabbitmq服务器地址    BROKER_PORT = 5672 #rabbitmq的默认的端口    BROKER_USER = &#39;test&#39;  #rabbitmq user    BROKER_PASSWORD = &quot;test&quot;     BROKER_VHOST = &quot;test_host&quot;    CELERY_RESULT_BACKEND = &quot;redis&quot;    REDIS_PORT=6379    REDIS_HOST = &#39;192.168.0.3&#39;    REDIS_DB = 0    CELERY_DEFAULT_EXCHANGE_TYPE = &quot;topic&quot; # exchange类型，常用 topic direct fanout     CELERYD_TASK_TIME_LIMIT = 5000 # 任务超时时间 s    CELERY_QUEUES = {&quot;notify&quot;:{                        &quot;binding_key&quot;:&quot;notify.#&quot;                },              &quot;email&quot;:{                    &quot;binding_key&quot;:&quot;email.#&quot;,                            }            }</code></pre><p>编写<code>task/main.py</code>，文件中@task标记的为celery要处理的任务。</p><pre><code class="python">    from celery.task import task    @task    def test_business():        print &quot;hit!&quot;        return &quot;ok&quot;</code></pre><p>在A上启动celery消费者进程，</p><pre><code class="shell">     celery worker -Q notify -l INFO</code></pre><p>这时报错无法连接，连接被拒绝，是因为没有设置rabbitmq的vhost,user,passowrd，暂时配置文件中的参数无法连接。</p><h4 id="机器B-配置"><a href="#机器B-配置" class="headerlink" title="机器B 配置"></a>机器B 配置</h4><p>安装redis 服务端 客户端</p><pre><code class="shell">    yum install redis    # 启动redis server    service redis start    # 查看状态    service redis status    # 设置开机自启    chkconfig redis on    # 自带客户端连接测试    redis-cli    执行 info 查看状态    # 安装python 客户端    pip install redis</code></pre><p>配置rabbitmq</p><pre><code class="shell">    # 添加vhost    rabbitmqctl add_vhost test_host    # 查看是否添加成功    rabbitmqctl list_vhosts    # 添加用户test 密码test    rabbitmqctl add_user test test    # 设置用户test可以访问vhost test_host    rabbitmqctl set_permissions -p test_host test &quot;.*&quot; &quot;.*&quot; &quot;.*&quot;</code></pre><p>现在重新在A上尝试启动消费者进程,发现启动成功。</p><p>在B上编写同样的<code>celeryconfig.py</code></p><p>编写 <code>test_send.py</code>， 必须和<code>celeryconfig.py</code>在同一个文件夹下</p><pre><code class="python">    from celery.execute import send_task    res = send_task(&quot;task.main.test_business&quot; ,queue=&#39;notify&#39;)</code></pre><p>执行<code>python test_send.py</code>即可发送消息，这时可在A机器上看到有日志输出，显示已经成功执行任务。</p><p>到这里已经实现了异步任务的整个流程。再进行拓展的话只需要将消费者worker进程用supervisor管理，并部署到多台节点上。生产者这边在django中进行简单封装，方便程序调用即可。</p><h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><p>我们也可以多加几个队列测试一下是否符合预期</p><p>将B上的<code>test_send.py</code>简单修改一下，多发几次且发向两个队列：</p><pre><code class="python">    from celery.execute import send_task    for index, item in enumerate(range(100)):        if index % 2:            res = send_task(&quot;task.main.test_business&quot; ,queue=&#39;notify&#39;)        else:            res = send_task(&quot;task.main.test_business&quot; ,queue=&#39;email&#39;)</code></pre><p>同时给A上的task/main.py加上延时模拟耗时执行</p><pre><code class="python">    from celery.task import task    import time    @task    def test_business():        time.sleep(1)        print &quot;hit!&quot;        return &quot;ok&quot;</code></pre><p>在A上重启已经启动的notify队列，再启动一个email队列。</p><pre><code class="shell">    celery worker -Q email -l INFO</code></pre><p>在B上测试发送</p><pre><code class="shell">    python test_send.py &amp;</code></pre><p>这时执行</p><pre><code class="shell">    # 每隔一秒查询一次test_host下的队列列表    watch -n 1 rabbitmqctl list_queues -p test_host</code></pre><p>可看到email和notify上分别有近50个任务,并且在逐渐消耗</p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;在实际业务中，经常遇到耗时任务的处理，比如邮件的发送，第三方数据的获取，大规模消息的发送等。对于这些耗时任务，不能直接在web请求中处理，不然会导致经常性504失败，以及服务端block太多http请求。celery是一个简单，可靠的分布式任务队列，可以处理异步任务、延时任务。celery可以使用rabbitmq，redis作为broker。
-    
-    </summary>
-    
-    
-      <category term="总结" scheme="http://www.javabin.cn/tags/%E6%80%BB%E7%BB%93/"/>
-    
-      <category term="django" scheme="http://www.javabin.cn/tags/django/"/>
-    
-      <category term="rabbitmq" scheme="http://www.javabin.cn/tags/rabbitmq/"/>
-    
-      <category term="消息队列" scheme="http://www.javabin.cn/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/"/>
-    
-      <category term="异步任务" scheme="http://www.javabin.cn/tags/%E5%BC%82%E6%AD%A5%E4%BB%BB%E5%8A%A1/"/>
-    
-      <category term="celery" scheme="http://www.javabin.cn/tags/celery/"/>
     
   </entry>
   
