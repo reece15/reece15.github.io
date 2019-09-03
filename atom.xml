@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.javabin.cn/"/>
-  <updated>2019-09-03T16:57:06.178Z</updated>
+  <updated>2019-09-03T16:58:53.610Z</updated>
   <id>http://www.javabin.cn/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="http://www.javabin.cn/2019/git_command.html"/>
     <id>http://www.javabin.cn/2019/git_command.html</id>
     <published>2019-09-03T16:25:24.000Z</published>
-    <updated>2019-09-03T16:57:06.178Z</updated>
+    <updated>2019-09-03T16:58:53.610Z</updated>
     
     <content type="html"><![CDATA[<p>简简单单，明明白白得使用git</p><p>git基本概念和常用命令<br><a id="more"></a></p><h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><ul><li>工作区<code>在git文件夹里，但是还没有加入版本控制</code></li><li>暂存区<code>已加入版本控制</code></li><li>对象区<code>已提交到本地仓库</code></li><li>远程服务<code>已提交到云端</code></li></ul><h2 id="常用操作"><a href="#常用操作" class="headerlink" title="常用操作"></a>常用操作</h2><ul><li>克隆分支到本地 <code>git clone xxxx.git</code> </li><li>查看当前分支<code>git branch</code></li><li>查看所有分支<code>git branch -a</code></li><li>创建分支<code>git branch dev</code></li><li>切换分支<code>git checkout dev</code></li><li>查看文件状态<code>git status</code></li><li>添加文件到版本控制<code>git add 1.txt</code></li><li>提交文件到本地仓库<code>git commit -m &quot;fix encode error&quot;</code></li><li>改变基线，从master同步过来<code>git rebase master</code></li><li>解决变基冲突，直接使用远程代码<code>git rebase --skip</code></li><li>解决变基冲突，手动解决冲突后<code>git add .</code>, <code>git rebase --continue</code></li><li>解决变基冲突，撤销变基<code>git rebase --abort</code></li><li>提交文件到远程仓库<code>git push</code></li><li>更新远程分支变动到本地<code>git pull</code></li><li>查看提交日志<code>git log</code></li><li>同步其他分支的变更<code>git merge master</code></li><li>撤销git add <code>git rm --cached 1.txt</code>或者<code>git reset 1.txt</code></li><li>回滚到某次提交<code>git reset --hard commit_id</code></li></ul><h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><ul><li>rebase不能在自由分支执行，就是只在自己分支rebase</li><li>reset前注意备份</li></ul>]]></content>
     
@@ -36,28 +36,6 @@
       <category term="总结" scheme="http://www.javabin.cn/tags/%E6%80%BB%E7%BB%93/"/>
     
       <category term="git" scheme="http://www.javabin.cn/tags/git/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>一次Python电话面试经验分享[GET offer]</title>
-    <link href="http://www.javabin.cn/2019/iv_cd_01.html"/>
-    <id>http://www.javabin.cn/2019/iv_cd_01.html</id>
-    <published>2019-08-23T15:10:54.000Z</published>
-    <updated>2019-09-02T18:16:13.473Z</updated>
-    
-    <content type="html"><![CDATA[<p>一次电话面试经验分享。<br><a id="more"></a></p><p>貌似招精通elasticsearch，Python的，所以刚开始都是问elasticsearch相关的问题。过程很顺利，一次远程电面直接获得offer，涨薪约40%+。</p><h2 id="面试问题："><a href="#面试问题：" class="headerlink" title="面试问题："></a>面试问题：</h2><ul><li>自我介绍</li><li>elasticsearch在你的项目中如何使用。</li><li>说一下elasticsearch如何安装部署?配置？</li><li>elasticsearch压力测试如何做的？</li><li>elasticsearch分片</li><li>elasticsearch分布式</li><li>存储过程用过吗？你是在什么情况下使用的？</li><li>sql优化你一般是如何做的？</li><li>redis在你的项目里怎么使用的？</li><li>mongo在你的项目里怎么使用的？</li><li>结巴分词在elasticsearch中使用？</li><li>分词的配置如何做的？</li><li>你的项目的git管理如何管理的？</li><li>数据库表设计如何做?</li><li>一个项目你一般会做哪些设计？</li><li>API接口一般如何测试？</li><li>你一般是如何出具API文档的？</li><li>设计模式都会什么？说下单例模式？</li><li>项目使用的Python3还是2？为什么？</li><li>你最近看了哪些书？</li><li>听说过持续集成吗？jekins如何使用？</li><li>Python静态代码检查你们项目是怎么做的?</li><li>自动化编译部署呢？</li><li>编程语言还会什么？是自学还是学校学习的？</li><li>java项目中常用的框架说一下？</li><li>用过mybatis吗？</li><li>说下ssh和ssm?</li><li>除了django外还用过其他框架吗？flask用过吗？</li><li>Mysql和Pgsql差异?</li></ul><h2 id="待加强"><a href="#待加强" class="headerlink" title="待加强"></a>待加强</h2><ul><li>了解elasticsearch分布式相关的原理</li><li>CI/CD，jekins</li><li>近期书单整理（面试当天刚好看完了《人性的弱点》，面试官不知道是什么，很懵逼）</li></ul>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;一次电话面试经验分享。&lt;br&gt;
-    
-    </summary>
-    
-    
-      <category term="总结" scheme="http://www.javabin.cn/tags/%E6%80%BB%E7%BB%93/"/>
-    
-      <category term="面试" scheme="http://www.javabin.cn/tags/%E9%9D%A2%E8%AF%95/"/>
     
   </entry>
   
@@ -80,6 +58,28 @@
       <category term="书单" scheme="http://www.javabin.cn/tags/%E4%B9%A6%E5%8D%95/"/>
     
       <category term="看书" scheme="http://www.javabin.cn/tags/%E7%9C%8B%E4%B9%A6/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>一次Python电话面试经验分享[GET offer]</title>
+    <link href="http://www.javabin.cn/2019/iv_cd_01.html"/>
+    <id>http://www.javabin.cn/2019/iv_cd_01.html</id>
+    <published>2019-08-23T15:10:54.000Z</published>
+    <updated>2019-09-02T18:16:13.473Z</updated>
+    
+    <content type="html"><![CDATA[<p>一次电话面试经验分享。<br><a id="more"></a></p><p>貌似招精通elasticsearch，Python的，所以刚开始都是问elasticsearch相关的问题。过程很顺利，一次远程电面直接获得offer，涨薪约40%+。</p><h2 id="面试问题："><a href="#面试问题：" class="headerlink" title="面试问题："></a>面试问题：</h2><ul><li>自我介绍</li><li>elasticsearch在你的项目中如何使用。</li><li>说一下elasticsearch如何安装部署?配置？</li><li>elasticsearch压力测试如何做的？</li><li>elasticsearch分片</li><li>elasticsearch分布式</li><li>存储过程用过吗？你是在什么情况下使用的？</li><li>sql优化你一般是如何做的？</li><li>redis在你的项目里怎么使用的？</li><li>mongo在你的项目里怎么使用的？</li><li>结巴分词在elasticsearch中使用？</li><li>分词的配置如何做的？</li><li>你的项目的git管理如何管理的？</li><li>数据库表设计如何做?</li><li>一个项目你一般会做哪些设计？</li><li>API接口一般如何测试？</li><li>你一般是如何出具API文档的？</li><li>设计模式都会什么？说下单例模式？</li><li>项目使用的Python3还是2？为什么？</li><li>你最近看了哪些书？</li><li>听说过持续集成吗？jekins如何使用？</li><li>Python静态代码检查你们项目是怎么做的?</li><li>自动化编译部署呢？</li><li>编程语言还会什么？是自学还是学校学习的？</li><li>java项目中常用的框架说一下？</li><li>用过mybatis吗？</li><li>说下ssh和ssm?</li><li>除了django外还用过其他框架吗？flask用过吗？</li><li>Mysql和Pgsql差异?</li></ul><h2 id="待加强"><a href="#待加强" class="headerlink" title="待加强"></a>待加强</h2><ul><li>了解elasticsearch分布式相关的原理</li><li>CI/CD，jekins</li><li>近期书单整理（面试当天刚好看完了《人性的弱点》，面试官不知道是什么，很懵逼）</li></ul>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;一次电话面试经验分享。&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="总结" scheme="http://www.javabin.cn/tags/%E6%80%BB%E7%BB%93/"/>
+    
+      <category term="面试" scheme="http://www.javabin.cn/tags/%E9%9D%A2%E8%AF%95/"/>
     
   </entry>
   
@@ -127,9 +127,9 @@
     </summary>
     
     
-      <category term="总结" scheme="http://www.javabin.cn/tags/%E6%80%BB%E7%BB%93/"/>
-    
       <category term="linux" scheme="http://www.javabin.cn/tags/linux/"/>
+    
+      <category term="总结" scheme="http://www.javabin.cn/tags/%E6%80%BB%E7%BB%93/"/>
     
       <category term="正则表达式" scheme="http://www.javabin.cn/tags/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/"/>
     
