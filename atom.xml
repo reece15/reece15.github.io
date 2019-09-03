@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.javabin.cn/"/>
-  <updated>2019-09-02T18:16:13.473Z</updated>
+  <updated>2019-09-03T16:57:06.178Z</updated>
   <id>http://www.javabin.cn/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>简简单单，明明白白得使用git</title>
+    <link href="http://www.javabin.cn/2019/git_command.html"/>
+    <id>http://www.javabin.cn/2019/git_command.html</id>
+    <published>2019-09-03T16:25:24.000Z</published>
+    <updated>2019-09-03T16:57:06.178Z</updated>
+    
+    <content type="html"><![CDATA[<p>简简单单，明明白白得使用git</p><p>git基本概念和常用命令<br><a id="more"></a></p><h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><ul><li>工作区<code>在git文件夹里，但是还没有加入版本控制</code></li><li>暂存区<code>已加入版本控制</code></li><li>对象区<code>已提交到本地仓库</code></li><li>远程服务<code>已提交到云端</code></li></ul><h2 id="常用操作"><a href="#常用操作" class="headerlink" title="常用操作"></a>常用操作</h2><ul><li>克隆分支到本地 <code>git clone xxxx.git</code> </li><li>查看当前分支<code>git branch</code></li><li>查看所有分支<code>git branch -a</code></li><li>创建分支<code>git branch dev</code></li><li>切换分支<code>git checkout dev</code></li><li>查看文件状态<code>git status</code></li><li>添加文件到版本控制<code>git add 1.txt</code></li><li>提交文件到本地仓库<code>git commit -m &quot;fix encode error&quot;</code></li><li>改变基线，从master同步过来<code>git rebase master</code></li><li>解决变基冲突，直接使用远程代码<code>git rebase --skip</code></li><li>解决变基冲突，手动解决冲突后<code>git add .</code>, <code>git rebase --continue</code></li><li>解决变基冲突，撤销变基<code>git rebase --abort</code></li><li>提交文件到远程仓库<code>git push</code></li><li>更新远程分支变动到本地<code>git pull</code></li><li>查看提交日志<code>git log</code></li><li>同步其他分支的变更<code>git merge master</code></li><li>撤销git add <code>git rm --cached 1.txt</code>或者<code>git reset 1.txt</code></li><li>回滚到某次提交<code>git reset --hard commit_id</code></li></ul><h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><ul><li>rebase不能在自由分支执行，就是只在自己分支rebase</li><li>reset前注意备份</li></ul>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;简简单单，明明白白得使用git&lt;/p&gt;
+&lt;p&gt;git基本概念和常用命令&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="总结" scheme="http://www.javabin.cn/tags/%E6%80%BB%E7%BB%93/"/>
+    
+      <category term="git" scheme="http://www.javabin.cn/tags/git/"/>
+    
+  </entry>
   
   <entry>
     <title>一次Python电话面试经验分享[GET offer]</title>
@@ -492,28 +515,6 @@
       <category term="异步任务" scheme="http://www.javabin.cn/tags/%E5%BC%82%E6%AD%A5%E4%BB%BB%E5%8A%A1/"/>
     
       <category term="celery" scheme="http://www.javabin.cn/tags/celery/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>django中查看指定函数的SQL日志</title>
-    <link href="http://www.javabin.cn/2019/django_sql_detail.html"/>
-    <id>http://www.javabin.cn/2019/django_sql_detail.html</id>
-    <published>2019-07-02T16:31:30.000Z</published>
-    <updated>2019-09-02T18:16:13.477Z</updated>
-    
-    <content type="html"><![CDATA[<p>开启全局sql日志很容易，只需在<code>settings.py</code>配置即可，但是在对逻辑比较复杂的接口进行性能测试时，如何只查看当前接口的sql日志呢？</p><a id="more"></a><h2 id="django-command"><a href="#django-command" class="headerlink" title="django command"></a>django command</h2><p>编写django command，django command可实现在加载django运行时环境的情况下执行业务逻辑。</p><p>编写的command应放入app下的<code>management/commands</code>目录下，编写继承<code>django.core.management.base.BaseCommand</code>的类，实现handle方法即可。</p><pre><code class="python">    from optparse import make_option    from django.core.management.base import BaseCommand    class Command(BaseCommand):        option_list = BaseCommand.option_list + (            make_option(&#39;-P&#39;, &#39;--password&#39;, action=&#39;store&#39;, dest=&#39;p&#39;, default=&quot;help&quot;, help=&#39;input password&#39;),            make_option(&#39;-U&#39;, &#39;--user&#39;, action=&#39;store&#39;, dest=&#39;u&#39;, default=&quot;101&quot;, help=&#39;input user&#39;),            make_option(&#39;-V&#39;, &#39;--value&#39;, action=&#39;store&#39;, dest=&#39;v&#39;, default=None,                        help=&#39;input value.&#39;)        )        def handle(self, *args, **options):            user = int(options.get(&#39;u&#39;, 0))            password = options.get(&#39;p&#39;, 123456)            value = options.get(&#39;v&#39;, &quot;hello&quot;)            # 调用要测试的API函数            print(&quot;user:{user}.pass:{password}.{value}&quot;.format(**vars()))</code></pre><p>最终的执行方式<code>python manage.py cmd -P admin -U 10086 -V hi</code></p><h2 id="查看SQL日志"><a href="#查看SQL日志" class="headerlink" title="查看SQL日志"></a>查看SQL日志</h2><p><code>django command</code>可支持指定配置文件。我们只需copy一份<code>settings.py</code>到<code>settings2.py</code>。然后修改日志配置即可。</p><pre><code class="python">    LOGGING = {        &#39;version&#39;: 1,        &#39;disable_existing_loggers&#39;: False,        &#39;handlers&#39;: {            &#39;console&#39;:{                &#39;level&#39;:&#39;DEBUG&#39;,                &#39;class&#39;:&#39;logging.StreamHandler&#39;,            },        },        &#39;loggers&#39;: {            &#39;django.db.backends&#39;: {                &#39;handlers&#39;: [&#39;default&#39;],                &#39;propagate&#39;: True,                &#39;level&#39;:&#39;DEBUG&#39;,            },        }    }</code></pre><p>执行<code>python manage.py cmd -P admin -U 10086 -V hi --setting=setting2</code>即可仅仅打印该函数运行时的所有SQL执行日志。</p><p>对日志进行过滤即可过滤指定SQL日志。</p><pre><code class="shell">     cat res.log| grep -E &quot;UPDATE|INSERT|DELETE|SELECT&quot;</code></pre>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;开启全局sql日志很容易，只需在&lt;code&gt;settings.py&lt;/code&gt;配置即可，但是在对逻辑比较复杂的接口进行性能测试时，如何只查看当前接口的sql日志呢？&lt;/p&gt;
-    
-    </summary>
-    
-    
-      <category term="总结" scheme="http://www.javabin.cn/tags/%E6%80%BB%E7%BB%93/"/>
-    
-      <category term="django" scheme="http://www.javabin.cn/tags/django/"/>
     
   </entry>
   
