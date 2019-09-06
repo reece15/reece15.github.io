@@ -92,28 +92,6 @@
   </entry>
   
   <entry>
-    <title>一次Python电话面试经验分享[GET offer]</title>
-    <link href="http://www.javabin.cn/2019/iv_cd_01.html"/>
-    <id>http://www.javabin.cn/2019/iv_cd_01.html</id>
-    <published>2019-08-23T15:10:54.000Z</published>
-    <updated>2019-09-02T18:16:13.473Z</updated>
-    
-    <content type="html"><![CDATA[<p>一次电话面试经验分享。<br><a id="more"></a></p><p>貌似招精通elasticsearch，Python的，所以刚开始都是问elasticsearch相关的问题。过程很顺利，一次远程电面直接获得offer，涨薪约40%+。</p><h2 id="面试问题："><a href="#面试问题：" class="headerlink" title="面试问题："></a>面试问题：</h2><ul><li>自我介绍</li><li>elasticsearch在你的项目中如何使用。</li><li>说一下elasticsearch如何安装部署?配置？</li><li>elasticsearch压力测试如何做的？</li><li>elasticsearch分片</li><li>elasticsearch分布式</li><li>存储过程用过吗？你是在什么情况下使用的？</li><li>sql优化你一般是如何做的？</li><li>redis在你的项目里怎么使用的？</li><li>mongo在你的项目里怎么使用的？</li><li>结巴分词在elasticsearch中使用？</li><li>分词的配置如何做的？</li><li>你的项目的git管理如何管理的？</li><li>数据库表设计如何做?</li><li>一个项目你一般会做哪些设计？</li><li>API接口一般如何测试？</li><li>你一般是如何出具API文档的？</li><li>设计模式都会什么？说下单例模式？</li><li>项目使用的Python3还是2？为什么？</li><li>你最近看了哪些书？</li><li>听说过持续集成吗？jekins如何使用？</li><li>Python静态代码检查你们项目是怎么做的?</li><li>自动化编译部署呢？</li><li>编程语言还会什么？是自学还是学校学习的？</li><li>java项目中常用的框架说一下？</li><li>用过mybatis吗？</li><li>说下ssh和ssm?</li><li>除了django外还用过其他框架吗？flask用过吗？</li><li>Mysql和Pgsql差异?</li></ul><h2 id="待加强"><a href="#待加强" class="headerlink" title="待加强"></a>待加强</h2><ul><li>了解elasticsearch分布式相关的原理</li><li>CI/CD，jekins</li><li>近期书单整理（面试当天刚好看完了《人性的弱点》，面试官不知道是什么，很懵逼）</li></ul>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;一次电话面试经验分享。&lt;br&gt;
-    
-    </summary>
-    
-    
-      <category term="总结" scheme="http://www.javabin.cn/tags/%E6%80%BB%E7%BB%93/"/>
-    
-      <category term="面试" scheme="http://www.javabin.cn/tags/%E9%9D%A2%E8%AF%95/"/>
-    
-  </entry>
-  
-  <entry>
     <title>我的书单[2019]</title>
     <link href="http://www.javabin.cn/2019/book_list.html"/>
     <id>http://www.javabin.cn/2019/book_list.html</id>
@@ -132,6 +110,28 @@
       <category term="书单" scheme="http://www.javabin.cn/tags/%E4%B9%A6%E5%8D%95/"/>
     
       <category term="看书" scheme="http://www.javabin.cn/tags/%E7%9C%8B%E4%B9%A6/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>一次Python电话面试经验分享[GET offer]</title>
+    <link href="http://www.javabin.cn/2019/iv_cd_01.html"/>
+    <id>http://www.javabin.cn/2019/iv_cd_01.html</id>
+    <published>2019-08-23T15:10:54.000Z</published>
+    <updated>2019-09-02T18:16:13.473Z</updated>
+    
+    <content type="html"><![CDATA[<p>一次电话面试经验分享。<br><a id="more"></a></p><p>貌似招精通elasticsearch，Python的，所以刚开始都是问elasticsearch相关的问题。过程很顺利，一次远程电面直接获得offer，涨薪约40%+。</p><h2 id="面试问题："><a href="#面试问题：" class="headerlink" title="面试问题："></a>面试问题：</h2><ul><li>自我介绍</li><li>elasticsearch在你的项目中如何使用。</li><li>说一下elasticsearch如何安装部署?配置？</li><li>elasticsearch压力测试如何做的？</li><li>elasticsearch分片</li><li>elasticsearch分布式</li><li>存储过程用过吗？你是在什么情况下使用的？</li><li>sql优化你一般是如何做的？</li><li>redis在你的项目里怎么使用的？</li><li>mongo在你的项目里怎么使用的？</li><li>结巴分词在elasticsearch中使用？</li><li>分词的配置如何做的？</li><li>你的项目的git管理如何管理的？</li><li>数据库表设计如何做?</li><li>一个项目你一般会做哪些设计？</li><li>API接口一般如何测试？</li><li>你一般是如何出具API文档的？</li><li>设计模式都会什么？说下单例模式？</li><li>项目使用的Python3还是2？为什么？</li><li>你最近看了哪些书？</li><li>听说过持续集成吗？jekins如何使用？</li><li>Python静态代码检查你们项目是怎么做的?</li><li>自动化编译部署呢？</li><li>编程语言还会什么？是自学还是学校学习的？</li><li>java项目中常用的框架说一下？</li><li>用过mybatis吗？</li><li>说下ssh和ssm?</li><li>除了django外还用过其他框架吗？flask用过吗？</li><li>Mysql和Pgsql差异?</li></ul><h2 id="待加强"><a href="#待加强" class="headerlink" title="待加强"></a>待加强</h2><ul><li>了解elasticsearch分布式相关的原理</li><li>CI/CD，jekins</li><li>近期书单整理（面试当天刚好看完了《人性的弱点》，面试官不知道是什么，很懵逼）</li></ul>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;一次电话面试经验分享。&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="总结" scheme="http://www.javabin.cn/tags/%E6%80%BB%E7%BB%93/"/>
+    
+      <category term="面试" scheme="http://www.javabin.cn/tags/%E9%9D%A2%E8%AF%95/"/>
     
   </entry>
   
