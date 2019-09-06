@@ -366,9 +366,9 @@
     
       <category term="总结" scheme="http://www.javabin.cn/tags/%E6%80%BB%E7%BB%93/"/>
     
-      <category term="pgsql" scheme="http://www.javabin.cn/tags/pgsql/"/>
-    
       <category term="锁" scheme="http://www.javabin.cn/tags/%E9%94%81/"/>
+    
+      <category term="pgsql" scheme="http://www.javabin.cn/tags/pgsql/"/>
     
   </entry>
   
