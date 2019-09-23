@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.javabin.cn/"/>
-  <updated>2019-09-06T17:34:19.051Z</updated>
+  <updated>2019-09-23T15:14:35.375Z</updated>
   <id>http://www.javabin.cn/</id>
   
   <author>
@@ -15,6 +15,28 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>elasticsearch中如何依据字符串长度过滤</title>
+    <link href="http://www.javabin.cn/2019/elastic_search_size.html"/>
+    <id>http://www.javabin.cn/2019/elastic_search_size.html</id>
+    <published>2019-09-23T13:11:24.000Z</published>
+    <updated>2019-09-23T15:14:35.375Z</updated>
+    
+    <content type="html"><![CDATA[<p>使用elasticsearch时，如何实现查找 name字段长度大于15的文档？这种类似的需求？</p><a id="more"></a><h2 id="解决方法1-使用regexp"><a href="#解决方法1-使用regexp" class="headerlink" title="解决方法1 使用regexp"></a>解决方法1 使用<code>regexp</code></h2><p>直接使用正则查询，不用修改原始的mapping，直接就可以查询，但是查询效率不高，适合数据量小的项目。</p><pre><code class="python">    es.search(index=&#39;test&#39;, body={        &#39;query&#39;:{            &#39;bool&#39;:{                &#39;filter&#39;:{                    {                             &#39;regexp&#39;: {                                 &#39;name&#39;: {                                     &#39;value&#39;: &#39;.{15,}&#39;                                 }                             }                         }                }            }        }    })</code></pre><h2 id="解决方法二-使用script脚本"><a href="#解决方法二-使用script脚本" class="headerlink" title="解决方法二 使用script脚本"></a>解决方法二 使用script脚本</h2><p>这种只能支持keyword类型字段。</p><pre><code class="python">    es.search(index=&#39;test&#39;,body={    &#39;query&#39;:{        &#39;bool&#39;:{            &#39;filter&#39;:{                &#39;script&#39;:{                    &#39;script&#39;:{                        &#39;inline&#39;: &quot;doc[&#39;name&#39;].length&gt;15&quot;,                        &#39;lang&#39;:&#39;painless&#39;                        }                    }                }            }        },    &#39;from&#39;:0,     &#39;size&#39;:20    })  </code></pre><h2 id="解决方法三-创建新字段"><a href="#解决方法三-创建新字段" class="headerlink" title="解决方法三 创建新字段"></a>解决方法三 创建新字段</h2><p>创建新字段记录数据长度。查询快但是需要在数据更新时维护该字段。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;使用elasticsearch时，如何实现查找 name字段长度大于15的文档？这种类似的需求？&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="总结" scheme="http://www.javabin.cn/tags/%E6%80%BB%E7%BB%93/"/>
+    
+      <category term="elasticsearch" scheme="http://www.javabin.cn/tags/elasticsearch/"/>
+    
+  </entry>
   
   <entry>
     <title>蓝天，白云，雪山，草原，4700m高山湖泊--记稻城亚丁5日游</title>
@@ -92,6 +114,28 @@
   </entry>
   
   <entry>
+    <title>我的书单[2019]</title>
+    <link href="http://www.javabin.cn/2019/book_list.html"/>
+    <id>http://www.javabin.cn/2019/book_list.html</id>
+    <published>2019-08-23T15:10:54.000Z</published>
+    <updated>2019-09-02T18:16:13.477Z</updated>
+    
+    <content type="html"><![CDATA[<p>我的2019书单<br><a id="more"></a></p><h2 id="Java并发编程的艺术"><a href="#Java并发编程的艺术" class="headerlink" title="Java并发编程的艺术"></a><del>Java并发编程的艺术</del></h2><p>java并发编程相关的多线程，锁优化，虚拟机都有讲到。</p><h2 id="穷爸爸富爸爸"><a href="#穷爸爸富爸爸" class="headerlink" title="穷爸爸富爸爸"></a><del>穷爸爸富爸爸</del></h2><p>讲财商的，不想一辈子搬砖的话可以了解一下。</p><h2 id="卡耐基沟通与人际关系"><a href="#卡耐基沟通与人际关系" class="headerlink" title="卡耐基沟通与人际关系"></a><del>卡耐基沟通与人际关系</del></h2><p>卡耐基系列，讲如何更好得与别人相处。</p><h2 id="重来2"><a href="#重来2" class="headerlink" title="重来2"></a>重来2</h2><p>关于远程工作</p><h2 id="暗时间"><a href="#暗时间" class="headerlink" title="暗时间"></a><del>暗时间</del></h2><p>程序员总结的一些知识，心理学，学习，编程</p><h2 id="程序员的呐喊"><a href="#程序员的呐喊" class="headerlink" title="程序员的呐喊"></a><del>程序员的呐喊</del></h2><p>程序员的总结，让学习编译原理，操作系统，学习其他语言。学习lisp和EMACS。</p><h2 id="黑客与画家"><a href="#黑客与画家" class="headerlink" title="黑客与画家"></a><del>黑客与画家</del></h2><p>关于创业。</p><h2 id="两周自制脚本语言"><a href="#两周自制脚本语言" class="headerlink" title="两周自制脚本语言"></a>两周自制脚本语言</h2><p>编译原理</p><h2 id="代码整洁之道"><a href="#代码整洁之道" class="headerlink" title="代码整洁之道"></a>代码整洁之道</h2><p>保证写的代码易维护</p><h2 id="代码大全"><a href="#代码大全" class="headerlink" title="代码大全"></a>代码大全</h2><p>看了一部分。编写代码中遇到的各种问题的处理方式。</p><h2 id="机器学习实战"><a href="#机器学习实战" class="headerlink" title="机器学习实战"></a>机器学习实战</h2><p>机器学习相关的算法的Python实现</p><h2 id="大型网站技术架构"><a href="#大型网站技术架构" class="headerlink" title="大型网站技术架构"></a><del>大型网站技术架构</del></h2><p>标题即内容。</p><h2 id="python-cookbook"><a href="#python-cookbook" class="headerlink" title="python cookbook"></a><del>python cookbook</del></h2><p>Python必看。</p><h2 id="流畅的python"><a href="#流畅的python" class="headerlink" title="流畅的python"></a><del>流畅的python</del></h2><p>Python必看</p><h2 id="金字塔原理"><a href="#金字塔原理" class="headerlink" title="金字塔原理"></a><del>金字塔原理</del></h2><p>讲 写文章的逻辑，说话的逻辑。</p><h2 id="tensorflow-实战google深度学习框架"><a href="#tensorflow-实战google深度学习框架" class="headerlink" title="tensorflow 实战google深度学习框架"></a><del>tensorflow 实战google深度学习框架</del></h2><p>学习tensorflow非常棒的一本书，从是什么到为什么，再到怎么做。又避开了部分冗长的数学证明。初学者可以一边看一边实战，入门很棒。</p><h2 id="重构-改善既有代码的设计"><a href="#重构-改善既有代码的设计" class="headerlink" title="重构 :改善既有代码的设计"></a>重构 :改善既有代码的设计</h2><p>如何对现有系统进行重构，接手他人项目的话，这本书很有帮助。</p><h2 id="大型网站技术架构-核心原理与案例分析"><a href="#大型网站技术架构-核心原理与案例分析" class="headerlink" title="大型网站技术架构:核心原理与案例分析"></a><del>大型网站技术架构:核心原理与案例分析</del></h2><p>标题即内容</p><h2 id="系统之美"><a href="#系统之美" class="headerlink" title="系统之美"></a>系统之美</h2><p>未看</p><h2 id="HeadFirst设计模式"><a href="#HeadFirst设计模式" class="headerlink" title="HeadFirst设计模式"></a>HeadFirst设计模式</h2><p>只看了几个常用的，书太厚。</p><h2 id="编程珠玑"><a href="#编程珠玑" class="headerlink" title="编程珠玑"></a>编程珠玑</h2><p>算法和数据结构之美</p><h2 id="软技能-代码之外的生存指南"><a href="#软技能-代码之外的生存指南" class="headerlink" title="软技能: 代码之外的生存指南"></a><del>软技能: 代码之外的生存指南</del></h2><p>程序员必读，世界观修正</p><h2 id="程序员修炼之道-从小工到专家"><a href="#程序员修炼之道-从小工到专家" class="headerlink" title="程序员修炼之道:从小工到专家"></a>程序员修炼之道:从小工到专家</h2><p>未看</p><h2 id="计算机程序的构造和解释"><a href="#计算机程序的构造和解释" class="headerlink" title="计算机程序的构造和解释"></a>计算机程序的构造和解释</h2><p>未看</p><h2 id="人月神话"><a href="#人月神话" class="headerlink" title="人月神话"></a>人月神话</h2><p>软件管理相关的。</p><h2 id="时间的形状-相对论史话"><a href="#时间的形状-相对论史话" class="headerlink" title="时间的形状-相对论史话"></a><del>时间的形状-相对论史话</del></h2><p>关于经典物理学和现代物理学发展的。从低速到高速，从宇宙到量子，从非惯性系到非惯性系，从经典物理学到量子物理学，两个字 神奇。</p><h2 id="人性的弱点"><a href="#人性的弱点" class="headerlink" title="人性的弱点"></a><del>人性的弱点</del></h2><p>卡耐基的书，讲与人交往的，包括与朋友，父母，孩子等。</p><h2 id="算法第四版"><a href="#算法第四版" class="headerlink" title="算法第四版"></a>算法第四版</h2><p>只看了红黑树之前</p><h2 id="算法的java实现"><a href="#算法的java实现" class="headerlink" title="算法的java实现"></a>算法的java实现</h2><p>只看了红黑树之前</p><h2 id="三体1-2-3"><a href="#三体1-2-3" class="headerlink" title="三体1/2/3"></a><del>三体1/2/3</del></h2><p>脑洞大开。科幻巨著。</p><h2 id="Rabbitmq实战指南"><a href="#Rabbitmq实战指南" class="headerlink" title="Rabbitmq实战指南"></a><del>Rabbitmq实战指南</del></h2><p>一书搞懂rabbitmq</p><h2 id="Linux-shell命令和编辑器？"><a href="#Linux-shell命令和编辑器？" class="headerlink" title="Linux shell命令和编辑器？"></a><del>Linux shell命令和编辑器？</del></h2><p>刚看完，貌似叫这个名字。linux命令一锅炖了，顺便讲了自带的几种编辑器的用法。</p><h2 id="erlang程序设计"><a href="#erlang程序设计" class="headerlink" title="erlang程序设计"></a>erlang程序设计</h2><p>打算看。以并发编程的模式思考问题。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;我的2019书单&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="看书" scheme="http://www.javabin.cn/tags/%E7%9C%8B%E4%B9%A6/"/>
+    
+      <category term="书单" scheme="http://www.javabin.cn/tags/%E4%B9%A6%E5%8D%95/"/>
+    
+  </entry>
+  
+  <entry>
     <title>一次Python电话面试经验分享[GET offer]</title>
     <link href="http://www.javabin.cn/2019/iv_cd_01.html"/>
     <id>http://www.javabin.cn/2019/iv_cd_01.html</id>
@@ -110,28 +154,6 @@
       <category term="总结" scheme="http://www.javabin.cn/tags/%E6%80%BB%E7%BB%93/"/>
     
       <category term="面试" scheme="http://www.javabin.cn/tags/%E9%9D%A2%E8%AF%95/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>我的书单[2019]</title>
-    <link href="http://www.javabin.cn/2019/book_list.html"/>
-    <id>http://www.javabin.cn/2019/book_list.html</id>
-    <published>2019-08-23T15:10:54.000Z</published>
-    <updated>2019-09-02T18:16:13.477Z</updated>
-    
-    <content type="html"><![CDATA[<p>我的2019书单<br><a id="more"></a></p><h2 id="Java并发编程的艺术"><a href="#Java并发编程的艺术" class="headerlink" title="Java并发编程的艺术"></a><del>Java并发编程的艺术</del></h2><p>java并发编程相关的多线程，锁优化，虚拟机都有讲到。</p><h2 id="穷爸爸富爸爸"><a href="#穷爸爸富爸爸" class="headerlink" title="穷爸爸富爸爸"></a><del>穷爸爸富爸爸</del></h2><p>讲财商的，不想一辈子搬砖的话可以了解一下。</p><h2 id="卡耐基沟通与人际关系"><a href="#卡耐基沟通与人际关系" class="headerlink" title="卡耐基沟通与人际关系"></a><del>卡耐基沟通与人际关系</del></h2><p>卡耐基系列，讲如何更好得与别人相处。</p><h2 id="重来2"><a href="#重来2" class="headerlink" title="重来2"></a>重来2</h2><p>关于远程工作</p><h2 id="暗时间"><a href="#暗时间" class="headerlink" title="暗时间"></a><del>暗时间</del></h2><p>程序员总结的一些知识，心理学，学习，编程</p><h2 id="程序员的呐喊"><a href="#程序员的呐喊" class="headerlink" title="程序员的呐喊"></a><del>程序员的呐喊</del></h2><p>程序员的总结，让学习编译原理，操作系统，学习其他语言。学习lisp和EMACS。</p><h2 id="黑客与画家"><a href="#黑客与画家" class="headerlink" title="黑客与画家"></a><del>黑客与画家</del></h2><p>关于创业。</p><h2 id="两周自制脚本语言"><a href="#两周自制脚本语言" class="headerlink" title="两周自制脚本语言"></a>两周自制脚本语言</h2><p>编译原理</p><h2 id="代码整洁之道"><a href="#代码整洁之道" class="headerlink" title="代码整洁之道"></a>代码整洁之道</h2><p>保证写的代码易维护</p><h2 id="代码大全"><a href="#代码大全" class="headerlink" title="代码大全"></a>代码大全</h2><p>看了一部分。编写代码中遇到的各种问题的处理方式。</p><h2 id="机器学习实战"><a href="#机器学习实战" class="headerlink" title="机器学习实战"></a>机器学习实战</h2><p>机器学习相关的算法的Python实现</p><h2 id="大型网站技术架构"><a href="#大型网站技术架构" class="headerlink" title="大型网站技术架构"></a><del>大型网站技术架构</del></h2><p>标题即内容。</p><h2 id="python-cookbook"><a href="#python-cookbook" class="headerlink" title="python cookbook"></a><del>python cookbook</del></h2><p>Python必看。</p><h2 id="流畅的python"><a href="#流畅的python" class="headerlink" title="流畅的python"></a><del>流畅的python</del></h2><p>Python必看</p><h2 id="金字塔原理"><a href="#金字塔原理" class="headerlink" title="金字塔原理"></a><del>金字塔原理</del></h2><p>讲 写文章的逻辑，说话的逻辑。</p><h2 id="tensorflow-实战google深度学习框架"><a href="#tensorflow-实战google深度学习框架" class="headerlink" title="tensorflow 实战google深度学习框架"></a><del>tensorflow 实战google深度学习框架</del></h2><p>学习tensorflow非常棒的一本书，从是什么到为什么，再到怎么做。又避开了部分冗长的数学证明。初学者可以一边看一边实战，入门很棒。</p><h2 id="重构-改善既有代码的设计"><a href="#重构-改善既有代码的设计" class="headerlink" title="重构 :改善既有代码的设计"></a>重构 :改善既有代码的设计</h2><p>如何对现有系统进行重构，接手他人项目的话，这本书很有帮助。</p><h2 id="大型网站技术架构-核心原理与案例分析"><a href="#大型网站技术架构-核心原理与案例分析" class="headerlink" title="大型网站技术架构:核心原理与案例分析"></a><del>大型网站技术架构:核心原理与案例分析</del></h2><p>标题即内容</p><h2 id="系统之美"><a href="#系统之美" class="headerlink" title="系统之美"></a>系统之美</h2><p>未看</p><h2 id="HeadFirst设计模式"><a href="#HeadFirst设计模式" class="headerlink" title="HeadFirst设计模式"></a>HeadFirst设计模式</h2><p>只看了几个常用的，书太厚。</p><h2 id="编程珠玑"><a href="#编程珠玑" class="headerlink" title="编程珠玑"></a>编程珠玑</h2><p>算法和数据结构之美</p><h2 id="软技能-代码之外的生存指南"><a href="#软技能-代码之外的生存指南" class="headerlink" title="软技能: 代码之外的生存指南"></a><del>软技能: 代码之外的生存指南</del></h2><p>程序员必读，世界观修正</p><h2 id="程序员修炼之道-从小工到专家"><a href="#程序员修炼之道-从小工到专家" class="headerlink" title="程序员修炼之道:从小工到专家"></a>程序员修炼之道:从小工到专家</h2><p>未看</p><h2 id="计算机程序的构造和解释"><a href="#计算机程序的构造和解释" class="headerlink" title="计算机程序的构造和解释"></a>计算机程序的构造和解释</h2><p>未看</p><h2 id="人月神话"><a href="#人月神话" class="headerlink" title="人月神话"></a>人月神话</h2><p>软件管理相关的。</p><h2 id="时间的形状-相对论史话"><a href="#时间的形状-相对论史话" class="headerlink" title="时间的形状-相对论史话"></a><del>时间的形状-相对论史话</del></h2><p>关于经典物理学和现代物理学发展的。从低速到高速，从宇宙到量子，从非惯性系到非惯性系，从经典物理学到量子物理学，两个字 神奇。</p><h2 id="人性的弱点"><a href="#人性的弱点" class="headerlink" title="人性的弱点"></a><del>人性的弱点</del></h2><p>卡耐基的书，讲与人交往的，包括与朋友，父母，孩子等。</p><h2 id="算法第四版"><a href="#算法第四版" class="headerlink" title="算法第四版"></a>算法第四版</h2><p>只看了红黑树之前</p><h2 id="算法的java实现"><a href="#算法的java实现" class="headerlink" title="算法的java实现"></a>算法的java实现</h2><p>只看了红黑树之前</p><h2 id="三体1-2-3"><a href="#三体1-2-3" class="headerlink" title="三体1/2/3"></a><del>三体1/2/3</del></h2><p>脑洞大开。科幻巨著。</p><h2 id="Rabbitmq实战指南"><a href="#Rabbitmq实战指南" class="headerlink" title="Rabbitmq实战指南"></a><del>Rabbitmq实战指南</del></h2><p>一书搞懂rabbitmq</p><h2 id="Linux-shell命令和编辑器？"><a href="#Linux-shell命令和编辑器？" class="headerlink" title="Linux shell命令和编辑器？"></a><del>Linux shell命令和编辑器？</del></h2><p>刚看完，貌似叫这个名字。linux命令一锅炖了，顺便讲了自带的几种编辑器的用法。</p><h2 id="erlang程序设计"><a href="#erlang程序设计" class="headerlink" title="erlang程序设计"></a>erlang程序设计</h2><p>打算看。以并发编程的模式思考问题。</p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;我的2019书单&lt;br&gt;
-    
-    </summary>
-    
-    
-      <category term="书单" scheme="http://www.javabin.cn/tags/%E4%B9%A6%E5%8D%95/"/>
-    
-      <category term="看书" scheme="http://www.javabin.cn/tags/%E7%9C%8B%E4%B9%A6/"/>
     
   </entry>
   
@@ -491,28 +513,6 @@
       <category term="总结" scheme="http://www.javabin.cn/tags/%E6%80%BB%E7%BB%93/"/>
     
       <category term="幂等性" scheme="http://www.javabin.cn/tags/%E5%B9%82%E7%AD%89%E6%80%A7/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>缓存相关问题和解决方法</title>
-    <link href="http://www.javabin.cn/2019/cache.html"/>
-    <id>http://www.javabin.cn/2019/cache.html</id>
-    <published>2019-07-08T15:30:43.000Z</published>
-    <updated>2019-09-02T18:16:13.477Z</updated>
-    
-    <content type="html"><![CDATA[<p>缓存相关问题和解决方法<a id="more"></a></p><h2 id="1-缓存穿透"><a href="#1-缓存穿透" class="headerlink" title="1.缓存穿透"></a>1.缓存穿透</h2><p>大量访问不存在的KEY</p><p>举例：当用户读取消息列表时，将消息列表缓存起来。但是当某个用户并没有消息却频繁刷新消息列表时，会每次访问数据库。</p><p>解决方法：将空值 存入缓存，规定返回该值时代表该key下无数据；而不是该key没有缓存，需要查询数据库。</p><h2 id="2-缓存预热"><a href="#2-缓存预热" class="headerlink" title="2.缓存预热"></a>2.缓存预热</h2><p>高并发接口上线前，提前将缓存加载好。</p><p>举例：当上线一个高并发接口时，为防止上线后接口马上reload缓存，导致数据库负载过高，应提前在上线前在灰度环境加载好依赖的缓存。</p><h2 id="3-缓存击穿"><a href="#3-缓存击穿" class="headerlink" title="3.缓存击穿"></a>3.缓存击穿</h2><p>某个key非常热门，一直有请求在访问这个key，如果这个key失效，会瞬间有大并发请求数据库。其他缓存正常，但是这里开了一个小洞。</p><p>举例：爆款商品缓存，热门游戏排行榜单缓存</p><p>解决方法：</p><ul><li>1.简单解决：根据业务情况延长过期时间，或者对这些热点数据不过期。</li><li>2.缓存重建时加分布式锁</li></ul><h2 id="4-缓存雪崩"><a href="#4-缓存雪崩" class="headerlink" title="4.缓存雪崩"></a>4.缓存雪崩</h2><p>大量key过期，导致大量请求数据库。</p><p>举例：大量热门游戏排行榜缓存同时过期。缓存服务挂掉。</p><p>解决方法：</p><ul><li>1.加载缓存时，失效时间加上随机数，不让同时失效。</li><li>2.根据业务情况判断是否可以加客户端缓存。</li><li>3.根据业务进行水平拆分，不同业务，不同并发压力的key分配到不同缓存服务；</li><li>4.接口限流；</li><li>5.多点高可用，故障转移。</li><li>6.根据业务情况判断是否可以加入数据版本控制。</li><li>7.使用持久化缓存。</li></ul><h2 id="5-缓存重建"><a href="#5-缓存重建" class="headerlink" title="5.缓存重建"></a>5.缓存重建</h2><p>key过期时从数据库重新加载缓存数据。瞬间并发过高时，会发生多次重复的缓存重建。</p><h2 id="6-缓存更新-or-淘汰缓存"><a href="#6-缓存更新-or-淘汰缓存" class="headerlink" title="6.缓存更新 or 淘汰缓存"></a>6.缓存更新 or 淘汰缓存</h2><ul><li>缓存更新：写入数据库后更新对应的缓存。缓存在接口调用时再重建。如果缓存写入失败，将导致数据不一致。</li><li>淘汰缓存：写入数据库后使缓存失效。实现简单。数据一致。但是如果是热点key，直接失效 会发生缓存击穿。</li></ul><h2 id="7-缓存不一致"><a href="#7-缓存不一致" class="headerlink" title="7.缓存不一致"></a>7.缓存不一致</h2><p>更新数据库后未更新缓存，导致缓存读到的数据与数据库不一致。</p><p>解决：解决逻辑bug, 在所有修改数据库的逻辑后更新缓存，或者封装缓存管理实现。无法立即定位问题时，临时crontab 定时检查缓存。</p><h2 id="8-高可用"><a href="#8-高可用" class="headerlink" title="8.高可用"></a>8.高可用</h2><p>业务水平拆分，不同缓存压力的缓存服务拆分，客户端缓存+版本控制，非单点部署,持久化缓存。</p><h2 id="9-缓存雪崩故障后的解决方法"><a href="#9-缓存雪崩故障后的解决方法" class="headerlink" title="9.缓存雪崩故障后的解决方法"></a>9.缓存雪崩故障后的解决方法</h2><ul><li>1.调整API限流，对异常API禁用，对不重要服务降级减少资源开销（不然服务刚起来就会挂掉）</li><li>2.排除故障（OOM加内存，客户端调用过于频繁的话限流，linux连接数不足则调整内核链接数，）后，启动数据库，缓存服务，命令行快速预热缓存</li><li>3.逐渐恢复正常限流，观察API请求频率和相关业务埋点的数据反馈</li></ul>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;缓存相关问题和解决方法
-    
-    </summary>
-    
-    
-      <category term="总结" scheme="http://www.javabin.cn/tags/%E6%80%BB%E7%BB%93/"/>
-    
-      <category term="缓存" scheme="http://www.javabin.cn/tags/%E7%BC%93%E5%AD%98/"/>
     
   </entry>
   
