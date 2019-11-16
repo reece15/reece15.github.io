@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.javabin.cn/"/>
-  <updated>2019-09-23T15:14:35.375Z</updated>
+  <updated>2019-11-16T15:36:25.542Z</updated>
   <id>http://www.javabin.cn/</id>
   
   <author>
@@ -15,6 +15,32 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>pgsql中的日期处理</title>
+    <link href="http://www.javabin.cn/2019/sql_date.html"/>
+    <id>http://www.javabin.cn/2019/sql_date.html</id>
+    <published>2019-10-06T15:10:54.000Z</published>
+    <updated>2019-11-16T15:36:25.542Z</updated>
+    
+    <content type="html"><![CDATA[<p>总结下数据库中的日期处理<a id="more"></a></p><ul><li>字符串日期转时间: <code>select &#39;20190202&#39;::DATE;</code> 或 <code>select DATE(&#39;20190202&#39;);</code></li><li>当前日期: <code>select CURRENT_DATE</code></li><li>按月/月初:<code>select DATE_TRUNC(&#39;month&#39;, &#39;20191111&#39;::DATE);</code> 或 <code>select substr(&#39;20191111&#39;, 0,7);</code></li><li>按年/年初:<code>select DATE_TRUNC(&#39;year&#39;, &#39;20191111&#39;::DATE);</code> 或 <code>select substr(&#39;20191111&#39;, 0,5);</code></li><li>按季度/季初:<code>select DATE_TRUNC(&#39;quarter&#39;, &#39;20191111&#39;::DATE);</code></li><li>月末:(加一个周期后减一天)<code>select DATE_TRUNC(&#39;month&#39;, &#39;20190211&#39;::DATE)+INTERVAL &#39;1&#39; MONTH - INTERVAL &#39;1&#39; DAY;</code></li><li>年末:<code>select DATE_TRUNC(&#39;year&#39;, &#39;20190211&#39;::DATE)+INTERVAL &#39;1&#39; YEAR - INTERVAL &#39;1&#39; DAY;</code></li><li>季末:<code>select DATE_TRUNC(&#39;quarter&#39;, &#39;20190211&#39;::DATE)+INTERVAL &#39;3&#39; month - INTERVAL &#39;1&#39; DAY;</code></li><li>取表中最后一天/最后一次更新的数据作为最终数据。在每日报表，每日更新表中，取最后一天的数据作为统计使用的数据: <ul><li>创建测试表，学生每日测试成绩表，每位学生的数据每日更新一次:<code>create table student_score (id int, name varchar(25), score int, t varchar(12))</code></li><li>创建测试数据: <code>insert into student_score select generate_series(1,100) as key, (random()*(10^3))::text, (random()*100)::int, CURRENT_DATE + (random()*100)::int - 50;</code></li><li>测试语句，取最后一天的数据作为最终数据:<code>with time_end as (select t from student_score order by t desc limit 1) select name, score from student_score where t=(select *from time_end);</code></li></ul></li></ul>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;总结下数据库中的日期处理
+    
+    </summary>
+    
+    
+      <category term="总结" scheme="http://www.javabin.cn/tags/%E6%80%BB%E7%BB%93/"/>
+    
+      <category term="数据库" scheme="http://www.javabin.cn/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+      <category term="pgsql" scheme="http://www.javabin.cn/tags/pgsql/"/>
+    
+      <category term="sql" scheme="http://www.javabin.cn/tags/sql/"/>
+    
+  </entry>
   
   <entry>
     <title>elasticsearch中如何依据字符串长度过滤</title>
@@ -129,9 +155,9 @@
     </summary>
     
     
-      <category term="看书" scheme="http://www.javabin.cn/tags/%E7%9C%8B%E4%B9%A6/"/>
-    
       <category term="书单" scheme="http://www.javabin.cn/tags/%E4%B9%A6%E5%8D%95/"/>
+    
+      <category term="看书" scheme="http://www.javabin.cn/tags/%E7%9C%8B%E4%B9%A6/"/>
     
   </entry>
   
@@ -491,28 +517,6 @@
       <category term="数据库" scheme="http://www.javabin.cn/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
     
       <category term="视图" scheme="http://www.javabin.cn/tags/%E8%A7%86%E5%9B%BE/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>由celery任务重复执行引起的对幂等性的思考</title>
-    <link href="http://www.javabin.cn/2019/celery_repeat.html"/>
-    <id>http://www.javabin.cn/2019/celery_repeat.html</id>
-    <published>2019-07-11T13:55:17.000Z</published>
-    <updated>2019-09-02T18:16:13.477Z</updated>
-    
-    <content type="html"><![CDATA[<p>现象：异步任务执行完成后，偶尔发现数据库中创建了重复数据，或者日志中报唯一索引冲突。</p><a id="more"></a><p>原因：异步任务消费者发生异常退出后重新连接，导致执行了一半的任务会被扔回队列，并再次被其他消费者执行。这会导致在数据库中创建了一部分重复的数据、或者日志中报主键冲突。</p><p>解决：保持任务多次执行的结果一致，通过加锁，创建前检查，加唯一约束，重复操作的异常处理等操作保证任务多次执行结果一致。</p><p>由此可以引出一个概念，幂等性。</p><h2 id="幂等性是什么"><a href="#幂等性是什么" class="headerlink" title="幂等性是什么"></a>幂等性是什么</h2><p>幂等性：方法/接口不会改变业务状态，可以保证重复调用的结果和单次调用的结果一致。</p><h2 id="常见的需要幂等的场景"><a href="#常见的需要幂等的场景" class="headerlink" title="常见的需要幂等的场景"></a>常见的需要幂等的场景</h2><h3 id="1-前端重复提交"><a href="#1-前端重复提交" class="headerlink" title="1.前端重复提交"></a>1.前端重复提交</h3><p>用户注册，用户创建商品等操作，前端都会提交一些数据给后台服务，后台需要根据用户提交的数据在数据库中创建记录。如果用户不小心多点了几次，后端收到了好几次提交，这时就会在数据库中重复创建了多条记录。这就是接口没有幂等性带来的bug。</p><h3 id="2-接口超时重试"><a href="#2-接口超时重试" class="headerlink" title="2.接口超时重试"></a>2.接口超时重试</h3><p>通过互联网调用的接口，有可能会因为网络原因而调用失败，这时，就需要对接口调用加上失败重试。如果第一次调用已经执行了一半时，发生了网络异常。这时再次调用时就会因为脏数据的存在而出现调用异常。</p><h3 id="3-消息重复消费"><a href="#3-消息重复消费" class="headerlink" title="3.消息重复消费"></a>3.消息重复消费</h3><p>在使用消息中间件来处理消息队列，且手动ack确认消息被正常消费时。如果消费者突然断开连接，那么已经执行了一半的消息会重新放回队列。当消息被其他消费者重新消费时，如果没有幂等性，就会导致消息重复消费时结果异常，如数据库重复数据，数据库数据冲突，资源重复等。</p><h2 id="实现幂等性的方法"><a href="#实现幂等性的方法" class="headerlink" title="实现幂等性的方法"></a>实现幂等性的方法</h2><h3 id="1-token机制"><a href="#1-token机制" class="headerlink" title="1.token机制"></a>1.token机制</h3><p>使用token机制来对每个请求做标识。生成一个唯一token，加入前端请求的表单hidden域和后端用户session中，前端每次请求时都会将这个token一起提交，在后端判断token相等则不是重复提交并删除token，不相等则是一个重复请求,并对重复请求做出响应。</p><pre><code class="python">    if token not in session:        return &quot;repeat request&quot;    else:        session.delete(token)</code></pre><p>注意：需要保证token申请和删除操作在并发和分布式条件下的原子性。</p><h3 id="2-加锁-分布式锁"><a href="#2-加锁-分布式锁" class="headerlink" title="2.加锁 分布式锁"></a>2.加锁 分布式锁</h3><p>使用分布式锁来解决接口的并发重复提交。当存在分布式部署的服务时，并发重复请求可能发往多个节点，这时需要一个所有节点都可原子性申请的锁，来保证只有一个请求可被正确执行。</p><pre><code class="python">    if not memcache.add(obj_id, val, exp):        return &quot;repeat request&quot;    else:        create_obj(**info)</code></pre><h3 id="3-数据库唯一约束"><a href="#3-数据库唯一约束" class="headerlink" title="3.数据库唯一约束"></a>3.数据库唯一约束</h3><p>对于用户提交数据，消息队列上存储的大量异步任务可能因故障而重复执行，可在数据库上设置唯一约束，来确保数据不会被重复创建。</p><h3 id="4-状态机"><a href="#4-状态机" class="headerlink" title="4.状态机"></a>4.状态机</h3><p>订单，审核流程在执行时，当前可执行的操作和当前的状态相关。需要建立当前状态可执行流程的映射，在流程状态已经切换时，防止执行重复的操作。</p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;现象：异步任务执行完成后，偶尔发现数据库中创建了重复数据，或者日志中报唯一索引冲突。&lt;/p&gt;
-    
-    </summary>
-    
-    
-      <category term="总结" scheme="http://www.javabin.cn/tags/%E6%80%BB%E7%BB%93/"/>
-    
-      <category term="幂等性" scheme="http://www.javabin.cn/tags/%E5%B9%82%E7%AD%89%E6%80%A7/"/>
     
   </entry>
   
