@@ -140,28 +140,6 @@
   </entry>
   
   <entry>
-    <title>我的书单[2019]</title>
-    <link href="http://www.javabin.cn/2019/book_list.html"/>
-    <id>http://www.javabin.cn/2019/book_list.html</id>
-    <published>2019-08-23T15:10:54.000Z</published>
-    <updated>2019-09-02T18:16:13.477Z</updated>
-    
-    <content type="html"><![CDATA[<p>我的2019书单<br><a id="more"></a></p><h2 id="Java并发编程的艺术"><a href="#Java并发编程的艺术" class="headerlink" title="Java并发编程的艺术"></a><del>Java并发编程的艺术</del></h2><p>java并发编程相关的多线程，锁优化，虚拟机都有讲到。</p><h2 id="穷爸爸富爸爸"><a href="#穷爸爸富爸爸" class="headerlink" title="穷爸爸富爸爸"></a><del>穷爸爸富爸爸</del></h2><p>讲财商的，不想一辈子搬砖的话可以了解一下。</p><h2 id="卡耐基沟通与人际关系"><a href="#卡耐基沟通与人际关系" class="headerlink" title="卡耐基沟通与人际关系"></a><del>卡耐基沟通与人际关系</del></h2><p>卡耐基系列，讲如何更好得与别人相处。</p><h2 id="重来2"><a href="#重来2" class="headerlink" title="重来2"></a>重来2</h2><p>关于远程工作</p><h2 id="暗时间"><a href="#暗时间" class="headerlink" title="暗时间"></a><del>暗时间</del></h2><p>程序员总结的一些知识，心理学，学习，编程</p><h2 id="程序员的呐喊"><a href="#程序员的呐喊" class="headerlink" title="程序员的呐喊"></a><del>程序员的呐喊</del></h2><p>程序员的总结，让学习编译原理，操作系统，学习其他语言。学习lisp和EMACS。</p><h2 id="黑客与画家"><a href="#黑客与画家" class="headerlink" title="黑客与画家"></a><del>黑客与画家</del></h2><p>关于创业。</p><h2 id="两周自制脚本语言"><a href="#两周自制脚本语言" class="headerlink" title="两周自制脚本语言"></a>两周自制脚本语言</h2><p>编译原理</p><h2 id="代码整洁之道"><a href="#代码整洁之道" class="headerlink" title="代码整洁之道"></a>代码整洁之道</h2><p>保证写的代码易维护</p><h2 id="代码大全"><a href="#代码大全" class="headerlink" title="代码大全"></a>代码大全</h2><p>看了一部分。编写代码中遇到的各种问题的处理方式。</p><h2 id="机器学习实战"><a href="#机器学习实战" class="headerlink" title="机器学习实战"></a>机器学习实战</h2><p>机器学习相关的算法的Python实现</p><h2 id="大型网站技术架构"><a href="#大型网站技术架构" class="headerlink" title="大型网站技术架构"></a><del>大型网站技术架构</del></h2><p>标题即内容。</p><h2 id="python-cookbook"><a href="#python-cookbook" class="headerlink" title="python cookbook"></a><del>python cookbook</del></h2><p>Python必看。</p><h2 id="流畅的python"><a href="#流畅的python" class="headerlink" title="流畅的python"></a><del>流畅的python</del></h2><p>Python必看</p><h2 id="金字塔原理"><a href="#金字塔原理" class="headerlink" title="金字塔原理"></a><del>金字塔原理</del></h2><p>讲 写文章的逻辑，说话的逻辑。</p><h2 id="tensorflow-实战google深度学习框架"><a href="#tensorflow-实战google深度学习框架" class="headerlink" title="tensorflow 实战google深度学习框架"></a><del>tensorflow 实战google深度学习框架</del></h2><p>学习tensorflow非常棒的一本书，从是什么到为什么，再到怎么做。又避开了部分冗长的数学证明。初学者可以一边看一边实战，入门很棒。</p><h2 id="重构-改善既有代码的设计"><a href="#重构-改善既有代码的设计" class="headerlink" title="重构 :改善既有代码的设计"></a>重构 :改善既有代码的设计</h2><p>如何对现有系统进行重构，接手他人项目的话，这本书很有帮助。</p><h2 id="大型网站技术架构-核心原理与案例分析"><a href="#大型网站技术架构-核心原理与案例分析" class="headerlink" title="大型网站技术架构:核心原理与案例分析"></a><del>大型网站技术架构:核心原理与案例分析</del></h2><p>标题即内容</p><h2 id="系统之美"><a href="#系统之美" class="headerlink" title="系统之美"></a>系统之美</h2><p>未看</p><h2 id="HeadFirst设计模式"><a href="#HeadFirst设计模式" class="headerlink" title="HeadFirst设计模式"></a>HeadFirst设计模式</h2><p>只看了几个常用的，书太厚。</p><h2 id="编程珠玑"><a href="#编程珠玑" class="headerlink" title="编程珠玑"></a>编程珠玑</h2><p>算法和数据结构之美</p><h2 id="软技能-代码之外的生存指南"><a href="#软技能-代码之外的生存指南" class="headerlink" title="软技能: 代码之外的生存指南"></a><del>软技能: 代码之外的生存指南</del></h2><p>程序员必读，世界观修正</p><h2 id="程序员修炼之道-从小工到专家"><a href="#程序员修炼之道-从小工到专家" class="headerlink" title="程序员修炼之道:从小工到专家"></a>程序员修炼之道:从小工到专家</h2><p>未看</p><h2 id="计算机程序的构造和解释"><a href="#计算机程序的构造和解释" class="headerlink" title="计算机程序的构造和解释"></a>计算机程序的构造和解释</h2><p>未看</p><h2 id="人月神话"><a href="#人月神话" class="headerlink" title="人月神话"></a>人月神话</h2><p>软件管理相关的。</p><h2 id="时间的形状-相对论史话"><a href="#时间的形状-相对论史话" class="headerlink" title="时间的形状-相对论史话"></a><del>时间的形状-相对论史话</del></h2><p>关于经典物理学和现代物理学发展的。从低速到高速，从宇宙到量子，从非惯性系到非惯性系，从经典物理学到量子物理学，两个字 神奇。</p><h2 id="人性的弱点"><a href="#人性的弱点" class="headerlink" title="人性的弱点"></a><del>人性的弱点</del></h2><p>卡耐基的书，讲与人交往的，包括与朋友，父母，孩子等。</p><h2 id="算法第四版"><a href="#算法第四版" class="headerlink" title="算法第四版"></a>算法第四版</h2><p>只看了红黑树之前</p><h2 id="算法的java实现"><a href="#算法的java实现" class="headerlink" title="算法的java实现"></a>算法的java实现</h2><p>只看了红黑树之前</p><h2 id="三体1-2-3"><a href="#三体1-2-3" class="headerlink" title="三体1/2/3"></a><del>三体1/2/3</del></h2><p>脑洞大开。科幻巨著。</p><h2 id="Rabbitmq实战指南"><a href="#Rabbitmq实战指南" class="headerlink" title="Rabbitmq实战指南"></a><del>Rabbitmq实战指南</del></h2><p>一书搞懂rabbitmq</p><h2 id="Linux-shell命令和编辑器？"><a href="#Linux-shell命令和编辑器？" class="headerlink" title="Linux shell命令和编辑器？"></a><del>Linux shell命令和编辑器？</del></h2><p>刚看完，貌似叫这个名字。linux命令一锅炖了，顺便讲了自带的几种编辑器的用法。</p><h2 id="erlang程序设计"><a href="#erlang程序设计" class="headerlink" title="erlang程序设计"></a>erlang程序设计</h2><p>打算看。以并发编程的模式思考问题。</p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;我的2019书单&lt;br&gt;
-    
-    </summary>
-    
-    
-      <category term="书单" scheme="http://www.javabin.cn/tags/%E4%B9%A6%E5%8D%95/"/>
-    
-      <category term="看书" scheme="http://www.javabin.cn/tags/%E7%9C%8B%E4%B9%A6/"/>
-    
-  </entry>
-  
-  <entry>
     <title>一次Python电话面试经验分享[GET offer]</title>
     <link href="http://www.javabin.cn/2019/iv_cd_01.html"/>
     <id>http://www.javabin.cn/2019/iv_cd_01.html</id>
@@ -180,6 +158,28 @@
       <category term="总结" scheme="http://www.javabin.cn/tags/%E6%80%BB%E7%BB%93/"/>
     
       <category term="面试" scheme="http://www.javabin.cn/tags/%E9%9D%A2%E8%AF%95/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>我的书单[2019]</title>
+    <link href="http://www.javabin.cn/2019/book_list.html"/>
+    <id>http://www.javabin.cn/2019/book_list.html</id>
+    <published>2019-08-23T15:10:54.000Z</published>
+    <updated>2019-09-02T18:16:13.477Z</updated>
+    
+    <content type="html"><![CDATA[<p>我的2019书单<br><a id="more"></a></p><h2 id="Java并发编程的艺术"><a href="#Java并发编程的艺术" class="headerlink" title="Java并发编程的艺术"></a><del>Java并发编程的艺术</del></h2><p>java并发编程相关的多线程，锁优化，虚拟机都有讲到。</p><h2 id="穷爸爸富爸爸"><a href="#穷爸爸富爸爸" class="headerlink" title="穷爸爸富爸爸"></a><del>穷爸爸富爸爸</del></h2><p>讲财商的，不想一辈子搬砖的话可以了解一下。</p><h2 id="卡耐基沟通与人际关系"><a href="#卡耐基沟通与人际关系" class="headerlink" title="卡耐基沟通与人际关系"></a><del>卡耐基沟通与人际关系</del></h2><p>卡耐基系列，讲如何更好得与别人相处。</p><h2 id="重来2"><a href="#重来2" class="headerlink" title="重来2"></a>重来2</h2><p>关于远程工作</p><h2 id="暗时间"><a href="#暗时间" class="headerlink" title="暗时间"></a><del>暗时间</del></h2><p>程序员总结的一些知识，心理学，学习，编程</p><h2 id="程序员的呐喊"><a href="#程序员的呐喊" class="headerlink" title="程序员的呐喊"></a><del>程序员的呐喊</del></h2><p>程序员的总结，让学习编译原理，操作系统，学习其他语言。学习lisp和EMACS。</p><h2 id="黑客与画家"><a href="#黑客与画家" class="headerlink" title="黑客与画家"></a><del>黑客与画家</del></h2><p>关于创业。</p><h2 id="两周自制脚本语言"><a href="#两周自制脚本语言" class="headerlink" title="两周自制脚本语言"></a>两周自制脚本语言</h2><p>编译原理</p><h2 id="代码整洁之道"><a href="#代码整洁之道" class="headerlink" title="代码整洁之道"></a>代码整洁之道</h2><p>保证写的代码易维护</p><h2 id="代码大全"><a href="#代码大全" class="headerlink" title="代码大全"></a>代码大全</h2><p>看了一部分。编写代码中遇到的各种问题的处理方式。</p><h2 id="机器学习实战"><a href="#机器学习实战" class="headerlink" title="机器学习实战"></a>机器学习实战</h2><p>机器学习相关的算法的Python实现</p><h2 id="大型网站技术架构"><a href="#大型网站技术架构" class="headerlink" title="大型网站技术架构"></a><del>大型网站技术架构</del></h2><p>标题即内容。</p><h2 id="python-cookbook"><a href="#python-cookbook" class="headerlink" title="python cookbook"></a><del>python cookbook</del></h2><p>Python必看。</p><h2 id="流畅的python"><a href="#流畅的python" class="headerlink" title="流畅的python"></a><del>流畅的python</del></h2><p>Python必看</p><h2 id="金字塔原理"><a href="#金字塔原理" class="headerlink" title="金字塔原理"></a><del>金字塔原理</del></h2><p>讲 写文章的逻辑，说话的逻辑。</p><h2 id="tensorflow-实战google深度学习框架"><a href="#tensorflow-实战google深度学习框架" class="headerlink" title="tensorflow 实战google深度学习框架"></a><del>tensorflow 实战google深度学习框架</del></h2><p>学习tensorflow非常棒的一本书，从是什么到为什么，再到怎么做。又避开了部分冗长的数学证明。初学者可以一边看一边实战，入门很棒。</p><h2 id="重构-改善既有代码的设计"><a href="#重构-改善既有代码的设计" class="headerlink" title="重构 :改善既有代码的设计"></a>重构 :改善既有代码的设计</h2><p>如何对现有系统进行重构，接手他人项目的话，这本书很有帮助。</p><h2 id="大型网站技术架构-核心原理与案例分析"><a href="#大型网站技术架构-核心原理与案例分析" class="headerlink" title="大型网站技术架构:核心原理与案例分析"></a><del>大型网站技术架构:核心原理与案例分析</del></h2><p>标题即内容</p><h2 id="系统之美"><a href="#系统之美" class="headerlink" title="系统之美"></a>系统之美</h2><p>未看</p><h2 id="HeadFirst设计模式"><a href="#HeadFirst设计模式" class="headerlink" title="HeadFirst设计模式"></a>HeadFirst设计模式</h2><p>只看了几个常用的，书太厚。</p><h2 id="编程珠玑"><a href="#编程珠玑" class="headerlink" title="编程珠玑"></a>编程珠玑</h2><p>算法和数据结构之美</p><h2 id="软技能-代码之外的生存指南"><a href="#软技能-代码之外的生存指南" class="headerlink" title="软技能: 代码之外的生存指南"></a><del>软技能: 代码之外的生存指南</del></h2><p>程序员必读，世界观修正</p><h2 id="程序员修炼之道-从小工到专家"><a href="#程序员修炼之道-从小工到专家" class="headerlink" title="程序员修炼之道:从小工到专家"></a>程序员修炼之道:从小工到专家</h2><p>未看</p><h2 id="计算机程序的构造和解释"><a href="#计算机程序的构造和解释" class="headerlink" title="计算机程序的构造和解释"></a>计算机程序的构造和解释</h2><p>未看</p><h2 id="人月神话"><a href="#人月神话" class="headerlink" title="人月神话"></a>人月神话</h2><p>软件管理相关的。</p><h2 id="时间的形状-相对论史话"><a href="#时间的形状-相对论史话" class="headerlink" title="时间的形状-相对论史话"></a><del>时间的形状-相对论史话</del></h2><p>关于经典物理学和现代物理学发展的。从低速到高速，从宇宙到量子，从非惯性系到非惯性系，从经典物理学到量子物理学，两个字 神奇。</p><h2 id="人性的弱点"><a href="#人性的弱点" class="headerlink" title="人性的弱点"></a><del>人性的弱点</del></h2><p>卡耐基的书，讲与人交往的，包括与朋友，父母，孩子等。</p><h2 id="算法第四版"><a href="#算法第四版" class="headerlink" title="算法第四版"></a>算法第四版</h2><p>只看了红黑树之前</p><h2 id="算法的java实现"><a href="#算法的java实现" class="headerlink" title="算法的java实现"></a>算法的java实现</h2><p>只看了红黑树之前</p><h2 id="三体1-2-3"><a href="#三体1-2-3" class="headerlink" title="三体1/2/3"></a><del>三体1/2/3</del></h2><p>脑洞大开。科幻巨著。</p><h2 id="Rabbitmq实战指南"><a href="#Rabbitmq实战指南" class="headerlink" title="Rabbitmq实战指南"></a><del>Rabbitmq实战指南</del></h2><p>一书搞懂rabbitmq</p><h2 id="Linux-shell命令和编辑器？"><a href="#Linux-shell命令和编辑器？" class="headerlink" title="Linux shell命令和编辑器？"></a><del>Linux shell命令和编辑器？</del></h2><p>刚看完，貌似叫这个名字。linux命令一锅炖了，顺便讲了自带的几种编辑器的用法。</p><h2 id="erlang程序设计"><a href="#erlang程序设计" class="headerlink" title="erlang程序设计"></a>erlang程序设计</h2><p>打算看。以并发编程的模式思考问题。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;我的2019书单&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="书单" scheme="http://www.javabin.cn/tags/%E4%B9%A6%E5%8D%95/"/>
+    
+      <category term="看书" scheme="http://www.javabin.cn/tags/%E7%9C%8B%E4%B9%A6/"/>
     
   </entry>
   
