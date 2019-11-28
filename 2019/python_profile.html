@@ -22,7 +22,7 @@
 <meta property="og:site_name" content="除了代码也想写点其他的">
 <meta property="og:description" content="最近在做一些性能优化方面的事情，总结一下遇到的一些问题和解决方法。">
 <meta property="og:locale" content="Chinese">
-<meta property="og:updated_time" content="2019-11-28T16:16:27.886Z">
+<meta property="og:updated_time" content="2019-11-28T16:28:42.436Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Python性能优化浅谈">
 <meta name="twitter:description" content="最近在做一些性能优化方面的事情，总结一下遇到的一些问题和解决方法。">
@@ -270,19 +270,23 @@ var _hmt = _hmt || [];
 <li>4.使用C库替换py库，如使用<code>cPickle替换pickle</code>。</li>
 <li>5.去掉不需要的迭代。如使用<code>(x for x in c if x.id==1)替代[x for x in c if x.id==1]</code>，使用<code>xrange替代range</code></li>
 <li>6.去掉无用的逻辑。如 <code>while len(x) &gt; idx</code>先计算出<code>cnt = len(x) 然后在while cnt &gt; idx</code></li>
-<li>8.将无参数依赖的函数或者功能，转为类变量。</li>
-<li>9.去重时在set中判断 而不是 list.</li>
-<li>10.对于重复遍历的数据。先以id或者其他label建立mapping，减少遍历次数。</li>
-<li>11.对于可缓存参数的函数。添加<code>function_tools.lru_cache</code>或者 <code>pyhon2.7</code>里的<code>backports.functools_lru_cache.lru_cache</code>或者对于逻辑不复杂的，直接建立<code>mapping</code>全局变量保存</li>
-<li>12.预生成结果。对于参数规模可以预测的，预先生成全局mapping即可。</li>
-<li>13.减少数据库操作。迭代执行sql的操作，转换为一条语句执行，或批量执行。</li>
-<li>14.尝试将串行转并行<ul>
+<li>7.将无参数依赖的函数或者功能，转为类变量或者cached_property。</li>
+<li>8.去重时在set中判断 而不是 list.</li>
+<li>9.对于重复遍历的数据。先以id或者其他label建立mapping，减少遍历次数。</li>
+<li>10.对于可缓存参数的函数。添加<code>function_tools.lru_cache</code>或者 <code>pyhon2.7</code>里的<code>backports.functools_lru_cache.lru_cache</code>或者对于逻辑不复杂的，直接建立<code>mapping</code>全局变量保存</li>
+<li>11.预生成结果。对于参数规模可以预测的，预先生成全局mapping即可。</li>
+<li>12.减少数据库操作。迭代执行sql的操作，转换为一条语句执行，或批量执行。</li>
+<li>13.尝试将串行转并行<ul>
 <li>对于执行结果无依赖的逻辑,可串行执行。如使用子进程生成结果时，如果生成的结果在当前函数里不在读取，可直接执行子进程，然后在函数末尾等待进程结束。</li>
 </ul>
 </li>
-<li>15.对于IO密集型的程序（大量时间在等待IO），使用多线程，简单实现可直接使用线程池<code>multiprocessing.dummy.Pool</code>.</li>
-<li>16.对于计算密集型程序（大量时间是执行算法逻辑），使用低级语言，多任务，分布式，异步任务和消息队列，高性能计算。如<code>Cpython实现,numpy,cpickle</code>,<code>multiprocessing</code>，<code>celery+rabbitmq+GFS</code>, <code>numba</code>。</li>
-<li>17.对于web程序,使用异步IO。如添加<code>gevent</code>支持，使用<code>tornado web框架</code>, 使用<code>python3 await/async</code>新特性。</li>
+<li>14.对于IO密集型的程序（大量时间在等待IO），使用多线程，简单实现可直接使用线程池<code>multiprocessing.dummy.Pool</code>.</li>
+<li>15.对于计算密集型程序（大量时间是执行算法逻辑），使用低级语言，多任务，分布式，异步任务和消息队列，高性能计算。如<code>Cpython实现,numpy,cpickle</code>,<code>multiprocessing</code>，<code>celery+rabbitmq+GFS</code>, <code>numba</code>。</li>
+<li>16.对于web程序,使用异步IO。如添加<code>gevent</code>支持，使用<code>tornado web框架</code>, 使用<code>python3 await/async</code>新特性。</li>
+<li>17.对于网络接口添加缓存。如使用内存数据库<code>memcache</code>, 可持久化内存数据库<code>redis</code>,mmap类数据库<code>mongo</code>等缓存服务。</li>
+<li>18.建立本地缓存。如在前端使用<code>localstorage</code>缓存接口数据，安卓使用<code>sqlite</code>缓存离线数据。</li>
+<li>19.页面静态化。如将页面分块后转为静态文件，以前只在java web项目中见到过。</li>
+<li>20.升级硬件，网络，增加CDN服务。有钱可以优先考虑这个。</li>
 </ul>
 <h2 id="优化后如何保持"><a href="#优化后如何保持" class="headerlink" title="优化后如何保持"></a>优化后如何保持</h2><ul>
 <li>使用<code>pylint</code>等工具做静态代码检查，并加入持续集成。</li>
@@ -969,6 +973,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">加密解密</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">总结</a>
               </li>
              
@@ -989,15 +1001,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">加密解密</a>
+                <a href="javascript:void(0)" class="js-tag color5">冒泡排序</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">python</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">二分查找</a>
+                <a href="javascript:void(0)" class="js-tag color5">插入排序</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1013,6 +1021,22 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">二分查找</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">书单</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">看书</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">缓存</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">学习</a>
               </li>
              
@@ -1022,30 +1046,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">二叉树</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">冒泡排序</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">插入排序</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">缓存</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">幂等性</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">微服务</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">服务治理</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1061,19 +1061,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">书单</a>
+                <a href="javascript:void(0)" class="js-tag color4">幂等性</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">看书</a>
+                <a href="javascript:void(0)" class="js-tag color4">微服务</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">游记</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">生活</a>
+                <a href="javascript:void(0)" class="js-tag color5">服务治理</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1086,6 +1082,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">感悟</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">游记</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">生活</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1157,14 +1161,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">激光雷达</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">机器人</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">电子</a>
               </li>
              
@@ -1178,6 +1174,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">智能小车</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">激光雷达</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">机器人</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1273,10 +1277,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">xmpp</a>
               </li>
              
@@ -1286,6 +1286,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">模块</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
               </li>
              
               <li class="article-tag-list-item">
