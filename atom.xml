@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.javabin.cn/"/>
-  <updated>2019-11-16T15:36:25.542Z</updated>
+  <updated>2019-11-28T16:02:39.334Z</updated>
   <id>http://www.javabin.cn/</id>
   
   <author>
@@ -15,6 +15,28 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Python性能优化浅谈</title>
+    <link href="http://www.javabin.cn/2019/python_profile.html"/>
+    <id>http://www.javabin.cn/2019/python_profile.html</id>
+    <published>2019-11-28T13:39:11.000Z</published>
+    <updated>2019-11-28T16:02:39.334Z</updated>
+    
+    <content type="html"><![CDATA[<p>最近在做一些性能优化方面的工作，总结一下遇到的一些问题和解决方法。<br><a id="more"></a></p><h2 id="优化哪里？"><a href="#优化哪里？" class="headerlink" title="优化哪里？"></a>优化哪里？</h2><p>既然需要性能优化，肯定是程序运行缓慢，那首先需要知道的是<code>慢在哪里</code>？<code>从哪里开始优化</code>?下面分情况说一下这个问题。</p><h3 id="系统那一部分运行缓慢"><a href="#系统那一部分运行缓慢" class="headerlink" title="系统那一部分运行缓慢?"></a>系统那一部分运行缓慢?</h3><p>对于分布式或者大型系统，由于子模块较多，组件较多，某一部分的运行缓慢可能会导致整个系统的运行缓慢。定位子模块，组件的方法很简单，只需要分别对每个部分进行benchmark,统计出每个部分的运行时间即可。常用的方法有：</p><ul><li><p>1.最简单的，直接使用，调用，运行单独的部分，统计运行时间。</p><ul><li>如:检查接口缓慢时。可先检查网络是否正常<code>ping  myserver.com</code> ，然后检查nginx是否正常<code>time curl -IL http://www.myserver.com/1.png</code> 接着检查web 服务是否缓慢  <code>time curl -IL http://www.myserver.com/api/v1/2</code>  </li></ul></li><li><p>2.在应用中添加统计运行时间的日志。</p><ul><li>如配置<code>logging</code>,或者开启服务的<code>慢查询日志</code>。</li></ul></li><li>3.借助相关工具查看性能差异。<ul><li>如:<code>top,htop</code>查看系统负载。<code>redis-benchmark，memaslap</code>等测试服务性能。</li></ul></li></ul><h3 id="Python程序缓慢如何定位"><a href="#Python程序缓慢如何定位" class="headerlink" title="Python程序缓慢如何定位"></a>Python程序缓慢如何定位</h3><ul><li>1.程序不是我写的,源码丢失。<ul><li>将pyc反编译为py。借助<code>uncompile2</code>工具反编译。记得<code>IDA 反编译工具</code>也可以，具体我没有试过，可以研究下。</li><li>使用<code>strace</code>  加载运行的进程，然后尝试触发缓慢的操作，接着将日志dump出来。可通过对日志中的系统调用时间进行分析，来确认那一部分缓慢，一般需要这样操作的情况，很大可能需要关注<code>socket</code>的 <code>recv send</code> 调用或者对<code>mutex_lock</code>锁的请求。</li></ul></li><li>2.有源码，但是只能线上运行或者只能线上重现。<ul><li><code>strace</code> 加载运行的进程</li><li>加日志分析统计运行缓慢的地方</li></ul></li><li>3.正常情况<ul><li>使用<code>cprofile,line_profiler,vprof,yappi_profiler</code>之类的工具分析程序中各个函数的调用次数和时间</li><li>使用<code>Pycham</code>自带的<code>profile</code>工具，直接run菜单点击<code>Profile &#39;xxx.py&#39;</code>即可。自带的工具支持<code>call graph</code>模式查看耗时情况，非常直观。</li></ul></li></ul><h2 id="如何优化"><a href="#如何优化" class="headerlink" title="如何优化"></a>如何优化</h2><h3 id="Python中一般优化方法"><a href="#Python中一般优化方法" class="headerlink" title="Python中一般优化方法"></a>Python中一般优化方法</h3><ul><li>1.低风险高收益的情况。优化调用次数高的 util 方法，公共方法，多重迭代中调用的方法。 </li><li>2.高风险的情况。优化（重构）指定复杂函数的实现，优化拥有大量逻辑的方法，优化不熟悉的逻辑，改变函数功能。</li></ul><h3 id="开始优化"><a href="#开始优化" class="headerlink" title="开始优化"></a>开始优化</h3><ul><li>1.尝试去掉无用的<code>deepcopy</code>,<code>deepcopy</code>中为了检测相互引用，性能损失非常大。干掉deepcopy的方法如下:<ul><li>使用浅拷贝或者赋值。分析逻辑，如果deepcopy的结果只是修改了1,2层，直接使用copy,或者列表推导式重新生成一个修改后的结果。</li><li>使用其他序列化方法。如果只是字典，可<code>json.loads(json.dumps(x))</code>，注意:这种操作会导致<code>int类型的key被转换为字符串</code>，如果无法接受，请不要采取这种方法。</li></ul></li><li>3.将正则表达式提前编译<ul><li>当被大量调用时，<code>re.search(r&#39;xc+&#39;, &#39;xxxccxx&#39;)</code>要比先一次<code>p=re.compile(r&#39;xc+&#39;)</code>之后再<code>p.search(&#39;xxxccxx&#39;)</code>慢很多。原因是正则表达使用时如果没有编译的话，会先进行编译，然后缓存下来，但是这个缓存很小，先编译并自行保存起来将可以有效提升速度。</li></ul></li><li>4.使用C库替换py库，如使用<code>cPickle替换pickle</code>。</li><li>5.去掉不需要的迭代。如使用<code>(x for x in c if x.id==1)替代[x for x in c if x.id==1]</code>，使用<code>xrange替代range</code></li><li>6.去掉无用的逻辑。如 <code>while len(x) &gt; idx</code>先计算出<code>cnt = len(x) 然后在while cnt &gt; idx</code></li><li>8.将无参数依赖的函数或者功能，转为类变量。</li><li>9.去重时在set中判断 而不是 list.</li><li>10.对于重复遍历的数据。先以id或者其他label建立mapping，减少遍历次数。</li><li>11.减少数据库操作。迭代执行sql的操作，转换为一条语句执行，或批量执行。</li><li>12.尝试将串行转并行<ul><li>对于执行结果无依赖的逻辑,可串行执行。如使用子进程生成结果时，如果生成的结果在当前函数里不在读取，可直接执行子进程，然后在函数末尾等待进程结束。</li></ul></li><li>13.对于IO密集型的程序（大量时间在等待IO），使用多线程，简单实现可直接使用线程池<code>multiprocessing.dummy.Pool</code>.</li><li>14.对于计算密集型程序（大量时间是执行算法逻辑），使用低级语言，多任务，分布式，异步任务和消息队列，高性能计算。如<code>Cpython实现,numpy,cpickle</code>,<code>multiprocessing</code>，<code>celery+rabbitmq+GFS</code>, <code>numba</code>。</li><li>15.对于web程序,使用异步IO。如添加<code>gevent</code>支持，使用<code>tornado web框架</code>, 使用<code>python3 await/async</code>新特性。</li></ul><h2 id="优化后如何保持"><a href="#优化后如何保持" class="headerlink" title="优化后如何保持"></a>优化后如何保持</h2><ul><li>使用<code>pylint</code>等工具做静态代码检查，并加入持续集成。</li><li>进行<code>code review</code></li><li>使用<code>ngios，zabbix</code>等做监控，加入性能监控脚本，业务中使用<code>statsd, logging</code>加入<code>benchmark</code>检测埋点，持续监控<code>slow query</code>,<code>slow log</code>。</li><li>进行 单元/API测试（保证代码 可单元测试）</li><li>对单一服务进行benchmark测试。</li><li>升级硬件</li></ul><h2 id="性能与实现简单之间的平衡"><a href="#性能与实现简单之间的平衡" class="headerlink" title="性能与实现简单之间的平衡"></a>性能与实现简单之间的平衡</h2><ul><li>先做低风险高收益优化</li><li>可以升级硬件解决的也不是啥大问题</li><li>太复杂必然会带入bug</li><li>做好充足测试</li></ul>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;最近在做一些性能优化方面的工作，总结一下遇到的一些问题和解决方法。&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="总结" scheme="http://www.javabin.cn/tags/%E6%80%BB%E7%BB%93/"/>
+    
+      <category term="性能优化" scheme="http://www.javabin.cn/tags/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/"/>
+    
+  </entry>
   
   <entry>
     <title>pgsql中的日期处理</title>
@@ -140,28 +162,6 @@
   </entry>
   
   <entry>
-    <title>我的书单[2019]</title>
-    <link href="http://www.javabin.cn/2019/book_list.html"/>
-    <id>http://www.javabin.cn/2019/book_list.html</id>
-    <published>2019-08-23T15:10:54.000Z</published>
-    <updated>2019-09-02T18:16:13.477Z</updated>
-    
-    <content type="html"><![CDATA[<p>我的2019书单<br><a id="more"></a></p><h2 id="Java并发编程的艺术"><a href="#Java并发编程的艺术" class="headerlink" title="Java并发编程的艺术"></a><del>Java并发编程的艺术</del></h2><p>java并发编程相关的多线程，锁优化，虚拟机都有讲到。</p><h2 id="穷爸爸富爸爸"><a href="#穷爸爸富爸爸" class="headerlink" title="穷爸爸富爸爸"></a><del>穷爸爸富爸爸</del></h2><p>讲财商的，不想一辈子搬砖的话可以了解一下。</p><h2 id="卡耐基沟通与人际关系"><a href="#卡耐基沟通与人际关系" class="headerlink" title="卡耐基沟通与人际关系"></a><del>卡耐基沟通与人际关系</del></h2><p>卡耐基系列，讲如何更好得与别人相处。</p><h2 id="重来2"><a href="#重来2" class="headerlink" title="重来2"></a>重来2</h2><p>关于远程工作</p><h2 id="暗时间"><a href="#暗时间" class="headerlink" title="暗时间"></a><del>暗时间</del></h2><p>程序员总结的一些知识，心理学，学习，编程</p><h2 id="程序员的呐喊"><a href="#程序员的呐喊" class="headerlink" title="程序员的呐喊"></a><del>程序员的呐喊</del></h2><p>程序员的总结，让学习编译原理，操作系统，学习其他语言。学习lisp和EMACS。</p><h2 id="黑客与画家"><a href="#黑客与画家" class="headerlink" title="黑客与画家"></a><del>黑客与画家</del></h2><p>关于创业。</p><h2 id="两周自制脚本语言"><a href="#两周自制脚本语言" class="headerlink" title="两周自制脚本语言"></a>两周自制脚本语言</h2><p>编译原理</p><h2 id="代码整洁之道"><a href="#代码整洁之道" class="headerlink" title="代码整洁之道"></a>代码整洁之道</h2><p>保证写的代码易维护</p><h2 id="代码大全"><a href="#代码大全" class="headerlink" title="代码大全"></a>代码大全</h2><p>看了一部分。编写代码中遇到的各种问题的处理方式。</p><h2 id="机器学习实战"><a href="#机器学习实战" class="headerlink" title="机器学习实战"></a>机器学习实战</h2><p>机器学习相关的算法的Python实现</p><h2 id="大型网站技术架构"><a href="#大型网站技术架构" class="headerlink" title="大型网站技术架构"></a><del>大型网站技术架构</del></h2><p>标题即内容。</p><h2 id="python-cookbook"><a href="#python-cookbook" class="headerlink" title="python cookbook"></a><del>python cookbook</del></h2><p>Python必看。</p><h2 id="流畅的python"><a href="#流畅的python" class="headerlink" title="流畅的python"></a><del>流畅的python</del></h2><p>Python必看</p><h2 id="金字塔原理"><a href="#金字塔原理" class="headerlink" title="金字塔原理"></a><del>金字塔原理</del></h2><p>讲 写文章的逻辑，说话的逻辑。</p><h2 id="tensorflow-实战google深度学习框架"><a href="#tensorflow-实战google深度学习框架" class="headerlink" title="tensorflow 实战google深度学习框架"></a><del>tensorflow 实战google深度学习框架</del></h2><p>学习tensorflow非常棒的一本书，从是什么到为什么，再到怎么做。又避开了部分冗长的数学证明。初学者可以一边看一边实战，入门很棒。</p><h2 id="重构-改善既有代码的设计"><a href="#重构-改善既有代码的设计" class="headerlink" title="重构 :改善既有代码的设计"></a>重构 :改善既有代码的设计</h2><p>如何对现有系统进行重构，接手他人项目的话，这本书很有帮助。</p><h2 id="大型网站技术架构-核心原理与案例分析"><a href="#大型网站技术架构-核心原理与案例分析" class="headerlink" title="大型网站技术架构:核心原理与案例分析"></a><del>大型网站技术架构:核心原理与案例分析</del></h2><p>标题即内容</p><h2 id="系统之美"><a href="#系统之美" class="headerlink" title="系统之美"></a>系统之美</h2><p>未看</p><h2 id="HeadFirst设计模式"><a href="#HeadFirst设计模式" class="headerlink" title="HeadFirst设计模式"></a>HeadFirst设计模式</h2><p>只看了几个常用的，书太厚。</p><h2 id="编程珠玑"><a href="#编程珠玑" class="headerlink" title="编程珠玑"></a>编程珠玑</h2><p>算法和数据结构之美</p><h2 id="软技能-代码之外的生存指南"><a href="#软技能-代码之外的生存指南" class="headerlink" title="软技能: 代码之外的生存指南"></a><del>软技能: 代码之外的生存指南</del></h2><p>程序员必读，世界观修正</p><h2 id="程序员修炼之道-从小工到专家"><a href="#程序员修炼之道-从小工到专家" class="headerlink" title="程序员修炼之道:从小工到专家"></a>程序员修炼之道:从小工到专家</h2><p>未看</p><h2 id="计算机程序的构造和解释"><a href="#计算机程序的构造和解释" class="headerlink" title="计算机程序的构造和解释"></a>计算机程序的构造和解释</h2><p>未看</p><h2 id="人月神话"><a href="#人月神话" class="headerlink" title="人月神话"></a>人月神话</h2><p>软件管理相关的。</p><h2 id="时间的形状-相对论史话"><a href="#时间的形状-相对论史话" class="headerlink" title="时间的形状-相对论史话"></a><del>时间的形状-相对论史话</del></h2><p>关于经典物理学和现代物理学发展的。从低速到高速，从宇宙到量子，从非惯性系到非惯性系，从经典物理学到量子物理学，两个字 神奇。</p><h2 id="人性的弱点"><a href="#人性的弱点" class="headerlink" title="人性的弱点"></a><del>人性的弱点</del></h2><p>卡耐基的书，讲与人交往的，包括与朋友，父母，孩子等。</p><h2 id="算法第四版"><a href="#算法第四版" class="headerlink" title="算法第四版"></a>算法第四版</h2><p>只看了红黑树之前</p><h2 id="算法的java实现"><a href="#算法的java实现" class="headerlink" title="算法的java实现"></a>算法的java实现</h2><p>只看了红黑树之前</p><h2 id="三体1-2-3"><a href="#三体1-2-3" class="headerlink" title="三体1/2/3"></a><del>三体1/2/3</del></h2><p>脑洞大开。科幻巨著。</p><h2 id="Rabbitmq实战指南"><a href="#Rabbitmq实战指南" class="headerlink" title="Rabbitmq实战指南"></a><del>Rabbitmq实战指南</del></h2><p>一书搞懂rabbitmq</p><h2 id="Linux-shell命令和编辑器？"><a href="#Linux-shell命令和编辑器？" class="headerlink" title="Linux shell命令和编辑器？"></a><del>Linux shell命令和编辑器？</del></h2><p>刚看完，貌似叫这个名字。linux命令一锅炖了，顺便讲了自带的几种编辑器的用法。</p><h2 id="erlang程序设计"><a href="#erlang程序设计" class="headerlink" title="erlang程序设计"></a>erlang程序设计</h2><p>打算看。以并发编程的模式思考问题。</p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;我的2019书单&lt;br&gt;
-    
-    </summary>
-    
-    
-      <category term="书单" scheme="http://www.javabin.cn/tags/%E4%B9%A6%E5%8D%95/"/>
-    
-      <category term="看书" scheme="http://www.javabin.cn/tags/%E7%9C%8B%E4%B9%A6/"/>
-    
-  </entry>
-  
-  <entry>
     <title>一次Python电话面试经验分享[GET offer]</title>
     <link href="http://www.javabin.cn/2019/iv_cd_01.html"/>
     <id>http://www.javabin.cn/2019/iv_cd_01.html</id>
@@ -180,6 +180,28 @@
       <category term="总结" scheme="http://www.javabin.cn/tags/%E6%80%BB%E7%BB%93/"/>
     
       <category term="面试" scheme="http://www.javabin.cn/tags/%E9%9D%A2%E8%AF%95/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>我的书单[2019]</title>
+    <link href="http://www.javabin.cn/2019/book_list.html"/>
+    <id>http://www.javabin.cn/2019/book_list.html</id>
+    <published>2019-08-23T15:10:54.000Z</published>
+    <updated>2019-09-02T18:16:13.477Z</updated>
+    
+    <content type="html"><![CDATA[<p>我的2019书单<br><a id="more"></a></p><h2 id="Java并发编程的艺术"><a href="#Java并发编程的艺术" class="headerlink" title="Java并发编程的艺术"></a><del>Java并发编程的艺术</del></h2><p>java并发编程相关的多线程，锁优化，虚拟机都有讲到。</p><h2 id="穷爸爸富爸爸"><a href="#穷爸爸富爸爸" class="headerlink" title="穷爸爸富爸爸"></a><del>穷爸爸富爸爸</del></h2><p>讲财商的，不想一辈子搬砖的话可以了解一下。</p><h2 id="卡耐基沟通与人际关系"><a href="#卡耐基沟通与人际关系" class="headerlink" title="卡耐基沟通与人际关系"></a><del>卡耐基沟通与人际关系</del></h2><p>卡耐基系列，讲如何更好得与别人相处。</p><h2 id="重来2"><a href="#重来2" class="headerlink" title="重来2"></a>重来2</h2><p>关于远程工作</p><h2 id="暗时间"><a href="#暗时间" class="headerlink" title="暗时间"></a><del>暗时间</del></h2><p>程序员总结的一些知识，心理学，学习，编程</p><h2 id="程序员的呐喊"><a href="#程序员的呐喊" class="headerlink" title="程序员的呐喊"></a><del>程序员的呐喊</del></h2><p>程序员的总结，让学习编译原理，操作系统，学习其他语言。学习lisp和EMACS。</p><h2 id="黑客与画家"><a href="#黑客与画家" class="headerlink" title="黑客与画家"></a><del>黑客与画家</del></h2><p>关于创业。</p><h2 id="两周自制脚本语言"><a href="#两周自制脚本语言" class="headerlink" title="两周自制脚本语言"></a>两周自制脚本语言</h2><p>编译原理</p><h2 id="代码整洁之道"><a href="#代码整洁之道" class="headerlink" title="代码整洁之道"></a>代码整洁之道</h2><p>保证写的代码易维护</p><h2 id="代码大全"><a href="#代码大全" class="headerlink" title="代码大全"></a>代码大全</h2><p>看了一部分。编写代码中遇到的各种问题的处理方式。</p><h2 id="机器学习实战"><a href="#机器学习实战" class="headerlink" title="机器学习实战"></a>机器学习实战</h2><p>机器学习相关的算法的Python实现</p><h2 id="大型网站技术架构"><a href="#大型网站技术架构" class="headerlink" title="大型网站技术架构"></a><del>大型网站技术架构</del></h2><p>标题即内容。</p><h2 id="python-cookbook"><a href="#python-cookbook" class="headerlink" title="python cookbook"></a><del>python cookbook</del></h2><p>Python必看。</p><h2 id="流畅的python"><a href="#流畅的python" class="headerlink" title="流畅的python"></a><del>流畅的python</del></h2><p>Python必看</p><h2 id="金字塔原理"><a href="#金字塔原理" class="headerlink" title="金字塔原理"></a><del>金字塔原理</del></h2><p>讲 写文章的逻辑，说话的逻辑。</p><h2 id="tensorflow-实战google深度学习框架"><a href="#tensorflow-实战google深度学习框架" class="headerlink" title="tensorflow 实战google深度学习框架"></a><del>tensorflow 实战google深度学习框架</del></h2><p>学习tensorflow非常棒的一本书，从是什么到为什么，再到怎么做。又避开了部分冗长的数学证明。初学者可以一边看一边实战，入门很棒。</p><h2 id="重构-改善既有代码的设计"><a href="#重构-改善既有代码的设计" class="headerlink" title="重构 :改善既有代码的设计"></a>重构 :改善既有代码的设计</h2><p>如何对现有系统进行重构，接手他人项目的话，这本书很有帮助。</p><h2 id="大型网站技术架构-核心原理与案例分析"><a href="#大型网站技术架构-核心原理与案例分析" class="headerlink" title="大型网站技术架构:核心原理与案例分析"></a><del>大型网站技术架构:核心原理与案例分析</del></h2><p>标题即内容</p><h2 id="系统之美"><a href="#系统之美" class="headerlink" title="系统之美"></a>系统之美</h2><p>未看</p><h2 id="HeadFirst设计模式"><a href="#HeadFirst设计模式" class="headerlink" title="HeadFirst设计模式"></a>HeadFirst设计模式</h2><p>只看了几个常用的，书太厚。</p><h2 id="编程珠玑"><a href="#编程珠玑" class="headerlink" title="编程珠玑"></a>编程珠玑</h2><p>算法和数据结构之美</p><h2 id="软技能-代码之外的生存指南"><a href="#软技能-代码之外的生存指南" class="headerlink" title="软技能: 代码之外的生存指南"></a><del>软技能: 代码之外的生存指南</del></h2><p>程序员必读，世界观修正</p><h2 id="程序员修炼之道-从小工到专家"><a href="#程序员修炼之道-从小工到专家" class="headerlink" title="程序员修炼之道:从小工到专家"></a>程序员修炼之道:从小工到专家</h2><p>未看</p><h2 id="计算机程序的构造和解释"><a href="#计算机程序的构造和解释" class="headerlink" title="计算机程序的构造和解释"></a>计算机程序的构造和解释</h2><p>未看</p><h2 id="人月神话"><a href="#人月神话" class="headerlink" title="人月神话"></a>人月神话</h2><p>软件管理相关的。</p><h2 id="时间的形状-相对论史话"><a href="#时间的形状-相对论史话" class="headerlink" title="时间的形状-相对论史话"></a><del>时间的形状-相对论史话</del></h2><p>关于经典物理学和现代物理学发展的。从低速到高速，从宇宙到量子，从非惯性系到非惯性系，从经典物理学到量子物理学，两个字 神奇。</p><h2 id="人性的弱点"><a href="#人性的弱点" class="headerlink" title="人性的弱点"></a><del>人性的弱点</del></h2><p>卡耐基的书，讲与人交往的，包括与朋友，父母，孩子等。</p><h2 id="算法第四版"><a href="#算法第四版" class="headerlink" title="算法第四版"></a>算法第四版</h2><p>只看了红黑树之前</p><h2 id="算法的java实现"><a href="#算法的java实现" class="headerlink" title="算法的java实现"></a>算法的java实现</h2><p>只看了红黑树之前</p><h2 id="三体1-2-3"><a href="#三体1-2-3" class="headerlink" title="三体1/2/3"></a><del>三体1/2/3</del></h2><p>脑洞大开。科幻巨著。</p><h2 id="Rabbitmq实战指南"><a href="#Rabbitmq实战指南" class="headerlink" title="Rabbitmq实战指南"></a><del>Rabbitmq实战指南</del></h2><p>一书搞懂rabbitmq</p><h2 id="Linux-shell命令和编辑器？"><a href="#Linux-shell命令和编辑器？" class="headerlink" title="Linux shell命令和编辑器？"></a><del>Linux shell命令和编辑器？</del></h2><p>刚看完，貌似叫这个名字。linux命令一锅炖了，顺便讲了自带的几种编辑器的用法。</p><h2 id="erlang程序设计"><a href="#erlang程序设计" class="headerlink" title="erlang程序设计"></a>erlang程序设计</h2><p>打算看。以并发编程的模式思考问题。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;我的2019书单&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="书单" scheme="http://www.javabin.cn/tags/%E4%B9%A6%E5%8D%95/"/>
+    
+      <category term="看书" scheme="http://www.javabin.cn/tags/%E7%9C%8B%E4%B9%A6/"/>
     
   </entry>
   
@@ -491,32 +513,6 @@
       <category term="pgsql" scheme="http://www.javabin.cn/tags/pgsql/"/>
     
       <category term="序列" scheme="http://www.javabin.cn/tags/%E5%BA%8F%E5%88%97/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>django中如何操作数据库视图</title>
-    <link href="http://www.javabin.cn/2019/orm_view.html"/>
-    <id>http://www.javabin.cn/2019/orm_view.html</id>
-    <published>2019-07-11T15:29:05.000Z</published>
-    <updated>2019-09-02T18:16:13.473Z</updated>
-    
-    <content type="html"><![CDATA[<p>如果业务中有一张表字段很多，一些字段更新特别频繁，一些字段基本不变，那么就需要对表进行垂直拆分，将不常用字段放入一个表，将经常更新的字段放入一个表。在对这多个表进行关联查询时，可以使用视图来进行查询，但是如何在django中使用orm操作数据库视图，实现拆分表的查询呢？</p><a id="more"></a><h2 id="视图"><a href="#视图" class="headerlink" title="视图"></a>视图</h2><p>视图是从一个或几个基本表（或视图）中导出的一个虚拟表，其内容由查询语句定义。</p><p>为什么要使用视图？视图简化了用户对数据的理解，简化了操作。对于经常使用的查询可以定义为视图，从而使得用户不必为以后的操作每次指定全部条件。比如我每次都要关联多张表进行查询，那么我可以建立一个关联查询这几张表的视图，每次我只需操作这个视图就行，对于我来说，可以认为这几张表关联的结果组成了一个新的表，而我只需对这个表进行操作即可。无需每次都指定查询语句进行关联查询。</p><h2 id="django中操作数据库视图"><a href="#django中操作数据库视图" class="headerlink" title="django中操作数据库视图"></a>django中操作数据库视图</h2><p>由于视图是一种虚拟表，可以像真实的表一样进行查询操作，我只需要将django的model映射到该视图即可。</p><h2 id="一个例子"><a href="#一个例子" class="headerlink" title="一个例子"></a>一个例子</h2><p>创建测试表的django model，测试表有两个，分别是存储一个人的基本信息和其他信息。</p><pre><code class="python">    #    from django.db import models    class ManBaseInfo(models.Model):        name= models.CharField(max_length=24)        sex = models.NullBooleanField()        age = models.SmallIntegerField()        class Meta:            app_label=&quot;app&quot; # 设置为app_label    class ManOtherInfo(models.Model):        company_name= models.CharField(max_length=125)        address= models.CharField(max_length=125)        class Meta:            app_label=&quot;app&quot;</code></pre><p>创建视图的django model,在视图中查询出两个表的所有字段。设置<code>Meta</code>的<code>managed</code>属性为false来告诉django不要管理这个model,也就是说在我执行<code>sync_db</code>同步数据库时，这个表不会自动创建，需要我手动创建。同时指定<code>db_table</code>来手动设置model对应的数据库的真实表名称。</p><pre><code class="python">    class ManInfo(models.Model):        name= models.CharField(max_length=24)        sex = models.NullBooleanField()        age = models.SmallIntegerField()        company_name= models.CharField(max_length=125)        address= models.CharField(max_length=125)        class Meta:            app_label=&quot;app&quot;             managed = False # django不管理该model的生成和销毁。            db_table = &quot;man_info_view&quot; # 指定视图名称</code></pre><p>创建数据库视图</p><pre><code class="python">    CREATE OR REPLACE VIEW man_info_view    AS    SELECT        app_manbaseinfo.id AS id,        app_manbaseinfo.name AS name,        app_manbaseinfo.age AS age,        app_manbaseinfo.sex AS sex,        app_manotherinfo.company_name AS company_name,        app_manotherinfo.address AS address    From        app_manbaseinfo LEFT JOIN app_manotherinfo        ON app_manbaseinfo.id=app_manotherinfo.id;</code></pre><p>如果我们想在django中查询这个视图</p><pre><code class="python">    ManInfo.object.filter(name=&quot;123&quot;).values_list(&quot;company_name&quot;, flat=1)</code></pre><p>如果我们想删除view</p><pre><code class="python">    drop view man_info_view;</code></pre>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;如果业务中有一张表字段很多，一些字段更新特别频繁，一些字段基本不变，那么就需要对表进行垂直拆分，将不常用字段放入一个表，将经常更新的字段放入一个表。在对这多个表进行关联查询时，可以使用视图来进行查询，但是如何在django中使用orm操作数据库视图，实现拆分表的查询呢？&lt;/p&gt;
-    
-    </summary>
-    
-    
-      <category term="总结" scheme="http://www.javabin.cn/tags/%E6%80%BB%E7%BB%93/"/>
-    
-      <category term="django" scheme="http://www.javabin.cn/tags/django/"/>
-    
-      <category term="数据库" scheme="http://www.javabin.cn/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
-    
-      <category term="视图" scheme="http://www.javabin.cn/tags/%E8%A7%86%E5%9B%BE/"/>
     
   </entry>
   
