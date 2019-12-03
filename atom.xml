@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.javabin.cn/"/>
-  <updated>2019-11-28T16:28:42.436Z</updated>
+  <updated>2019-12-03T19:05:14.060Z</updated>
   <id>http://www.javabin.cn/</id>
   
   <author>
@@ -15,6 +15,30 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>由`数据不一致`引起的对事物处理，事物可见性和session缓存的思考</title>
+    <link href="http://www.javabin.cn/2019/sqlalchemy_session.html"/>
+    <id>http://www.javabin.cn/2019/sqlalchemy_session.html</id>
+    <published>2019-12-03T14:39:11.000Z</published>
+    <updated>2019-12-03T19:05:14.060Z</updated>
+    
+    <content type="html"><![CDATA[<p>最近遇到一个问题：使用<code>sqlalchemy</code>创建了两个session,然后在第一个session里创建了一条数据，并commit到数据库后，在第二个session中修改了这条数据并commit到数据库，接着回到第一个session中查询,查询到的竟然是没有修改之前的数据。<br><a id="more"></a></p><h2 id="猜测原因"><a href="#猜测原因" class="headerlink" title="猜测原因"></a>猜测原因</h2><p>刚开始猜测到了两种原因：session缓存，事物可见性。这里一一说一下每种的分析。</p><h3 id="猜测是事物可见性导致的"><a href="#猜测是事物可见性导致的" class="headerlink" title="猜测是事物可见性导致的"></a>猜测是事物可见性导致的</h3><p>由于关闭了<code>auto commit</code>，采用手动显示提交事物的方式。猜测第一个session中的查询处于事物中，导致无法看到另一个session中事物对数据库做出的修改。</p><p>调试方法:<br>1.单步debug后发现的确是第一个session在最后一次查询时，查询到的结果和数据库不一致。第二个session的修改内容没有在这里体现。<br>2.对第一个session中创建对象并commit之后的<code>session</code>对象调试，发现它的<code>transaction</code>属性的状态为<code>ACTIVE</code><br>3.继续进入源码调试发现<code>transaction</code>状态在提交后会变为CLOSED然后又会重新开始一个事物。也就是说<code>第二个session修改数据时，第一个session也处于事物中</code>。</p><pre><code class="python">    # transaction的close方法中将自己的状态置为CLOSED,然后又开始一个事物。     def close(self, invalidate=False):        self.session.transaction = self._parent        if self._parent is None:            for connection, transaction, autoclose in set(                self._connections.values()            ):                if invalidate:                    connection.invalidate()                if autoclose:                    connection.close()                else:                    transaction.close()        self._state = CLOSED        self.session.dispatch.after_transaction_end(self.session, self)        if self._parent is None:            if not self.session.autocommit:                self.session.begin()        self.session = None        self._connections = None</code></pre><p>4.但是第二个session的事物明明已经提交了，在处于默认的事物级别（读已提交READ_COMMITED）下按理第一个session是可以读到修改的数据的。但是还是尝试下是否可以解决问题。即查询前提交或者放弃一次事物。</p><p>解决方法：<br>在查询之前调用一次<code>session.commit()</code>或者<code>session.rollback()</code>即可，也<code>的确管用</code>。</p><h3 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h3><p><code>sqlalchemy</code>如果关闭<code>auto commit</code>的话，事物的管理是这样的：如果前一个事物被提交后，会将当前事物关闭，然后 马上重新开启一个事物。也就是说，你每时每刻都处于一个事物里，这会由于事物隔离级别导致不同事物间可能无法查询到写入数据库的数据。</p><p>但是目前这个场景却不是事物可见性导致的情况。因为第二个session 的事物已经提交，READ_COMMITED事物隔离级别下，这时数据库里的数据谁都可以查到的。（pgsql数据库查询默认事物隔离级别:<code>show default_transaction_isolation;</code>查看当前事物隔离级别:<code>show transaction_isolation;</code>）</p><h2 id="session-缓存"><a href="#session-缓存" class="headerlink" title="session 缓存"></a>session 缓存</h2><p>ORM框架建立了对象和数据库表之间的映射关系，当然也需要维护这个关系。一般都会实现持久化对象状态的维护(分别标记：未持久化的对象，已持久化到数据库的对象，已从数据库中删除的对象,已脱离session的对象等) <code>sqlalchemy</code>的状态可以查看文档:<a href="https://docs.sqlalchemy.org/en/13/orm/session_state_management.html" target="_blank" rel="noopener">持久化状态</a>)，而且也实现了session级的对象缓存，比如查询一个对象两次，第二次发现这个对象是已经持久化到数据库的对象，就不走数据库，直接从session缓存里取。这也就导致了，如果有两个session，那么每个session都不会知道自己从数据库里获取的对象已经被修改了，这时再从缓存中取的话，就会取出已经过期的数据。（一般以事物级别维护，同一个事物内才会如此）</p><h3 id="调试方法"><a href="#调试方法" class="headerlink" title="调试方法"></a>调试方法</h3><p>1.直接调用<code>session.expire(obj)</code>使当前对象过期后，查询数据库发现<code>查询结果和数据库一致</code>。<br>2.尝试打开<code>sqlalchemy</code>的<code>query log</code>. 在<code>create_engine</code>时设置<code>echo=True</code></p><pre><code class="python">    engine = create_engine(&quot;db_url&quot;, echo=True)</code></pre><p><del>发现无sql查询日志，说明从缓存中取了，结案了</del>。很遗憾，并没有。在进行简单测试时，<code>的确是从session缓存取了</code>，这没有问题。但是在我的场景里，第一个session创建的是B对象，第二个session实际修改的是对象A的关联对象 对象B的字段，查询时也有对B进行查询的SQL日志输出，无法通过无sql输出来说明是从缓存中查的。</p><p>3.debug一下，在第一个session查询对象A之后，尝试读出对象B和B的属性时。下断点。可以F7跟进时看到进入了下面的代码。</p><pre><code class="python">    class InstrumentedAttribute(QueryableAttribute):        &quot;&quot;&quot;Class bound instrumented attribute which adds basic        :term:`descriptor` methods.        See :class:`.QueryableAttribute` for a description of most features.        &quot;&quot;&quot;        def __set__(self, instance, value):            self.impl.set(                instance_state(instance), instance_dict(instance), value, None            )        def __delete__(self, instance):            self.impl.delete(instance_state(instance), instance_dict(instance))        def __get__(self, instance, owner):            if instance is None:                return self            dict_ = instance_dict(instance)            if self._supports_population and self.key in dict_:                return dict_[self.key]            else:                return self.impl.get(instance_state(instance), dict_)</code></pre><p>其中 <code>__get__</code>方法即为获取属性时调用的方法，获取B对象的属性时，发现传入的B对象的地址和第一个session初次创建的对象B的地址一致，直接是同一个对象。的确是缓存导致了数据不一致的情况。</p><h3 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h3><p>查询前<code>session.expire(obj)</code>，<code>session.refresh(obj)</code>或者<code>session.commit()</code>，<code>sessoion.rollback()</code></p><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul><li><code>sqlalchemy</code>关闭<code>auto commit</code>。就算commit后也其实一直在一个事物中</li><li>多个事物修改查询同一个数据，事物隔离级别和查询时机会影响查询的结果。</li><li>session缓存会出现拿到过期数据。</li></ul>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;最近遇到一个问题：使用&lt;code&gt;sqlalchemy&lt;/code&gt;创建了两个session,然后在第一个session里创建了一条数据，并commit到数据库后，在第二个session中修改了这条数据并commit到数据库，接着回到第一个session中查询,查询到的竟然是没有修改之前的数据。&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="总结" scheme="http://www.javabin.cn/tags/%E6%80%BB%E7%BB%93/"/>
+    
+      <category term="数据库" scheme="http://www.javabin.cn/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+      <category term="事物" scheme="http://www.javabin.cn/tags/%E4%BA%8B%E7%89%A9/"/>
+    
+  </entry>
   
   <entry>
     <title>Python性能优化浅谈</title>
@@ -162,28 +186,6 @@
   </entry>
   
   <entry>
-    <title>我的书单[2019]</title>
-    <link href="http://www.javabin.cn/2019/book_list.html"/>
-    <id>http://www.javabin.cn/2019/book_list.html</id>
-    <published>2019-08-23T15:10:54.000Z</published>
-    <updated>2019-09-02T18:16:13.477Z</updated>
-    
-    <content type="html"><![CDATA[<p>我的2019书单<br><a id="more"></a></p><h2 id="Java并发编程的艺术"><a href="#Java并发编程的艺术" class="headerlink" title="Java并发编程的艺术"></a><del>Java并发编程的艺术</del></h2><p>java并发编程相关的多线程，锁优化，虚拟机都有讲到。</p><h2 id="穷爸爸富爸爸"><a href="#穷爸爸富爸爸" class="headerlink" title="穷爸爸富爸爸"></a><del>穷爸爸富爸爸</del></h2><p>讲财商的，不想一辈子搬砖的话可以了解一下。</p><h2 id="卡耐基沟通与人际关系"><a href="#卡耐基沟通与人际关系" class="headerlink" title="卡耐基沟通与人际关系"></a><del>卡耐基沟通与人际关系</del></h2><p>卡耐基系列，讲如何更好得与别人相处。</p><h2 id="重来2"><a href="#重来2" class="headerlink" title="重来2"></a>重来2</h2><p>关于远程工作</p><h2 id="暗时间"><a href="#暗时间" class="headerlink" title="暗时间"></a><del>暗时间</del></h2><p>程序员总结的一些知识，心理学，学习，编程</p><h2 id="程序员的呐喊"><a href="#程序员的呐喊" class="headerlink" title="程序员的呐喊"></a><del>程序员的呐喊</del></h2><p>程序员的总结，让学习编译原理，操作系统，学习其他语言。学习lisp和EMACS。</p><h2 id="黑客与画家"><a href="#黑客与画家" class="headerlink" title="黑客与画家"></a><del>黑客与画家</del></h2><p>关于创业。</p><h2 id="两周自制脚本语言"><a href="#两周自制脚本语言" class="headerlink" title="两周自制脚本语言"></a>两周自制脚本语言</h2><p>编译原理</p><h2 id="代码整洁之道"><a href="#代码整洁之道" class="headerlink" title="代码整洁之道"></a>代码整洁之道</h2><p>保证写的代码易维护</p><h2 id="代码大全"><a href="#代码大全" class="headerlink" title="代码大全"></a>代码大全</h2><p>看了一部分。编写代码中遇到的各种问题的处理方式。</p><h2 id="机器学习实战"><a href="#机器学习实战" class="headerlink" title="机器学习实战"></a>机器学习实战</h2><p>机器学习相关的算法的Python实现</p><h2 id="大型网站技术架构"><a href="#大型网站技术架构" class="headerlink" title="大型网站技术架构"></a><del>大型网站技术架构</del></h2><p>标题即内容。</p><h2 id="python-cookbook"><a href="#python-cookbook" class="headerlink" title="python cookbook"></a><del>python cookbook</del></h2><p>Python必看。</p><h2 id="流畅的python"><a href="#流畅的python" class="headerlink" title="流畅的python"></a><del>流畅的python</del></h2><p>Python必看</p><h2 id="金字塔原理"><a href="#金字塔原理" class="headerlink" title="金字塔原理"></a><del>金字塔原理</del></h2><p>讲 写文章的逻辑，说话的逻辑。</p><h2 id="tensorflow-实战google深度学习框架"><a href="#tensorflow-实战google深度学习框架" class="headerlink" title="tensorflow 实战google深度学习框架"></a><del>tensorflow 实战google深度学习框架</del></h2><p>学习tensorflow非常棒的一本书，从是什么到为什么，再到怎么做。又避开了部分冗长的数学证明。初学者可以一边看一边实战，入门很棒。</p><h2 id="重构-改善既有代码的设计"><a href="#重构-改善既有代码的设计" class="headerlink" title="重构 :改善既有代码的设计"></a>重构 :改善既有代码的设计</h2><p>如何对现有系统进行重构，接手他人项目的话，这本书很有帮助。</p><h2 id="大型网站技术架构-核心原理与案例分析"><a href="#大型网站技术架构-核心原理与案例分析" class="headerlink" title="大型网站技术架构:核心原理与案例分析"></a><del>大型网站技术架构:核心原理与案例分析</del></h2><p>标题即内容</p><h2 id="系统之美"><a href="#系统之美" class="headerlink" title="系统之美"></a>系统之美</h2><p>未看</p><h2 id="HeadFirst设计模式"><a href="#HeadFirst设计模式" class="headerlink" title="HeadFirst设计模式"></a>HeadFirst设计模式</h2><p>只看了几个常用的，书太厚。</p><h2 id="编程珠玑"><a href="#编程珠玑" class="headerlink" title="编程珠玑"></a>编程珠玑</h2><p>算法和数据结构之美</p><h2 id="软技能-代码之外的生存指南"><a href="#软技能-代码之外的生存指南" class="headerlink" title="软技能: 代码之外的生存指南"></a><del>软技能: 代码之外的生存指南</del></h2><p>程序员必读，世界观修正</p><h2 id="程序员修炼之道-从小工到专家"><a href="#程序员修炼之道-从小工到专家" class="headerlink" title="程序员修炼之道:从小工到专家"></a>程序员修炼之道:从小工到专家</h2><p>未看</p><h2 id="计算机程序的构造和解释"><a href="#计算机程序的构造和解释" class="headerlink" title="计算机程序的构造和解释"></a>计算机程序的构造和解释</h2><p>未看</p><h2 id="人月神话"><a href="#人月神话" class="headerlink" title="人月神话"></a>人月神话</h2><p>软件管理相关的。</p><h2 id="时间的形状-相对论史话"><a href="#时间的形状-相对论史话" class="headerlink" title="时间的形状-相对论史话"></a><del>时间的形状-相对论史话</del></h2><p>关于经典物理学和现代物理学发展的。从低速到高速，从宇宙到量子，从非惯性系到非惯性系，从经典物理学到量子物理学，两个字 神奇。</p><h2 id="人性的弱点"><a href="#人性的弱点" class="headerlink" title="人性的弱点"></a><del>人性的弱点</del></h2><p>卡耐基的书，讲与人交往的，包括与朋友，父母，孩子等。</p><h2 id="算法第四版"><a href="#算法第四版" class="headerlink" title="算法第四版"></a>算法第四版</h2><p>只看了红黑树之前</p><h2 id="算法的java实现"><a href="#算法的java实现" class="headerlink" title="算法的java实现"></a>算法的java实现</h2><p>只看了红黑树之前</p><h2 id="三体1-2-3"><a href="#三体1-2-3" class="headerlink" title="三体1/2/3"></a><del>三体1/2/3</del></h2><p>脑洞大开。科幻巨著。</p><h2 id="Rabbitmq实战指南"><a href="#Rabbitmq实战指南" class="headerlink" title="Rabbitmq实战指南"></a><del>Rabbitmq实战指南</del></h2><p>一书搞懂rabbitmq</p><h2 id="Linux-shell命令和编辑器？"><a href="#Linux-shell命令和编辑器？" class="headerlink" title="Linux shell命令和编辑器？"></a><del>Linux shell命令和编辑器？</del></h2><p>刚看完，貌似叫这个名字。linux命令一锅炖了，顺便讲了自带的几种编辑器的用法。</p><h2 id="erlang程序设计"><a href="#erlang程序设计" class="headerlink" title="erlang程序设计"></a>erlang程序设计</h2><p>打算看。以并发编程的模式思考问题。</p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;我的2019书单&lt;br&gt;
-    
-    </summary>
-    
-    
-      <category term="书单" scheme="http://www.javabin.cn/tags/%E4%B9%A6%E5%8D%95/"/>
-    
-      <category term="看书" scheme="http://www.javabin.cn/tags/%E7%9C%8B%E4%B9%A6/"/>
-    
-  </entry>
-  
-  <entry>
     <title>一次Python电话面试经验分享[GET offer]</title>
     <link href="http://www.javabin.cn/2019/iv_cd_01.html"/>
     <id>http://www.javabin.cn/2019/iv_cd_01.html</id>
@@ -202,6 +204,28 @@
       <category term="总结" scheme="http://www.javabin.cn/tags/%E6%80%BB%E7%BB%93/"/>
     
       <category term="面试" scheme="http://www.javabin.cn/tags/%E9%9D%A2%E8%AF%95/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>我的书单[2019]</title>
+    <link href="http://www.javabin.cn/2019/book_list.html"/>
+    <id>http://www.javabin.cn/2019/book_list.html</id>
+    <published>2019-08-23T15:10:54.000Z</published>
+    <updated>2019-09-02T18:16:13.477Z</updated>
+    
+    <content type="html"><![CDATA[<p>我的2019书单<br><a id="more"></a></p><h2 id="Java并发编程的艺术"><a href="#Java并发编程的艺术" class="headerlink" title="Java并发编程的艺术"></a><del>Java并发编程的艺术</del></h2><p>java并发编程相关的多线程，锁优化，虚拟机都有讲到。</p><h2 id="穷爸爸富爸爸"><a href="#穷爸爸富爸爸" class="headerlink" title="穷爸爸富爸爸"></a><del>穷爸爸富爸爸</del></h2><p>讲财商的，不想一辈子搬砖的话可以了解一下。</p><h2 id="卡耐基沟通与人际关系"><a href="#卡耐基沟通与人际关系" class="headerlink" title="卡耐基沟通与人际关系"></a><del>卡耐基沟通与人际关系</del></h2><p>卡耐基系列，讲如何更好得与别人相处。</p><h2 id="重来2"><a href="#重来2" class="headerlink" title="重来2"></a>重来2</h2><p>关于远程工作</p><h2 id="暗时间"><a href="#暗时间" class="headerlink" title="暗时间"></a><del>暗时间</del></h2><p>程序员总结的一些知识，心理学，学习，编程</p><h2 id="程序员的呐喊"><a href="#程序员的呐喊" class="headerlink" title="程序员的呐喊"></a><del>程序员的呐喊</del></h2><p>程序员的总结，让学习编译原理，操作系统，学习其他语言。学习lisp和EMACS。</p><h2 id="黑客与画家"><a href="#黑客与画家" class="headerlink" title="黑客与画家"></a><del>黑客与画家</del></h2><p>关于创业。</p><h2 id="两周自制脚本语言"><a href="#两周自制脚本语言" class="headerlink" title="两周自制脚本语言"></a>两周自制脚本语言</h2><p>编译原理</p><h2 id="代码整洁之道"><a href="#代码整洁之道" class="headerlink" title="代码整洁之道"></a>代码整洁之道</h2><p>保证写的代码易维护</p><h2 id="代码大全"><a href="#代码大全" class="headerlink" title="代码大全"></a>代码大全</h2><p>看了一部分。编写代码中遇到的各种问题的处理方式。</p><h2 id="机器学习实战"><a href="#机器学习实战" class="headerlink" title="机器学习实战"></a>机器学习实战</h2><p>机器学习相关的算法的Python实现</p><h2 id="大型网站技术架构"><a href="#大型网站技术架构" class="headerlink" title="大型网站技术架构"></a><del>大型网站技术架构</del></h2><p>标题即内容。</p><h2 id="python-cookbook"><a href="#python-cookbook" class="headerlink" title="python cookbook"></a><del>python cookbook</del></h2><p>Python必看。</p><h2 id="流畅的python"><a href="#流畅的python" class="headerlink" title="流畅的python"></a><del>流畅的python</del></h2><p>Python必看</p><h2 id="金字塔原理"><a href="#金字塔原理" class="headerlink" title="金字塔原理"></a><del>金字塔原理</del></h2><p>讲 写文章的逻辑，说话的逻辑。</p><h2 id="tensorflow-实战google深度学习框架"><a href="#tensorflow-实战google深度学习框架" class="headerlink" title="tensorflow 实战google深度学习框架"></a><del>tensorflow 实战google深度学习框架</del></h2><p>学习tensorflow非常棒的一本书，从是什么到为什么，再到怎么做。又避开了部分冗长的数学证明。初学者可以一边看一边实战，入门很棒。</p><h2 id="重构-改善既有代码的设计"><a href="#重构-改善既有代码的设计" class="headerlink" title="重构 :改善既有代码的设计"></a>重构 :改善既有代码的设计</h2><p>如何对现有系统进行重构，接手他人项目的话，这本书很有帮助。</p><h2 id="大型网站技术架构-核心原理与案例分析"><a href="#大型网站技术架构-核心原理与案例分析" class="headerlink" title="大型网站技术架构:核心原理与案例分析"></a><del>大型网站技术架构:核心原理与案例分析</del></h2><p>标题即内容</p><h2 id="系统之美"><a href="#系统之美" class="headerlink" title="系统之美"></a>系统之美</h2><p>未看</p><h2 id="HeadFirst设计模式"><a href="#HeadFirst设计模式" class="headerlink" title="HeadFirst设计模式"></a>HeadFirst设计模式</h2><p>只看了几个常用的，书太厚。</p><h2 id="编程珠玑"><a href="#编程珠玑" class="headerlink" title="编程珠玑"></a>编程珠玑</h2><p>算法和数据结构之美</p><h2 id="软技能-代码之外的生存指南"><a href="#软技能-代码之外的生存指南" class="headerlink" title="软技能: 代码之外的生存指南"></a><del>软技能: 代码之外的生存指南</del></h2><p>程序员必读，世界观修正</p><h2 id="程序员修炼之道-从小工到专家"><a href="#程序员修炼之道-从小工到专家" class="headerlink" title="程序员修炼之道:从小工到专家"></a>程序员修炼之道:从小工到专家</h2><p>未看</p><h2 id="计算机程序的构造和解释"><a href="#计算机程序的构造和解释" class="headerlink" title="计算机程序的构造和解释"></a>计算机程序的构造和解释</h2><p>未看</p><h2 id="人月神话"><a href="#人月神话" class="headerlink" title="人月神话"></a>人月神话</h2><p>软件管理相关的。</p><h2 id="时间的形状-相对论史话"><a href="#时间的形状-相对论史话" class="headerlink" title="时间的形状-相对论史话"></a><del>时间的形状-相对论史话</del></h2><p>关于经典物理学和现代物理学发展的。从低速到高速，从宇宙到量子，从非惯性系到非惯性系，从经典物理学到量子物理学，两个字 神奇。</p><h2 id="人性的弱点"><a href="#人性的弱点" class="headerlink" title="人性的弱点"></a><del>人性的弱点</del></h2><p>卡耐基的书，讲与人交往的，包括与朋友，父母，孩子等。</p><h2 id="算法第四版"><a href="#算法第四版" class="headerlink" title="算法第四版"></a>算法第四版</h2><p>只看了红黑树之前</p><h2 id="算法的java实现"><a href="#算法的java实现" class="headerlink" title="算法的java实现"></a>算法的java实现</h2><p>只看了红黑树之前</p><h2 id="三体1-2-3"><a href="#三体1-2-3" class="headerlink" title="三体1/2/3"></a><del>三体1/2/3</del></h2><p>脑洞大开。科幻巨著。</p><h2 id="Rabbitmq实战指南"><a href="#Rabbitmq实战指南" class="headerlink" title="Rabbitmq实战指南"></a><del>Rabbitmq实战指南</del></h2><p>一书搞懂rabbitmq</p><h2 id="Linux-shell命令和编辑器？"><a href="#Linux-shell命令和编辑器？" class="headerlink" title="Linux shell命令和编辑器？"></a><del>Linux shell命令和编辑器？</del></h2><p>刚看完，貌似叫这个名字。linux命令一锅炖了，顺便讲了自带的几种编辑器的用法。</p><h2 id="erlang程序设计"><a href="#erlang程序设计" class="headerlink" title="erlang程序设计"></a>erlang程序设计</h2><p>打算看。以并发编程的模式思考问题。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;我的2019书单&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="书单" scheme="http://www.javabin.cn/tags/%E4%B9%A6%E5%8D%95/"/>
+    
+      <category term="看书" scheme="http://www.javabin.cn/tags/%E7%9C%8B%E4%B9%A6/"/>
     
   </entry>
   
@@ -487,32 +511,6 @@
       <category term="memcache" scheme="http://www.javabin.cn/tags/memcache/"/>
     
       <category term="压测" scheme="http://www.javabin.cn/tags/%E5%8E%8B%E6%B5%8B/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>pgsql序列冲突问题和序列相关操作</title>
-    <link href="http://www.javabin.cn/2019/pgsql_seq.html"/>
-    <id>http://www.javabin.cn/2019/pgsql_seq.html</id>
-    <published>2019-07-11T16:15:13.000Z</published>
-    <updated>2019-09-02T18:16:13.477Z</updated>
-    
-    <content type="html"><![CDATA[<p>给pgsql的某个表的id设置了自增主键，然后某一天突然发现插入数据时报主键冲突？select max(id) 显示产生的ID并不是最大值加一。</p><a id="more"></a><h2 id="序列"><a href="#序列" class="headerlink" title="序列"></a>序列</h2><p>特殊的单行表，序列发生器，用来为行或者表来生成唯一标识符。</p><p>pgsql中创建自增主键时，实际上创建了一个序列<code>tablename_colname_seq</code>，然后将主键的默认值指定为<code>nextval(&#39;tablename_colname_seq&#39;)</code>。这样当我们在插入数据且不设置主键的值时，主键默认值将是序列的下一个值。</p><h2 id="为什么会主键冲突"><a href="#为什么会主键冲突" class="headerlink" title="为什么会主键冲突"></a>为什么会主键冲突</h2><p>由于序列中下一个值和表中max(id)是没有关系的，如果我们手动插入数据时，指定的id值远大于max(id)。当下一次不指定主键默认值时，默认值还是以序列的值自增，在序列增长到和我们刚才手动指定的ID相等时，插入操作就会发生主键冲突。</p><h2 id="如何解决"><a href="#如何解决" class="headerlink" title="如何解决"></a>如何解决</h2><p>1.只需手动重置序列的当前值即可。</p><pre><code class="shell">    select setval(&#39;test_table_id_seq&#39;, (SELECT max(id) FROM test_table));</code></pre><p>2.如果需要手动指定ID，就都手动指定ID</p><p>3.使用uuid等代替自增ID</p><h2 id="序列的相关函数"><a href="#序列的相关函数" class="headerlink" title="序列的相关函数"></a>序列的相关函数</h2><pre><code class="shell">    # 查看序列当前位置    SELECT last_value FROM test_table_id_seq;    # 重置序列位置    alter sequence test_table_id_seq restart with 1111;    # 查看当前真实数据的最大ID    select max(id) from test_table;    # 将序列重置为ID最大值+1    select setval(&#39;test_table_id_seq&#39;, (SELECT max(id) FROM test_table));</code></pre>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;给pgsql的某个表的id设置了自增主键，然后某一天突然发现插入数据时报主键冲突？select max(id) 显示产生的ID并不是最大值加一。&lt;/p&gt;
-    
-    </summary>
-    
-    
-      <category term="总结" scheme="http://www.javabin.cn/tags/%E6%80%BB%E7%BB%93/"/>
-    
-      <category term="数据库" scheme="http://www.javabin.cn/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
-    
-      <category term="pgsql" scheme="http://www.javabin.cn/tags/pgsql/"/>
-    
-      <category term="序列" scheme="http://www.javabin.cn/tags/%E5%BA%8F%E5%88%97/"/>
     
   </entry>
   
