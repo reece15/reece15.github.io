@@ -6,7 +6,7 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://www.javabin.cn">
-  <title>由`数据不一致`引起的对事物处理，事物可见性和session缓存的思考 | 除了代码也想写点其他的</title>
+  <title>由数据不一致引起的对事物处理，事物可见性和session缓存的思考 | 除了代码也想写点其他的</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
   
@@ -17,14 +17,14 @@
   <meta name="description" content="最近遇到一个问题：使用sqlalchemy创建了两个session,然后在第一个session里创建了一条数据，并commit到数据库后，在第二个session中修改了这条数据并commit到数据库，接着回到第一个session中查询,查询到的竟然是没有修改之前的数据。">
 <meta name="keywords" content="sqlalchemy,自动开启事物,事物可见性,查询不生效,session缓存,数据库缓存">
 <meta property="og:type" content="article">
-<meta property="og:title" content="由`数据不一致`引起的对事物处理，事物可见性和session缓存的思考">
+<meta property="og:title" content="由数据不一致引起的对事物处理，事物可见性和session缓存的思考">
 <meta property="og:url" content="http://www.javabin.cn/2019/sqlalchemy_session.html">
 <meta property="og:site_name" content="除了代码也想写点其他的">
 <meta property="og:description" content="最近遇到一个问题：使用sqlalchemy创建了两个session,然后在第一个session里创建了一条数据，并commit到数据库后，在第二个session中修改了这条数据并commit到数据库，接着回到第一个session中查询,查询到的竟然是没有修改之前的数据。">
 <meta property="og:locale" content="Chinese">
-<meta property="og:updated_time" content="2019-12-03T19:05:14.060Z">
+<meta property="og:updated_time" content="2019-12-04T13:10:27.883Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="由`数据不一致`引起的对事物处理，事物可见性和session缓存的思考">
+<meta name="twitter:title" content="由数据不一致引起的对事物处理，事物可见性和session缓存的思考">
 <meta name="twitter:description" content="最近遇到一个问题：使用sqlalchemy创建了两个session,然后在第一个session里创建了一条数据，并commit到数据库后，在第二个session中修改了这条数据并commit到数据库，接着回到第一个session中查询,查询到的竟然是没有修改之前的数据。">
   
     <link rel="alternative" href="/atom.xml" title="除了代码也想写点其他的" type="application/atom+xml">
@@ -197,7 +197,7 @@ var _hmt = _hmt || [];
         
   
     <h1 class="article-title" itemprop="name">
-      由`数据不一致`引起的对事物处理，事物可见性和session缓存的思考
+      由数据不一致引起的对事物处理，事物可见性和session缓存的思考
     </h1>
   
 
@@ -212,7 +212,7 @@ var _hmt = _hmt || [];
     <div class="article-entry" itemprop="articleBody">
 	   
 		 
-	<img src="/photo_2019/db_cache_trans.jpg" width="500px" title="由`数据不一致`引起的对事物处理，事物可见性和session缓存的思考"/>
+	<img src="/photo_2019/db_cache_trans.jpg" width="500px" title="由数据不一致引起的对事物处理，事物可见性和session缓存的思考"/>
 
 		
       
@@ -255,8 +255,8 @@ var _hmt = _hmt || [];
     engine = create_engine(&quot;db_url&quot;, echo=True)
 
 </code></pre>
-<p><del>发现无sql查询日志，说明从缓存中取了，结案了</del>。很遗憾，并没有。在进行简单测试时，<code>的确是从session缓存取了</code>，这没有问题。但是在我的场景里，第一个session创建的是B对象，第二个session实际修改的是对象A的关联对象 对象B的字段，查询时也有对B进行查询的SQL日志输出，无法通过无sql输出来说明是从缓存中查的。</p>
-<p>3.debug一下，在第一个session查询对象A之后，尝试读出对象B和B的属性时。下断点。可以F7跟进时看到进入了下面的代码。</p>
+<p>发现有查询日志。</p>
+<p>3.在我的场景里，第一个session创建的是B对象且已经提交。第二个session实际修改的是对象A的关联对象 对象B的字段。debug一下，在第一个session查询对象A之后，尝试读出对象B和B的属性时。下断点。可以F7跟进时看到进入了下面的代码。</p>
 <pre><code class="python">
     class InstrumentedAttribute(QueryableAttribute):
         &quot;&quot;&quot;Class bound instrumented attribute which adds basic
@@ -287,6 +287,7 @@ var _hmt = _hmt || [];
 
 </code></pre>
 <p>其中 <code>__get__</code>方法即为获取属性时调用的方法，获取B对象的属性时，发现传入的B对象的地址和第一个session初次创建的对象B的地址一致，直接是同一个对象。的确是缓存导致了数据不一致的情况。</p>
+<p>4.继续测试发现在新的事物中，读取上一个事物中已经commit的对象B的属性，会导致如果从当前事物中查询和这个对象B一样的query，就会直接使用对象B的缓存。</p>
 <h3 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h3><p>查询前<code>session.expire(obj)</code>，<code>session.refresh(obj)</code>或者<code>session.commit()</code>，<code>sessoion.rollback()</code></p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
 <li><code>sqlalchemy</code>关闭<code>auto commit</code>。就算commit后也其实一直在一个事物中</li>
@@ -968,14 +969,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">加密解密</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">python</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">总结</a>
               </li>
              
@@ -996,6 +989,22 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">加密解密</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">冒泡排序</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">插入排序</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">awk</a>
               </li>
              
@@ -1008,11 +1017,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">冒泡排序</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">插入排序</a>
+                <a href="javascript:void(0)" class="js-tag color5">二分查找</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1028,23 +1033,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">二分查找</a>
+                <a href="javascript:void(0)" class="js-tag color4">微服务</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">缓存</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">书单</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">看书</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">幂等性</a>
+                <a href="javascript:void(0)" class="js-tag color5">服务治理</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1060,11 +1053,43 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">幂等性</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">书单</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">看书</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">缓存</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">读写分离</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">orm</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">django</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">源码</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">游记</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">生活</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1077,30 +1102,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">感悟</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">游记</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">生活</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">微服务</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">服务治理</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">读写分离</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">orm</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1136,10 +1137,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">git</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">GIT</a>
               </li>
              
@@ -1156,15 +1153,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">git</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">激光雷达</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">机器人</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">面试</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1176,11 +1173,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">knn算法</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">mnist数据集</a>
+                <a href="javascript:void(0)" class="js-tag color3">面试</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1197,6 +1190,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">智能小车</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">knn算法</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">mnist数据集</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1232,15 +1233,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">工作</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">数据库</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">视图</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1256,6 +1249,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">工作</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">视图</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">pgsql</a>
               </li>
              
@@ -1265,6 +1266,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">索引</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">序列</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1288,7 +1293,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">序列</a>
+                <a href="javascript:void(0)" class="js-tag color1">正则表达式</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1304,14 +1309,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">sql</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">正则表达式</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">异步任务</a>
               </li>
              
@@ -1320,7 +1317,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">sql</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">事物</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">高性能</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">java</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">多线程</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1333,18 +1346,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">类加载</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">多线程</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">高性能</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">事物</a>
               </li>
             
             <div class="clearfix"></div>
