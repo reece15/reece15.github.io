@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.javabin.cn/"/>
-  <updated>2019-12-04T13:10:27.883Z</updated>
+  <updated>2019-12-04T14:59:22.766Z</updated>
   <id>http://www.javabin.cn/</id>
   
   <author>
@@ -15,6 +15,30 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>python单元测试中使用mock patch来解决不易测试的依赖</title>
+    <link href="http://www.javabin.cn/2019/mock_patch.html"/>
+    <id>http://www.javabin.cn/2019/mock_patch.html</id>
+    <published>2019-12-04T13:15:11.000Z</published>
+    <updated>2019-12-04T14:59:22.766Z</updated>
+    
+    <content type="html"><![CDATA[<p>在进行单元测试时，有时会遇到代码里有大量 的外部接口请求，异步逻辑，复杂的校验，无法进行单元测试的函数调用等情况。这时，可使用mock工具来对这些逻辑进行patch。</p><a id="more"></a><h2 id="待测逻辑中有异步调用"><a href="#待测逻辑中有异步调用" class="headerlink" title="待测逻辑中有异步调用"></a>待测逻辑中有异步调用</h2><p>对异步调用的逻辑进行patch，使非异步调用逻辑可以正常执行。在当前单元测试中只校验异步调用时传入的参数正确。然后对异步调用的函数单独编写单元测试即可。</p><p>示例:</p><pre><code class="python"># coding: utf-8&quot;&quot;&quot;tasks/task.py简单模拟一个异步任务&quot;&quot;&quot;import threadingimport timeclass Task(object):    def __init__(self, val):        self.val = val    def run(self):        raise NotImplementedError    def apply(self):        self.run()    def apply_async(self):        thread = threading.Thread(target=self.run)        thread.start()class AddTask(Task):    def run(self):        print(&quot;running&quot;)        time.sleep(10)  # 耗时任务        self.val *= 30if __name__ == &quot;__main__&quot;:    print(AddTask(12).apply_async())    print(123)</code></pre><p>编写单元测试,patch异步调用</p><pre><code class="python"># coding: utf-8&quot;&quot;&quot;tests/tests.py&quot;&quot;&quot;from unittest import TestCasefrom mock import patchfrom tasks.task import func, AddTaskclass TestTask(TestCase):    @patch(&quot;tasks.task.AddTask&quot;)    # patch addtask    def test_task(self, mocked_task):        a = 1        b = 2        func(a, b)        mocked_task.assert_called_once_with(a+b)  # 只判断调用时参数正确    def test_add_task(self):        x = 10        task = AddTask(x)        task.apply()        assert x * 30 == task.val</code></pre><h2 id="待测逻辑中有无法单元测试的逻辑"><a href="#待测逻辑中有无法单元测试的逻辑" class="headerlink" title="待测逻辑中有无法单元测试的逻辑"></a>待测逻辑中有无法单元测试的逻辑</h2><p>对于待测逻辑中存在依赖外部接口，进行参数校验等逻辑，可进行patch,忽略这些校验使测试继续进行。</p><pre><code class="python"># tasks/task.pydef trans_name(name, val):  # 模拟一个简单场景:调用api校验数据后，然后才进行一系列逻辑    data = requests.get(u&quot;http://123.com/api/v2/check_name?name={}&quot;.format(name)).json()    if data[&#39;status&#39;] == &#39;ok&#39;:        name = &quot;{}_{}&quot;.format(name, val)        return name    return None</code></pre><p>编写单元测试，<code>patch requests.get</code>返回值和<code>json</code>方法</p><pre><code class="python"># coding: utf-8&quot;&quot;&quot;tests/test_process.py对于待测逻辑中存在依赖外部接口，进行参数校验等逻辑，可进行patch,忽略这些校验使测试继续进行。&quot;&quot;&quot;from unittest import TestCasefrom mock import patch, Mockfrom tasks.task import trans_nameclass TestTask(TestCase):    @patch(&quot;tasks.task.requests&quot;)    # patch addtask    def test_trans_name(self, mocked_requests):        name = &quot;ccc&quot;        val = &quot;222&quot;        mocked_response = Mock()        mocked_response.status_code = 200        mocked_response.json.return_value = {            &quot;status&quot;: &quot;ok&quot;        }        mocked_requests.get.side_effect = [mocked_response]        self.assertEqual(&quot;{}_{}&quot;.format(name, val), trans_name(name, val))        assert mocked_requests.get.call_count == 1</code></pre><h2 id="有多个patch对象"><a href="#有多个patch对象" class="headerlink" title="有多个patch对象"></a>有多个patch对象</h2><p>多个patch对象的参数顺序如下示例所示:</p><pre><code class="python">    @patch(&quot;tasks.task.AddTask1&quot;)    @patch(&quot;tasks.task.AddTask2&quot;)    def test_add_task(self, AddTask2, AddTask1):        pass</code></pre><h2 id="修改函数功能"><a href="#修改函数功能" class="headerlink" title="修改函数功能"></a>修改函数功能</h2><p>可将函数替换为自己定义的函数，实现修改函数的执行效果。这里为了简单说明情况，以替换time.sleep函数来说明情况。</p><pre><code class="python">@patch(&quot;tasks.task.time&quot;)    def test_func(self, mocked_time):        def sleep(t):   # 修改函数功能，以time.sleep举例            if t &gt; 3:                time.sleep(3)            else:                time.sleep(t)        mocked_time.sleep = Mock(side_effect=sleep)        func(3, 2)</code></pre><h2 id="替换函数返回值"><a href="#替换函数返回值" class="headerlink" title="替换函数返回值"></a>替换函数返回值</h2><p>直接改变函数返回值，用于patch token校验类的逻辑</p><pre><code class="python">@patch(&quot;tasks.task.token_check&quot;, return_value=True)    def test_func_ret(self, mocked_token_check):        pass</code></pre>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;在进行单元测试时，有时会遇到代码里有大量 的外部接口请求，异步逻辑，复杂的校验，无法进行单元测试的函数调用等情况。这时，可使用mock工具来对这些逻辑进行patch。&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="python" scheme="http://www.javabin.cn/tags/python/"/>
+    
+      <category term="总结" scheme="http://www.javabin.cn/tags/%E6%80%BB%E7%BB%93/"/>
+    
+      <category term="单元测试" scheme="http://www.javabin.cn/tags/%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/"/>
+    
+  </entry>
   
   <entry>
     <title>由数据不一致引起的对事物处理，事物可见性和session缓存的思考</title>
@@ -156,9 +180,9 @@
     </summary>
     
     
-      <category term="总结" scheme="http://www.javabin.cn/tags/%E6%80%BB%E7%BB%93/"/>
-    
       <category term="python" scheme="http://www.javabin.cn/tags/python/"/>
+    
+      <category term="总结" scheme="http://www.javabin.cn/tags/%E6%80%BB%E7%BB%93/"/>
     
   </entry>
   
@@ -186,28 +210,6 @@
   </entry>
   
   <entry>
-    <title>一次Python电话面试经验分享[GET offer]</title>
-    <link href="http://www.javabin.cn/2019/iv_cd_01.html"/>
-    <id>http://www.javabin.cn/2019/iv_cd_01.html</id>
-    <published>2019-08-23T15:10:54.000Z</published>
-    <updated>2019-09-02T18:16:13.473Z</updated>
-    
-    <content type="html"><![CDATA[<p>一次电话面试经验分享。<br><a id="more"></a></p><p>貌似招精通elasticsearch，Python的，所以刚开始都是问elasticsearch相关的问题。过程很顺利，一次远程电面直接获得offer，涨薪约40%+。</p><h2 id="面试问题："><a href="#面试问题：" class="headerlink" title="面试问题："></a>面试问题：</h2><ul><li>自我介绍</li><li>elasticsearch在你的项目中如何使用。</li><li>说一下elasticsearch如何安装部署?配置？</li><li>elasticsearch压力测试如何做的？</li><li>elasticsearch分片</li><li>elasticsearch分布式</li><li>存储过程用过吗？你是在什么情况下使用的？</li><li>sql优化你一般是如何做的？</li><li>redis在你的项目里怎么使用的？</li><li>mongo在你的项目里怎么使用的？</li><li>结巴分词在elasticsearch中使用？</li><li>分词的配置如何做的？</li><li>你的项目的git管理如何管理的？</li><li>数据库表设计如何做?</li><li>一个项目你一般会做哪些设计？</li><li>API接口一般如何测试？</li><li>你一般是如何出具API文档的？</li><li>设计模式都会什么？说下单例模式？</li><li>项目使用的Python3还是2？为什么？</li><li>你最近看了哪些书？</li><li>听说过持续集成吗？jekins如何使用？</li><li>Python静态代码检查你们项目是怎么做的?</li><li>自动化编译部署呢？</li><li>编程语言还会什么？是自学还是学校学习的？</li><li>java项目中常用的框架说一下？</li><li>用过mybatis吗？</li><li>说下ssh和ssm?</li><li>除了django外还用过其他框架吗？flask用过吗？</li><li>Mysql和Pgsql差异?</li></ul><h2 id="待加强"><a href="#待加强" class="headerlink" title="待加强"></a>待加强</h2><ul><li>了解elasticsearch分布式相关的原理</li><li>CI/CD，jekins</li><li>近期书单整理（面试当天刚好看完了《人性的弱点》，面试官不知道是什么，很懵逼）</li></ul>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;一次电话面试经验分享。&lt;br&gt;
-    
-    </summary>
-    
-    
-      <category term="总结" scheme="http://www.javabin.cn/tags/%E6%80%BB%E7%BB%93/"/>
-    
-      <category term="面试" scheme="http://www.javabin.cn/tags/%E9%9D%A2%E8%AF%95/"/>
-    
-  </entry>
-  
-  <entry>
     <title>我的书单[2019]</title>
     <link href="http://www.javabin.cn/2019/book_list.html"/>
     <id>http://www.javabin.cn/2019/book_list.html</id>
@@ -226,6 +228,28 @@
       <category term="书单" scheme="http://www.javabin.cn/tags/%E4%B9%A6%E5%8D%95/"/>
     
       <category term="看书" scheme="http://www.javabin.cn/tags/%E7%9C%8B%E4%B9%A6/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>一次Python电话面试经验分享[GET offer]</title>
+    <link href="http://www.javabin.cn/2019/iv_cd_01.html"/>
+    <id>http://www.javabin.cn/2019/iv_cd_01.html</id>
+    <published>2019-08-23T15:10:54.000Z</published>
+    <updated>2019-09-02T18:16:13.473Z</updated>
+    
+    <content type="html"><![CDATA[<p>一次电话面试经验分享。<br><a id="more"></a></p><p>貌似招精通elasticsearch，Python的，所以刚开始都是问elasticsearch相关的问题。过程很顺利，一次远程电面直接获得offer，涨薪约40%+。</p><h2 id="面试问题："><a href="#面试问题：" class="headerlink" title="面试问题："></a>面试问题：</h2><ul><li>自我介绍</li><li>elasticsearch在你的项目中如何使用。</li><li>说一下elasticsearch如何安装部署?配置？</li><li>elasticsearch压力测试如何做的？</li><li>elasticsearch分片</li><li>elasticsearch分布式</li><li>存储过程用过吗？你是在什么情况下使用的？</li><li>sql优化你一般是如何做的？</li><li>redis在你的项目里怎么使用的？</li><li>mongo在你的项目里怎么使用的？</li><li>结巴分词在elasticsearch中使用？</li><li>分词的配置如何做的？</li><li>你的项目的git管理如何管理的？</li><li>数据库表设计如何做?</li><li>一个项目你一般会做哪些设计？</li><li>API接口一般如何测试？</li><li>你一般是如何出具API文档的？</li><li>设计模式都会什么？说下单例模式？</li><li>项目使用的Python3还是2？为什么？</li><li>你最近看了哪些书？</li><li>听说过持续集成吗？jekins如何使用？</li><li>Python静态代码检查你们项目是怎么做的?</li><li>自动化编译部署呢？</li><li>编程语言还会什么？是自学还是学校学习的？</li><li>java项目中常用的框架说一下？</li><li>用过mybatis吗？</li><li>说下ssh和ssm?</li><li>除了django外还用过其他框架吗？flask用过吗？</li><li>Mysql和Pgsql差异?</li></ul><h2 id="待加强"><a href="#待加强" class="headerlink" title="待加强"></a>待加强</h2><ul><li>了解elasticsearch分布式相关的原理</li><li>CI/CD，jekins</li><li>近期书单整理（面试当天刚好看完了《人性的弱点》，面试官不知道是什么，很懵逼）</li></ul>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;一次电话面试经验分享。&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="总结" scheme="http://www.javabin.cn/tags/%E6%80%BB%E7%BB%93/"/>
+    
+      <category term="面试" scheme="http://www.javabin.cn/tags/%E9%9D%A2%E8%AF%95/"/>
     
   </entry>
   
@@ -487,30 +511,6 @@
       <category term="数据库" scheme="http://www.javabin.cn/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
     
       <category term="pgsql" scheme="http://www.javabin.cn/tags/pgsql/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>使用memaslap对memcache做压力测试</title>
-    <link href="http://www.javabin.cn/2019/memcache_test.html"/>
-    <id>http://www.javabin.cn/2019/memcache_test.html</id>
-    <published>2019-07-13T23:57:24.000Z</published>
-    <updated>2019-09-02T18:16:13.477Z</updated>
-    
-    <content type="html"><![CDATA[<p>如何测试目前memcache是否可以处理并发峰值时的流量？</p><a id="more"></a><h2 id="memaslap是什么"><a href="#memaslap是什么" class="headerlink" title="memaslap是什么"></a>memaslap是什么</h2><p>memaslap是libmemcached提供的一个memcache的压力测试工具。libMemcached 是一个开源的memcache客户端库和工具，用于操作 memcached 服务器。有着小内存消耗、线程安全，完全访问服务端的各种函数等等优势。</p><h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><pre><code class="shell">    cd /tmp    wget https://launchpad.net/libmemcached/1.0/1.0.18/+download/libmemcached-1.0.18.tar.gz    tar -zxvf libmemcached-1.0.18.tar.gz    cd libmemcached-1.0.18    mkdir -p /usr/local/libmemcached    ./configure --prefix=/usr/local/libmemcached  --enable-memaslap # 注意开启需要的压测工具    make    make install</code></pre><h2 id="如何压测"><a href="#如何压测" class="headerlink" title="如何压测"></a>如何压测</h2><pre><code class="shell">    /usr/local/libmemcached/bin/memaslap -s 192.168.1.2:11211 -t 60s -T 8 -c 8000 -X 100b</code></pre><h2 id="参数都是什么"><a href="#参数都是什么" class="headerlink" title="参数都是什么"></a>参数都是什么</h2><pre><code>-s, --servers=：要压测的一个或多个memcached服务器。servers=localhost:11111,localhost:11211-T, --threads=：线程数量，最好等于cpu数量。默认值为8-c, --concurrency=：负载需要虚拟的并发数量，默认值是128-n, --conn_sock=：一个并发的tcp连接数量，默认值是1-x, --execute_number=：set/get数量，默认值100w-t, --time=：运行时间，其格式为: s-seconds, m-minutes, h-hours, d-days e.g.: --time=2h.-F, --cfg_cmd=：加载配置文件-w, --win_size=：任务窗口大小，e.g.: --win_size=10k. 默认值为10k-X, --fixed_size=：value的大小-v, --verify=：所要确认的数据比例， e.g.: --verify=0.01-d, --division=：多重get的数量，默认值为1即单个get-S, --stat_freq=：定期清理静态数据的间隔时间， e.g.: --resp_freq=10s.-e, --exp_verify=：失效时间的比例, e.g.: --exp_verify=0.01。默认情况是不设置该选项-o, --overwrite=：对象需要覆盖的比例， e.g.: --overwrite=0.01.默认情况是不进行覆盖。-R, --reconnect：支持重新连接-U, --udp：使用UDP协议，默认是TCP协议-a, --facebook：启动faceb检测-B, --binary：使用二进制协议，默认值是ascii协议-P, --tps=：吞吐量， e.g.: --tps=10k.-p, --rep_write=：前n个服务端可以写数据， e.g.: --rep_write=2.-b, --verbose：错误信息-h, --help：帮助文档-V, --version：版本信息</code></pre><h2 id="测试结果"><a href="#测试结果" class="headerlink" title="测试结果"></a>测试结果</h2><pre><code>get_misses: 2880949  # 未命中次数written_bytes: 279040930 # 写入字节数read_bytes: 57410993 # 读取字节数object_bytes: 56658228 # 对接字节数Run time: 60.0s Ops: 3445746 TPS: 57424 Net_rate: 5.3M/s# 60s内总操作数为3445746条,每秒事物处理57424个。</code></pre>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;如何测试目前memcache是否可以处理并发峰值时的流量？&lt;/p&gt;
-    
-    </summary>
-    
-    
-      <category term="总结" scheme="http://www.javabin.cn/tags/%E6%80%BB%E7%BB%93/"/>
-    
-      <category term="memcache" scheme="http://www.javabin.cn/tags/memcache/"/>
-    
-      <category term="压测" scheme="http://www.javabin.cn/tags/%E5%8E%8B%E6%B5%8B/"/>
     
   </entry>
   
