@@ -79,14 +79,14 @@
   </url>
   
   <url>
-    <loc>http://www.javabin.cn/2018/django_views.html</loc>
+    <loc>http://www.javabin.cn/2018/flock.html</loc>
     
     <lastmod>2019-09-02T18:16:13.477Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.javabin.cn/2018/aes_java_python.html</loc>
+    <loc>http://www.javabin.cn/2019/pgsql_seq.html</loc>
     
     <lastmod>2019-09-02T18:16:13.477Z</lastmod>
     
@@ -114,7 +114,7 @@
   </url>
   
   <url>
-    <loc>http://www.javabin.cn/2018/flock.html</loc>
+    <loc>http://www.javabin.cn/2019/cache.html</loc>
     
     <lastmod>2019-09-02T18:16:13.477Z</lastmod>
     
@@ -163,7 +163,14 @@
   </url>
   
   <url>
-    <loc>http://www.javabin.cn/2019/cache.html</loc>
+    <loc>http://www.javabin.cn/2018/django_autoreload.html</loc>
+    
+    <lastmod>2019-09-02T18:16:13.477Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.javabin.cn/2018/aes_java_python.html</loc>
     
     <lastmod>2019-09-02T18:16:13.477Z</lastmod>
     
@@ -205,6 +212,13 @@
   </url>
   
   <url>
+    <loc>http://www.javabin.cn/2019/django_sql_detail.html</loc>
+    
+    <lastmod>2019-09-02T18:16:13.477Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.javabin.cn/2018/ns2755.html</loc>
     
     <lastmod>2019-09-02T18:16:13.477Z</lastmod>
@@ -212,14 +226,7 @@
   </url>
   
   <url>
-    <loc>http://www.javabin.cn/2018/django_autoreload.html</loc>
-    
-    <lastmod>2019-09-02T18:16:13.477Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.javabin.cn/2019/django_sql_detail.html</loc>
+    <loc>http://www.javabin.cn/2018/django_views.html</loc>
     
     <lastmod>2019-09-02T18:16:13.477Z</lastmod>
     
@@ -233,14 +240,7 @@
   </url>
   
   <url>
-    <loc>http://www.javabin.cn/2019/pgsql_seq.html</loc>
-    
-    <lastmod>2019-09-02T18:16:13.477Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.javabin.cn/2018/es_install.html</loc>
+    <loc>http://www.javabin.cn/2019/iv_cd_01.html</loc>
     
     <lastmod>2019-09-02T18:16:13.473Z</lastmod>
     
@@ -254,21 +254,14 @@
   </url>
   
   <url>
+    <loc>http://www.javabin.cn/2018/es_install.html</loc>
+    
+    <lastmod>2019-09-02T18:16:13.473Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.javabin.cn/2016/thread.html</loc>
-    
-    <lastmod>2019-09-02T18:16:13.473Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.javabin.cn/2018/awk_val.html</loc>
-    
-    <lastmod>2019-09-02T18:16:13.473Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.javabin.cn/2019/yolov3_train_fish2.html</loc>
     
     <lastmod>2019-09-02T18:16:13.473Z</lastmod>
     
@@ -282,7 +275,7 @@
   </url>
   
   <url>
-    <loc>http://www.javabin.cn/2019/iv_cd_01.html</loc>
+    <loc>http://www.javabin.cn/2018/while1orture.html</loc>
     
     <lastmod>2019-09-02T18:16:13.473Z</lastmod>
     
@@ -290,13 +283,6 @@
   
   <url>
     <loc>http://www.javabin.cn/2018/django_start.html</loc>
-    
-    <lastmod>2019-09-02T18:16:13.473Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.javabin.cn/2018/manacher.html</loc>
     
     <lastmod>2019-09-02T18:16:13.473Z</lastmod>
     
@@ -317,7 +303,28 @@
   </url>
   
   <url>
+    <loc>http://www.javabin.cn/2018/django_steam.html</loc>
+    
+    <lastmod>2019-09-02T18:16:13.473Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.javabin.cn/2018/manacher.html</loc>
+    
+    <lastmod>2019-09-02T18:16:13.473Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.javabin.cn/2019/merge_sort.html</loc>
+    
+    <lastmod>2019-09-02T18:16:13.473Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.javabin.cn/2018/base_sort.html</loc>
     
     <lastmod>2019-09-02T18:16:13.473Z</lastmod>
     
@@ -331,14 +338,7 @@
   </url>
   
   <url>
-    <loc>http://www.javabin.cn/2018/django_steam.html</loc>
-    
-    <lastmod>2019-09-02T18:16:13.473Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.javabin.cn/2018/while1orture.html</loc>
+    <loc>http://www.javabin.cn/2018/awk_val.html</loc>
     
     <lastmod>2019-09-02T18:16:13.473Z</lastmod>
     
@@ -359,14 +359,14 @@
   </url>
   
   <url>
-    <loc>http://www.javabin.cn/2018/osstat.html</loc>
+    <loc>http://www.javabin.cn/2019/avl_tree_insert.html</loc>
     
     <lastmod>2019-09-02T18:16:13.473Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.javabin.cn/2019/python_xmpp.html</loc>
+    <loc>http://www.javabin.cn/2018/osstat.html</loc>
     
     <lastmod>2019-09-02T18:16:13.473Z</lastmod>
     
@@ -380,14 +380,14 @@
   </url>
   
   <url>
-    <loc>http://www.javabin.cn/2019/pgsql_lock.html</loc>
+    <loc>http://www.javabin.cn/2019/python_xmpp.html</loc>
     
     <lastmod>2019-09-02T18:16:13.473Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.javabin.cn/2019/avl_tree_insert.html</loc>
+    <loc>http://www.javabin.cn/2019/pgsql_lock.html</loc>
     
     <lastmod>2019-09-02T18:16:13.473Z</lastmod>
     
@@ -401,7 +401,7 @@
   </url>
   
   <url>
-    <loc>http://www.javabin.cn/2018/base_sort.html</loc>
+    <loc>http://www.javabin.cn/2019/yolov3_train_fish2.html</loc>
     
     <lastmod>2019-09-02T18:16:13.473Z</lastmod>
     
@@ -422,14 +422,14 @@
   </url>
   
   <url>
-    <loc>http://www.javabin.cn/2019/r_index.html</loc>
+    <loc>http://www.javabin.cn/2018/knn_py.html</loc>
     
     <lastmod>2019-09-02T18:16:13.469Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.javabin.cn/2018/knn_py.html</loc>
+    <loc>http://www.javabin.cn/2019/r_index.html</loc>
     
     <lastmod>2019-09-02T18:16:13.469Z</lastmod>
     
@@ -499,14 +499,14 @@
   </url>
   
   <url>
-    <loc>http://www.javabin.cn/2018/knn_mnist.html</loc>
+    <loc>http://www.javabin.cn/2019/bin_search_tree.html</loc>
     
     <lastmod>2019-09-02T18:16:13.465Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.javabin.cn/2019/bin_search_tree.html</loc>
+    <loc>http://www.javabin.cn/2018/knn_mnist.html</loc>
     
     <lastmod>2019-09-02T18:16:13.465Z</lastmod>
     
