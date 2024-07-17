@@ -5,7 +5,7 @@
     
   <url>
     <loc>http://www.javabin.cn/2024/2024_llm_01_first_look.html</loc>
-    <lastmod>2024-07-17T16:57:54.738Z</lastmod>
+    <lastmod>2024-07-17T17:26:44.481Z</lastmod>
     <data>
         <display>
         <title>【大模型-01】本地部署qwen2模型+集成聊天界面ChatGPT-Next-Web（无显卡也可运行）</title>
@@ -63,13 +63,13 @@
         <title>【AirTag】为低功耗蓝牙设备添加AirTag功能</title>
         <pubTime>2024-03-07T14:12:23.000Z</pubTime>
         
-        <tag>总结</tag>
-         
         <tag>固件</tag>
          
         <tag>AirTag</tag>
          
         <tag>墨水屏</tag>
+         
+        <tag>总结</tag>
          
          
            
@@ -86,11 +86,11 @@
         <title>【墨水屏】2.9寸墨水屏固件适配、二次开发，主控芯片：TLSR8359</title>
         <pubTime>2022-07-23T04:12:23.000Z</pubTime>
         
-        <tag>总结</tag>
-         
         <tag>固件</tag>
          
         <tag>墨水屏</tag>
+         
+        <tag>总结</tag>
          
         <tag>C语言</tag>
          
@@ -109,25 +109,6 @@
     
     
   <url>
-    <loc>http://www.javabin.cn/2018/while1orture.html</loc>
-    <lastmod>2024-03-11T14:49:03.614Z</lastmod>
-    <data>
-        <display>
-        <title>while 1比while True快？why?</title>
-        <pubTime>2018-05-09T06:12:12.000Z</pubTime>
-        
-        <tag>python</tag>
-         
-        <tag>高性能</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>http://www.javabin.cn/2021/xiaoai_fm.html</loc>
     <lastmod>2024-03-11T14:49:03.614Z</lastmod>
     <data>
@@ -142,6 +123,25 @@
         <tag>小爱音箱</tag>
          
         <tag>智能家居</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.javabin.cn/2018/while1orture.html</loc>
+    <lastmod>2024-03-11T14:49:03.614Z</lastmod>
+    <data>
+        <display>
+        <title>while 1比while True快？why?</title>
+        <pubTime>2018-05-09T06:12:12.000Z</pubTime>
+        
+        <tag>python</tag>
+         
+        <tag>高性能</tag>
          
          
            
@@ -189,27 +189,6 @@
 
     
   <url>
-    <loc>http://www.javabin.cn/2016/ssl.html</loc>
-    <lastmod>2024-03-11T14:49:03.613Z</lastmod>
-    <data>
-        <display>
-        <title>在nginx上部署Let's Encrypt证书</title>
-        <pubTime>2016-06-02T03:10:24.000Z</pubTime>
-        
-        <tag>学习</tag>
-         
-        <tag>linux</tag>
-         
-        <tag>网络</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>http://www.javabin.cn/2016/statictest.html</loc>
     <lastmod>2024-03-11T14:49:03.613Z</lastmod>
     <data>
@@ -226,6 +205,27 @@
         <tag>关键字</tag>
          
         <tag>类加载</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.javabin.cn/2016/ssl.html</loc>
+    <lastmod>2024-03-11T14:49:03.613Z</lastmod>
+    <data>
+        <display>
+        <title>在nginx上部署Let's Encrypt证书</title>
+        <pubTime>2016-06-02T03:10:24.000Z</pubTime>
+        
+        <tag>学习</tag>
+         
+        <tag>linux</tag>
+         
+        <tag>网络</tag>
          
          
            
@@ -268,27 +268,6 @@
         <tag>科技</tag>
          
         <tag>虚拟现实</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://www.javabin.cn/2019/re_zero.html</loc>
-    <lastmod>2024-03-11T14:49:03.612Z</lastmod>
-    <data>
-        <display>
-        <title>正则表达式之零宽断言</title>
-        <pubTime>2019-08-06T16:57:15.000Z</pubTime>
-        
-        <tag>总结</tag>
-         
-        <tag>linux</tag>
-         
-        <tag>正则表达式</tag>
          
          
            
@@ -382,6 +361,27 @@
 
     
   <url>
+    <loc>http://www.javabin.cn/2019/re_zero.html</loc>
+    <lastmod>2024-03-11T14:49:03.612Z</lastmod>
+    <data>
+        <display>
+        <title>正则表达式之零宽断言</title>
+        <pubTime>2019-08-06T16:57:15.000Z</pubTime>
+        
+        <tag>总结</tag>
+         
+        <tag>linux</tag>
+         
+        <tag>正则表达式</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.javabin.cn/2019/python_profile.html</loc>
     <lastmod>2024-03-11T14:49:03.610Z</lastmod>
     <data>
@@ -433,9 +433,9 @@
         
         <tag>总结</tag>
          
-        <tag>python</tag>
-         
         <tag>算法</tag>
+         
+        <tag>python</tag>
          
         <tag>快速排序</tag>
          
@@ -625,25 +625,6 @@
 
     
   <url>
-    <loc>http://www.javabin.cn/2018/pg_jieba.html</loc>
-    <lastmod>2024-03-11T14:49:03.608Z</lastmod>
-    <data>
-        <display>
-        <title>使用pg_jieba使django1.4支持全文检索</title>
-        <pubTime>2018-10-26T15:15:30.000Z</pubTime>
-        
-        <tag>总结</tag>
-         
-        <tag>数据库</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>http://www.javabin.cn/2019/pgsql_index.html</loc>
     <lastmod>2024-03-11T14:49:03.608Z</lastmod>
     <data>
@@ -656,6 +637,25 @@
         <tag>pgsql</tag>
          
         <tag>索引</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.javabin.cn/2018/pg_jieba.html</loc>
+    <lastmod>2024-03-11T14:49:03.608Z</lastmod>
+    <data>
+        <display>
+        <title>使用pg_jieba使django1.4支持全文检索</title>
+        <pubTime>2018-10-26T15:15:30.000Z</pubTime>
+        
+        <tag>总结</tag>
+         
+        <tag>数据库</tag>
          
          
            
@@ -856,18 +856,18 @@
 
     
   <url>
-    <loc>http://www.javabin.cn/2018/knn_py.html</loc>
+    <loc>http://www.javabin.cn/2018/leetcode564.html</loc>
     <lastmod>2024-03-11T14:49:03.605Z</lastmod>
     <data>
         <display>
-        <title>KNN算法和python实现</title>
-        <pubTime>2018-05-05T07:11:18.000Z</pubTime>
+        <title>leecode 564.寻找最近的回文数</title>
+        <pubTime>2018-11-24T16:02:47.000Z</pubTime>
         
-        <tag>python</tag>
+        <tag>总结</tag>
          
-        <tag>机器学习</tag>
+        <tag>算法</tag>
          
-        <tag>KNN算法</tag>
+        <tag>leetcode</tag>
          
          
            
@@ -904,18 +904,18 @@
 
     
   <url>
-    <loc>http://www.javabin.cn/2018/leetcode564.html</loc>
+    <loc>http://www.javabin.cn/2018/knn_py.html</loc>
     <lastmod>2024-03-11T14:49:03.605Z</lastmod>
     <data>
         <display>
-        <title>leecode 564.寻找最近的回文数</title>
-        <pubTime>2018-11-24T16:02:47.000Z</pubTime>
+        <title>KNN算法和python实现</title>
+        <pubTime>2018-05-05T07:11:18.000Z</pubTime>
         
-        <tag>总结</tag>
+        <tag>python</tag>
          
-        <tag>算法</tag>
+        <tag>机器学习</tag>
          
-        <tag>leetcode</tag>
+        <tag>KNN算法</tag>
          
          
            
@@ -935,6 +935,44 @@
         <tag>总结</tag>
          
         <tag>面试</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.javabin.cn/2019/iv_cd_01.html</loc>
+    <lastmod>2024-03-11T14:49:03.604Z</lastmod>
+    <data>
+        <display>
+        <title>一次Python电话面试经验分享[GET offer]</title>
+        <pubTime>2019-08-23T15:10:54.000Z</pubTime>
+        
+        <tag>总结</tag>
+         
+        <tag>面试</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.javabin.cn/2019/invoke_pypi.html</loc>
+    <lastmod>2024-03-11T14:49:03.604Z</lastmod>
+    <data>
+        <display>
+        <title>【第三方库分享】使用invoke简单执行系统任务</title>
+        <pubTime>2019-09-03T18:25:24.000Z</pubTime>
+        
+        <tag>总结</tag>
+         
+        <tag>python</tag>
          
          
            
@@ -982,35 +1020,20 @@
 
     
   <url>
-    <loc>http://www.javabin.cn/2019/invoke_pypi.html</loc>
-    <lastmod>2024-03-11T14:49:03.604Z</lastmod>
+    <loc>http://www.javabin.cn/2018/grpc_start.html</loc>
+    <lastmod>2024-03-11T14:49:03.603Z</lastmod>
     <data>
         <display>
-        <title>【第三方库分享】使用invoke简单执行系统任务</title>
-        <pubTime>2019-09-03T18:25:24.000Z</pubTime>
+        <title>微服务初试---python grpc</title>
+        <pubTime>2018-08-17T16:36:08.000Z</pubTime>
         
-        <tag>总结</tag>
-         
         <tag>python</tag>
          
+        <tag>微服务</tag>
          
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://www.javabin.cn/2019/iv_cd_01.html</loc>
-    <lastmod>2024-03-11T14:49:03.604Z</lastmod>
-    <data>
-        <display>
-        <title>一次Python电话面试经验分享[GET offer]</title>
-        <pubTime>2019-08-23T15:10:54.000Z</pubTime>
-        
-        <tag>总结</tag>
+        <tag>架构</tag>
          
-        <tag>面试</tag>
+        <tag>grpc</tag>
          
          
            
@@ -1041,20 +1064,18 @@
 
     
   <url>
-    <loc>http://www.javabin.cn/2018/grpc_start.html</loc>
+    <loc>http://www.javabin.cn/2018/https.html</loc>
     <lastmod>2024-03-11T14:49:03.603Z</lastmod>
     <data>
         <display>
-        <title>微服务初试---python grpc</title>
-        <pubTime>2018-08-17T16:36:08.000Z</pubTime>
+        <title>温柔的切换http到https</title>
+        <pubTime>2018-04-03T07:04:54.000Z</pubTime>
         
-        <tag>python</tag>
+        <tag>学习</tag>
          
-        <tag>微服务</tag>
+        <tag>https</tag>
          
-        <tag>架构</tag>
-         
-        <tag>grpc</tag>
+        <tag>生产环境</tag>
          
          
            
@@ -1091,35 +1112,16 @@
 
     
   <url>
-    <loc>http://www.javabin.cn/2018/https.html</loc>
-    <lastmod>2024-03-11T14:49:03.603Z</lastmod>
-    <data>
-        <display>
-        <title>温柔的切换http到https</title>
-        <pubTime>2018-04-03T07:04:54.000Z</pubTime>
-        
-        <tag>学习</tag>
-         
-        <tag>https</tag>
-         
-        <tag>生产环境</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://www.javabin.cn/2018/git_pr.html</loc>
+    <loc>http://www.javabin.cn/2019/glibc_err.html</loc>
     <lastmod>2024-03-11T14:49:03.602Z</lastmod>
     <data>
         <display>
-        <title>github撤销已经提交的pr中的commit</title>
-        <pubTime>2018-09-06T11:49:31.000Z</pubTime>
+        <title>glibc升级导致的locale环境错误</title>
+        <pubTime>2019-05-29T17:23:57.000Z</pubTime>
         
-        <tag>GIT</tag>
+        <tag>总结</tag>
+         
+        <tag>linux</tag>
          
          
            
@@ -1148,16 +1150,14 @@
 
     
   <url>
-    <loc>http://www.javabin.cn/2019/glibc_err.html</loc>
+    <loc>http://www.javabin.cn/2018/git_pr.html</loc>
     <lastmod>2024-03-11T14:49:03.602Z</lastmod>
     <data>
         <display>
-        <title>glibc升级导致的locale环境错误</title>
-        <pubTime>2019-05-29T17:23:57.000Z</pubTime>
+        <title>github撤销已经提交的pr中的commit</title>
+        <pubTime>2018-09-06T11:49:31.000Z</pubTime>
         
-        <tag>总结</tag>
-         
-        <tag>linux</tag>
+        <tag>GIT</tag>
          
          
            
@@ -1274,25 +1274,6 @@
 
     
   <url>
-    <loc>http://www.javabin.cn/2018/effective_python.html</loc>
-    <lastmod>2024-03-11T14:49:03.596Z</lastmod>
-    <data>
-        <display>
-        <title>再读《effective python》想到的</title>
-        <pubTime>2018-08-15T14:23:20.000Z</pubTime>
-        
-        <tag>书单</tag>
-         
-        <tag>看书</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>http://www.javabin.cn/2019/es_95.html</loc>
     <lastmod>2024-03-11T14:49:03.596Z</lastmod>
     <data>
@@ -1307,6 +1288,25 @@
         <tag>报错</tag>
          
         <tag>全文检索</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.javabin.cn/2018/effective_python.html</loc>
+    <lastmod>2024-03-11T14:49:03.596Z</lastmod>
+    <data>
+        <display>
+        <title>再读《effective python》想到的</title>
+        <pubTime>2018-08-15T14:23:20.000Z</pubTime>
+        
+        <tag>书单</tag>
+         
+        <tag>看书</tag>
          
          
            
@@ -1341,12 +1341,12 @@
 
     
   <url>
-    <loc>http://www.javabin.cn/2018/django_start.html</loc>
+    <loc>http://www.javabin.cn/2018/django_views.html</loc>
     <lastmod>2024-03-11T14:49:03.595Z</lastmod>
     <data>
         <display>
-        <title>Django 源码学习之搭建环境和django启动流程(一)</title>
-        <pubTime>2018-04-28T16:34:24.000Z</pubTime>
+        <title>检查django项目 view和urls中的import error</title>
+        <pubTime>2018-06-26T16:04:37.000Z</pubTime>
         
         <tag>python</tag>
          
@@ -1385,18 +1385,41 @@
 
     
   <url>
-    <loc>http://www.javabin.cn/2018/django_views.html</loc>
+    <loc>http://www.javabin.cn/2018/django_start.html</loc>
     <lastmod>2024-03-11T14:49:03.595Z</lastmod>
     <data>
         <display>
-        <title>检查django项目 view和urls中的import error</title>
-        <pubTime>2018-06-26T16:04:37.000Z</pubTime>
+        <title>Django 源码学习之搭建环境和django启动流程(一)</title>
+        <pubTime>2018-04-28T16:34:24.000Z</pubTime>
         
         <tag>python</tag>
          
         <tag>django</tag>
          
         <tag>源码</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.javabin.cn/2019/django_db_router.html</loc>
+    <lastmod>2024-03-11T14:49:03.594Z</lastmod>
+    <data>
+        <display>
+        <title>django database router实现ORM层读写分离</title>
+        <pubTime>2019-07-02T15:51:01.000Z</pubTime>
+        
+        <tag>总结</tag>
+         
+        <tag>读写分离</tag>
+         
+        <tag>orm</tag>
+         
+        <tag>django</tag>
          
          
            
@@ -1429,6 +1452,25 @@
 
     
   <url>
+    <loc>http://www.javabin.cn/2019/django_sql_detail.html</loc>
+    <lastmod>2024-03-11T14:49:03.594Z</lastmod>
+    <data>
+        <display>
+        <title>django中查看指定函数的SQL日志</title>
+        <pubTime>2019-07-02T16:31:30.000Z</pubTime>
+        
+        <tag>总结</tag>
+         
+        <tag>django</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.javabin.cn/2018/django_autoreload.html</loc>
     <lastmod>2024-03-11T14:49:03.594Z</lastmod>
     <data>
@@ -1441,48 +1483,6 @@
         <tag>django</tag>
          
         <tag>源码</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://www.javabin.cn/2019/django_db_router.html</loc>
-    <lastmod>2024-03-11T14:49:03.594Z</lastmod>
-    <data>
-        <display>
-        <title>django database router实现ORM层读写分离</title>
-        <pubTime>2019-07-02T15:51:01.000Z</pubTime>
-        
-        <tag>总结</tag>
-         
-        <tag>django</tag>
-         
-        <tag>读写分离</tag>
-         
-        <tag>orm</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://www.javabin.cn/2019/django_sql_detail.html</loc>
-    <lastmod>2024-03-11T14:49:03.594Z</lastmod>
-    <data>
-        <display>
-        <title>django中查看指定函数的SQL日志</title>
-        <pubTime>2019-07-02T16:31:30.000Z</pubTime>
-        
-        <tag>总结</tag>
-         
-        <tag>django</tag>
          
          
            
@@ -1637,6 +1637,25 @@
 
     
   <url>
+    <loc>http://www.javabin.cn/2019/cache.html</loc>
+    <lastmod>2024-03-11T14:49:03.592Z</lastmod>
+    <data>
+        <display>
+        <title>缓存相关问题和解决方法</title>
+        <pubTime>2019-07-08T15:30:43.000Z</pubTime>
+        
+        <tag>总结</tag>
+         
+        <tag>缓存</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.javabin.cn/2022/bot.html</loc>
     <lastmod>2024-03-11T14:49:03.592Z</lastmod>
     <data>
@@ -1658,39 +1677,18 @@
 
     
   <url>
-    <loc>http://www.javabin.cn/2019/cache.html</loc>
-    <lastmod>2024-03-11T14:49:03.592Z</lastmod>
-    <data>
-        <display>
-        <title>缓存相关问题和解决方法</title>
-        <pubTime>2019-07-08T15:30:43.000Z</pubTime>
-        
-        <tag>总结</tag>
-         
-        <tag>缓存</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://www.javabin.cn/2018/awk_val.html</loc>
+    <loc>http://www.javabin.cn/2019/bin_search.html</loc>
     <lastmod>2024-03-11T14:49:03.591Z</lastmod>
     <data>
         <display>
-        <title>AWK 内置变量ORS,OFS,RS,FS,RT,NR,FNR,$NF,NF</title>
-        <pubTime>2018-07-07T10:04:16.000Z</pubTime>
+        <title>二分查找算法原理[Python实现]</title>
+        <pubTime>2019-07-29T12:14:32.000Z</pubTime>
         
         <tag>总结</tag>
          
-        <tag>awk</tag>
+        <tag>算法</tag>
          
-        <tag>脚本</tag>
-         
-        <tag>linux</tag>
+        <tag>二分查找</tag>
          
          
            
@@ -1723,18 +1721,20 @@
 
     
   <url>
-    <loc>http://www.javabin.cn/2019/bin_search.html</loc>
+    <loc>http://www.javabin.cn/2018/awk_val.html</loc>
     <lastmod>2024-03-11T14:49:03.591Z</lastmod>
     <data>
         <display>
-        <title>二分查找算法原理[Python实现]</title>
-        <pubTime>2019-07-29T12:14:32.000Z</pubTime>
+        <title>AWK 内置变量ORS,OFS,RS,FS,RT,NR,FNR,$NF,NF</title>
+        <pubTime>2018-07-07T10:04:16.000Z</pubTime>
         
         <tag>总结</tag>
          
-        <tag>算法</tag>
+        <tag>awk</tag>
          
-        <tag>二分查找</tag>
+        <tag>脚本</tag>
+         
+        <tag>linux</tag>
          
          
            
@@ -1751,9 +1751,9 @@
         <title>【3D打印机降噪】MKs gen l v2.1主板更换4988电机驱动为TMC2209</title>
         <pubTime>2022-04-13T14:14:46.000Z</pubTime>
         
-        <tag>硬件</tag>
-         
         <tag>总结</tag>
+         
+        <tag>硬件</tag>
          
          
            
