@@ -2052,6 +2052,11 @@ pre .css~* .id,pre .id {
 
 .article-entry p {
     margin-top: 10px;
+    text-indent: 2em;
+}
+
+.article-entry p::first-letter {
+
 }
 
 .article-entry blockquote {
@@ -2066,6 +2071,8 @@ pre .css~* .id,pre .id {
 .article-entry blockquote p {
     margin-top: 0;
     margin-bottom: 0;
+    text-indent: 0;
+    word-break: break-all;
 }
 
 .article-entry em {
