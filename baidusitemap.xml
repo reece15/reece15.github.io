@@ -5,7 +5,7 @@
     
   <url>
     <loc>http://www.javabin.cn/2024/2024_llm_04_fine_tuning.html</loc>
-    <lastmod>2024-07-22T18:08:35.245Z</lastmod>
+    <lastmod>2024-07-23T01:04:48.840Z</lastmod>
     <data>
         <display>
         <title>【大模型-04】增强 大模型自身能力的方式：微调</title>
@@ -19,9 +19,9 @@
          
         <tag>lora</tag>
          
-        <tag>编程</tag>
-         
         <tag>llama-factory</tag>
+         
+        <tag>编程</tag>
          
          
            
@@ -42,9 +42,9 @@
          
         <tag>大模型</tag>
          
-        <tag>程序</tag>
-         
         <tag>agent</tag>
+         
+        <tag>程序</tag>
          
         <tag>dify</tag>
          
@@ -69,9 +69,9 @@
          
         <tag>大模型</tag>
          
-        <tag>程序</tag>
-         
         <tag>agent</tag>
+         
+        <tag>程序</tag>
          
          
            
@@ -92,9 +92,9 @@
          
         <tag>大模型</tag>
          
-        <tag>qwen2</tag>
-         
         <tag>程序</tag>
+         
+        <tag>qwen2</tag>
          
         <tag>ChatGPT-Next-Web</tag>
          
@@ -140,13 +140,13 @@
         <title>【AirTag】为低功耗蓝牙设备添加AirTag功能</title>
         <pubTime>2024-03-07T14:12:23.000Z</pubTime>
         
+        <tag>总结</tag>
+         
         <tag>固件</tag>
          
         <tag>AirTag</tag>
          
         <tag>墨水屏</tag>
-         
-        <tag>总结</tag>
          
          
            
@@ -163,11 +163,11 @@
         <title>【墨水屏】2.9寸墨水屏固件适配、二次开发，主控芯片：TLSR8359</title>
         <pubTime>2022-07-23T04:12:23.000Z</pubTime>
         
+        <tag>总结</tag>
+         
         <tag>固件</tag>
          
         <tag>墨水屏</tag>
-         
-        <tag>总结</tag>
          
         <tag>C语言</tag>
          
@@ -205,20 +205,16 @@
 
     
   <url>
-    <loc>http://www.javabin.cn/2021/xiaoai_fm.html</loc>
+    <loc>http://www.javabin.cn/2019/yolov3_train_fish2.html</loc>
     <lastmod>2024-03-11T14:49:03.614Z</lastmod>
     <data>
         <display>
-        <title>【智能音箱】小爱音箱pro拆机,刷机,开启ssh,备份系统的方法</title>
-        <pubTime>2021-06-18T18:22:24.000Z</pubTime>
+        <title>RGB转换HSV颜色空间，自动识别一张图片的主要颜色</title>
+        <pubTime>2019-06-12T15:53:19.000Z</pubTime>
         
-        <tag>系统</tag>
+        <tag>总结</tag>
          
-        <tag>刷机</tag>
-         
-        <tag>小爱音箱</tag>
-         
-        <tag>智能家居</tag>
+        <tag>python</tag>
          
          
            
@@ -247,16 +243,20 @@
 
     
   <url>
-    <loc>http://www.javabin.cn/2019/yolov3_train_fish2.html</loc>
+    <loc>http://www.javabin.cn/2021/xiaoai_fm.html</loc>
     <lastmod>2024-03-11T14:49:03.614Z</lastmod>
     <data>
         <display>
-        <title>RGB转换HSV颜色空间，自动识别一张图片的主要颜色</title>
-        <pubTime>2019-06-12T15:53:19.000Z</pubTime>
+        <title>【智能音箱】小爱音箱pro拆机,刷机,开启ssh,备份系统的方法</title>
+        <pubTime>2021-06-18T18:22:24.000Z</pubTime>
         
-        <tag>总结</tag>
+        <tag>系统</tag>
          
-        <tag>python</tag>
+        <tag>刷机</tag>
+         
+        <tag>小爱音箱</tag>
+         
+        <tag>智能家居</tag>
          
          
            
@@ -354,27 +354,6 @@
 
     
   <url>
-    <loc>http://www.javabin.cn/2019/sqlalchemy_session.html</loc>
-    <lastmod>2024-03-11T14:49:03.612Z</lastmod>
-    <data>
-        <display>
-        <title>由数据不一致引起的对事物处理，事物可见性和session缓存的思考</title>
-        <pubTime>2019-12-03T14:39:11.000Z</pubTime>
-        
-        <tag>总结</tag>
-         
-        <tag>数据库</tag>
-         
-        <tag>事物</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>http://www.javabin.cn/2019/rabbitmq_ack.html</loc>
     <lastmod>2024-03-11T14:49:03.612Z</lastmod>
     <data>
@@ -387,29 +366,6 @@
         <tag>rabbitmq</tag>
          
         <tag>消息队列</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://www.javabin.cn/2019/sql_date.html</loc>
-    <lastmod>2024-03-11T14:49:03.612Z</lastmod>
-    <data>
-        <display>
-        <title>pgsql中的日期处理</title>
-        <pubTime>2019-10-06T15:10:54.000Z</pubTime>
-        
-        <tag>总结</tag>
-         
-        <tag>pgsql</tag>
-         
-        <tag>数据库</tag>
-         
-        <tag>sql</tag>
          
          
            
@@ -459,20 +415,64 @@
 
     
   <url>
-    <loc>http://www.javabin.cn/2019/python_xmpp.html</loc>
-    <lastmod>2024-03-11T14:49:03.610Z</lastmod>
+    <loc>http://www.javabin.cn/2019/sqlalchemy_session.html</loc>
+    <lastmod>2024-03-11T14:49:03.612Z</lastmod>
     <data>
         <display>
-        <title>python如何使用xmpp发送和接收IM消息</title>
-        <pubTime>2019-06-25T22:53:58.000Z</pubTime>
+        <title>由数据不一致引起的对事物处理，事物可见性和session缓存的思考</title>
+        <pubTime>2019-12-03T14:39:11.000Z</pubTime>
         
         <tag>总结</tag>
          
-        <tag>xmpp</tag>
+        <tag>数据库</tag>
          
-        <tag>im</tag>
+        <tag>事物</tag>
          
-        <tag>模块</tag>
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.javabin.cn/2019/sql_date.html</loc>
+    <lastmod>2024-03-11T14:49:03.612Z</lastmod>
+    <data>
+        <display>
+        <title>pgsql中的日期处理</title>
+        <pubTime>2019-10-06T15:10:54.000Z</pubTime>
+        
+        <tag>总结</tag>
+         
+        <tag>数据库</tag>
+         
+        <tag>pgsql</tag>
+         
+        <tag>sql</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.javabin.cn/2018/qsort.html</loc>
+    <lastmod>2024-03-11T14:49:03.610Z</lastmod>
+    <data>
+        <display>
+        <title>快速排序算法python实现总结</title>
+        <pubTime>2018-08-21T18:31:03.000Z</pubTime>
+        
+        <tag>总结</tag>
+         
+        <tag>算法</tag>
+         
+        <tag>python</tag>
+         
+        <tag>快速排序</tag>
          
          
            
@@ -492,6 +492,50 @@
         <tag>总结</tag>
          
         <tag>性能优化</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.javabin.cn/2019/r_index.html</loc>
+    <lastmod>2024-03-11T14:49:03.610Z</lastmod>
+    <data>
+        <display>
+        <title>倒排索引的原理</title>
+        <pubTime>2019-08-09T15:01:21.000Z</pubTime>
+        
+        <tag>总结</tag>
+         
+        <tag>全文检索</tag>
+         
+        <tag>倒排索引</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.javabin.cn/2019/python_xmpp.html</loc>
+    <lastmod>2024-03-11T14:49:03.610Z</lastmod>
+    <data>
+        <display>
+        <title>python如何使用xmpp发送和接收IM消息</title>
+        <pubTime>2019-06-25T22:53:58.000Z</pubTime>
+        
+        <tag>总结</tag>
+         
+        <tag>xmpp</tag>
+         
+        <tag>im</tag>
+         
+        <tag>模块</tag>
          
          
            
@@ -528,50 +572,6 @@
 
     
   <url>
-    <loc>http://www.javabin.cn/2019/r_index.html</loc>
-    <lastmod>2024-03-11T14:49:03.610Z</lastmod>
-    <data>
-        <display>
-        <title>倒排索引的原理</title>
-        <pubTime>2019-08-09T15:01:21.000Z</pubTime>
-        
-        <tag>总结</tag>
-         
-        <tag>全文检索</tag>
-         
-        <tag>倒排索引</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://www.javabin.cn/2018/qsort.html</loc>
-    <lastmod>2024-03-11T14:49:03.610Z</lastmod>
-    <data>
-        <display>
-        <title>快速排序算法python实现总结</title>
-        <pubTime>2018-08-21T18:31:03.000Z</pubTime>
-        
-        <tag>总结</tag>
-         
-        <tag>算法</tag>
-         
-        <tag>python</tag>
-         
-        <tag>快速排序</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>http://www.javabin.cn/2019/pgsql_lock.html</loc>
     <lastmod>2024-03-11T14:49:03.609Z</lastmod>
     <data>
@@ -584,27 +584,6 @@
         <tag>锁</tag>
          
         <tag>pgsql</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://www.javabin.cn/2019/pgsql_op.html</loc>
-    <lastmod>2024-03-11T14:49:03.609Z</lastmod>
-    <data>
-        <display>
-        <title>pgsql常用操作</title>
-        <pubTime>2019-07-17T15:58:22.000Z</pubTime>
-        
-        <tag>总结</tag>
-         
-        <tag>pgsql</tag>
-         
-        <tag>数据库</tag>
          
          
            
@@ -637,20 +616,18 @@
 
     
   <url>
-    <loc>http://www.javabin.cn/2019/pgsql_seq.html</loc>
+    <loc>http://www.javabin.cn/2019/pgsql_op.html</loc>
     <lastmod>2024-03-11T14:49:03.609Z</lastmod>
     <data>
         <display>
-        <title>pgsql序列冲突问题和序列相关操作</title>
-        <pubTime>2019-07-11T16:15:13.000Z</pubTime>
+        <title>pgsql常用操作</title>
+        <pubTime>2019-07-17T15:58:22.000Z</pubTime>
         
         <tag>总结</tag>
          
-        <tag>pgsql</tag>
-         
         <tag>数据库</tag>
          
-        <tag>序列</tag>
+        <tag>pgsql</tag>
          
          
            
@@ -660,16 +637,20 @@
 
     
   <url>
-    <loc>http://www.javabin.cn/2018/pg_jieba.html</loc>
-    <lastmod>2024-03-11T14:49:03.608Z</lastmod>
+    <loc>http://www.javabin.cn/2019/pgsql_seq.html</loc>
+    <lastmod>2024-03-11T14:49:03.609Z</lastmod>
     <data>
         <display>
-        <title>使用pg_jieba使django1.4支持全文检索</title>
-        <pubTime>2018-10-26T15:15:30.000Z</pubTime>
+        <title>pgsql序列冲突问题和序列相关操作</title>
+        <pubTime>2019-07-11T16:15:13.000Z</pubTime>
         
         <tag>总结</tag>
          
         <tag>数据库</tag>
+         
+        <tag>pgsql</tag>
+         
+        <tag>序列</tag>
          
          
            
@@ -721,6 +702,25 @@
 
     
   <url>
+    <loc>http://www.javabin.cn/2018/pg_jieba.html</loc>
+    <lastmod>2024-03-11T14:49:03.608Z</lastmod>
+    <data>
+        <display>
+        <title>使用pg_jieba使django1.4支持全文检索</title>
+        <pubTime>2018-10-26T15:15:30.000Z</pubTime>
+        
+        <tag>总结</tag>
+         
+        <tag>数据库</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.javabin.cn/2019/pgsql_index.html</loc>
     <lastmod>2024-03-11T14:49:03.608Z</lastmod>
     <data>
@@ -742,27 +742,6 @@
 
     
   <url>
-    <loc>http://www.javabin.cn/2019/mock_patch.html</loc>
-    <lastmod>2024-03-11T14:49:03.607Z</lastmod>
-    <data>
-        <display>
-        <title>python单元测试中使用mock patch来解决不易测试的依赖</title>
-        <pubTime>2019-12-04T13:15:11.000Z</pubTime>
-        
-        <tag>总结</tag>
-         
-        <tag>python</tag>
-         
-        <tag>单元测试</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>http://www.javabin.cn/2018/ns2755.html</loc>
     <lastmod>2024-03-11T14:49:03.607Z</lastmod>
     <data>
@@ -775,6 +754,27 @@
         <tag>error</tag>
          
         <tag>日常使用</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.javabin.cn/2019/mock_patch.html</loc>
+    <lastmod>2024-03-11T14:49:03.607Z</lastmod>
+    <data>
+        <display>
+        <title>python单元测试中使用mock patch来解决不易测试的依赖</title>
+        <pubTime>2019-12-04T13:15:11.000Z</pubTime>
+        
+        <tag>总结</tag>
+         
+        <tag>python</tag>
+         
+        <tag>单元测试</tag>
          
          
            
@@ -828,27 +828,6 @@
 
     
   <url>
-    <loc>http://www.javabin.cn/2019/merge_sort.html</loc>
-    <lastmod>2024-03-11T14:49:03.606Z</lastmod>
-    <data>
-        <display>
-        <title>归并排序的原理和实现[Python实现]</title>
-        <pubTime>2019-08-06T16:42:52.000Z</pubTime>
-        
-        <tag>总结</tag>
-         
-        <tag>算法</tag>
-         
-        <tag>归并排序</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>http://www.javabin.cn/2019/memcache_test.html</loc>
     <lastmod>2024-03-11T14:49:03.606Z</lastmod>
     <data>
@@ -870,16 +849,18 @@
 
     
   <url>
-    <loc>http://www.javabin.cn/2018/manacher.html</loc>
+    <loc>http://www.javabin.cn/2019/merge_sort.html</loc>
     <lastmod>2024-03-11T14:49:03.606Z</lastmod>
     <data>
         <display>
-        <title>马拉车算法(Manacher算法)的原理</title>
-        <pubTime>2018-11-28T19:08:24.000Z</pubTime>
+        <title>归并排序的原理和实现[Python实现]</title>
+        <pubTime>2019-08-06T16:42:52.000Z</pubTime>
         
         <tag>总结</tag>
          
         <tag>算法</tag>
+         
+        <tag>归并排序</tag>
          
          
            
@@ -912,6 +893,25 @@
 
     
   <url>
+    <loc>http://www.javabin.cn/2018/manacher.html</loc>
+    <lastmod>2024-03-11T14:49:03.606Z</lastmod>
+    <data>
+        <display>
+        <title>马拉车算法(Manacher算法)的原理</title>
+        <pubTime>2018-11-28T19:08:24.000Z</pubTime>
+        
+        <tag>总结</tag>
+         
+        <tag>算法</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.javabin.cn/2018/knn_mnist02.html</loc>
     <lastmod>2024-03-11T14:49:03.605Z</lastmod>
     <data>
@@ -933,27 +933,6 @@
 
     
   <url>
-    <loc>http://www.javabin.cn/2018/knn_py.html</loc>
-    <lastmod>2024-03-11T14:49:03.605Z</lastmod>
-    <data>
-        <display>
-        <title>KNN算法和python实现</title>
-        <pubTime>2018-05-05T07:11:18.000Z</pubTime>
-        
-        <tag>python</tag>
-         
-        <tag>机器学习</tag>
-         
-        <tag>KNN算法</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>http://www.javabin.cn/2018/leetcode564.html</loc>
     <lastmod>2024-03-11T14:49:03.605Z</lastmod>
     <data>
@@ -966,6 +945,27 @@
         <tag>算法</tag>
          
         <tag>leetcode</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.javabin.cn/2018/knn_py.html</loc>
+    <lastmod>2024-03-11T14:49:03.605Z</lastmod>
+    <data>
+        <display>
+        <title>KNN算法和python实现</title>
+        <pubTime>2018-05-05T07:11:18.000Z</pubTime>
+        
+        <tag>python</tag>
+         
+        <tag>机器学习</tag>
+         
+        <tag>KNN算法</tag>
          
          
            
@@ -1021,18 +1021,14 @@
 
     
   <url>
-    <loc>http://www.javabin.cn/2018/knn_mnist.html</loc>
+    <loc>http://www.javabin.cn/2018/json_datetime.html</loc>
     <lastmod>2024-03-11T14:49:03.604Z</lastmod>
     <data>
         <display>
-        <title>使用mnist数据集测试knn算法之解析并加载数据集(一)</title>
-        <pubTime>2018-05-09T02:50:49.000Z</pubTime>
+        <title>json 序列化时 如何序列化datetime</title>
+        <pubTime>2018-08-17T18:03:19.000Z</pubTime>
         
-        <tag>机器学习</tag>
-         
-        <tag>knn算法</tag>
-         
-        <tag>mnist数据集</tag>
+        <tag>python</tag>
          
          
            
@@ -1061,6 +1057,27 @@
 
     
   <url>
+    <loc>http://www.javabin.cn/2018/knn_mnist.html</loc>
+    <lastmod>2024-03-11T14:49:03.604Z</lastmod>
+    <data>
+        <display>
+        <title>使用mnist数据集测试knn算法之解析并加载数据集(一)</title>
+        <pubTime>2018-05-09T02:50:49.000Z</pubTime>
+        
+        <tag>机器学习</tag>
+         
+        <tag>knn算法</tag>
+         
+        <tag>mnist数据集</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.javabin.cn/2018/hw_test.html</loc>
     <lastmod>2024-03-11T14:49:03.604Z</lastmod>
     <data>
@@ -1071,23 +1088,6 @@
         <tag>总结</tag>
          
         <tag>面试</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://www.javabin.cn/2018/json_datetime.html</loc>
-    <lastmod>2024-03-11T14:49:03.604Z</lastmod>
-    <data>
-        <display>
-        <title>json 序列化时 如何序列化datetime</title>
-        <pubTime>2018-08-17T18:03:19.000Z</pubTime>
-        
-        <tag>python</tag>
          
          
            
@@ -1189,6 +1189,23 @@
 
     
   <url>
+    <loc>http://www.javabin.cn/2018/git_pr.html</loc>
+    <lastmod>2024-03-11T14:49:03.602Z</lastmod>
+    <data>
+        <display>
+        <title>github撤销已经提交的pr中的commit</title>
+        <pubTime>2018-09-06T11:49:31.000Z</pubTime>
+        
+        <tag>GIT</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.javabin.cn/2016/github2gitcafe.html</loc>
     <lastmod>2024-03-11T14:49:03.602Z</lastmod>
     <data>
@@ -1227,23 +1244,6 @@
 
     
   <url>
-    <loc>http://www.javabin.cn/2018/git_pr.html</loc>
-    <lastmod>2024-03-11T14:49:03.602Z</lastmod>
-    <data>
-        <display>
-        <title>github撤销已经提交的pr中的commit</title>
-        <pubTime>2018-09-06T11:49:31.000Z</pubTime>
-        
-        <tag>GIT</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>http://www.javabin.cn/2018/es_install.html</loc>
     <lastmod>2024-03-11T14:49:03.597Z</lastmod>
     <data>
@@ -1258,27 +1258,6 @@
         <tag>elasticsearch</tag>
          
         <tag>全文检索</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://www.javabin.cn/2018/flock.html</loc>
-    <lastmod>2024-03-11T14:49:03.597Z</lastmod>
-    <data>
-        <display>
-        <title>linux中防止shell重复执行</title>
-        <pubTime>2018-11-23T14:41:08.000Z</pubTime>
-        
-        <tag>总结</tag>
-         
-        <tag>锁</tag>
-         
-        <tag>shell</tag>
          
          
            
@@ -1332,16 +1311,18 @@
 
     
   <url>
-    <loc>http://www.javabin.cn/2019/elastic_search_size.html</loc>
-    <lastmod>2024-03-11T14:49:03.596Z</lastmod>
+    <loc>http://www.javabin.cn/2018/flock.html</loc>
+    <lastmod>2024-03-11T14:49:03.597Z</lastmod>
     <data>
         <display>
-        <title>elasticsearch中如何依据字符串长度过滤</title>
-        <pubTime>2019-09-23T13:11:24.000Z</pubTime>
+        <title>linux中防止shell重复执行</title>
+        <pubTime>2018-11-23T14:41:08.000Z</pubTime>
         
         <tag>总结</tag>
          
-        <tag>elasticsearch</tag>
+        <tag>锁</tag>
+         
+        <tag>shell</tag>
          
          
            
@@ -1370,22 +1351,16 @@
 
     
   <url>
-    <loc>http://www.javabin.cn/2018/es_base.html</loc>
+    <loc>http://www.javabin.cn/2019/elastic_search_size.html</loc>
     <lastmod>2024-03-11T14:49:03.596Z</lastmod>
     <data>
         <display>
-        <title>elasticsearch 入坑(二) 基本操作</title>
-        <pubTime>2018-12-13T12:24:36.000Z</pubTime>
+        <title>elasticsearch中如何依据字符串长度过滤</title>
+        <pubTime>2019-09-23T13:11:24.000Z</pubTime>
         
         <tag>总结</tag>
          
-        <tag>linux</tag>
-         
-        <tag>python</tag>
-         
         <tag>elasticsearch</tag>
-         
-        <tag>全文检索</tag>
          
          
            
@@ -1406,9 +1381,57 @@
          
         <tag>elasticsearch</tag>
          
+        <tag>报错</tag>
+         
         <tag>全文检索</tag>
          
-        <tag>报错</tag>
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.javabin.cn/2018/es_base.html</loc>
+    <lastmod>2024-03-11T14:49:03.596Z</lastmod>
+    <data>
+        <display>
+        <title>elasticsearch 入坑(二) 基本操作</title>
+        <pubTime>2018-12-13T12:24:36.000Z</pubTime>
+        
+        <tag>总结</tag>
+         
+        <tag>python</tag>
+         
+        <tag>linux</tag>
+         
+        <tag>elasticsearch</tag>
+         
+        <tag>全文检索</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.javabin.cn/2018/django_steam.html</loc>
+    <lastmod>2024-03-11T14:49:03.595Z</lastmod>
+    <data>
+        <display>
+        <title>使用Django StreamingHttpResponse实现opencv处理图片后进行web视频流播放</title>
+        <pubTime>2018-07-02T14:57:33.000Z</pubTime>
+        
+        <tag>python</tag>
+         
+        <tag>django</tag>
+         
+        <tag>opencv</tag>
+         
+        <tag>树莓派</tag>
          
          
            
@@ -1460,69 +1483,6 @@
 
     
   <url>
-    <loc>http://www.javabin.cn/2018/django_steam.html</loc>
-    <lastmod>2024-03-11T14:49:03.595Z</lastmod>
-    <data>
-        <display>
-        <title>使用Django StreamingHttpResponse实现opencv处理图片后进行web视频流播放</title>
-        <pubTime>2018-07-02T14:57:33.000Z</pubTime>
-        
-        <tag>python</tag>
-         
-        <tag>django</tag>
-         
-        <tag>opencv</tag>
-         
-        <tag>树莓派</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://www.javabin.cn/2019/django_sql_detail.html</loc>
-    <lastmod>2024-03-11T14:49:03.594Z</lastmod>
-    <data>
-        <display>
-        <title>django中查看指定函数的SQL日志</title>
-        <pubTime>2019-07-02T16:31:30.000Z</pubTime>
-        
-        <tag>总结</tag>
-         
-        <tag>django</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://www.javabin.cn/2018/django_autoreload.html</loc>
-    <lastmod>2024-03-11T14:49:03.594Z</lastmod>
-    <data>
-        <display>
-        <title>Django 源码学习之autoreload(二)</title>
-        <pubTime>2018-04-29T19:37:12.000Z</pubTime>
-        
-        <tag>python</tag>
-         
-        <tag>django</tag>
-         
-        <tag>源码</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>http://www.javabin.cn/2019/dark_time.html</loc>
     <lastmod>2024-03-11T14:49:03.594Z</lastmod>
     <data>
@@ -1555,11 +1515,51 @@
         
         <tag>总结</tag>
          
-        <tag>django</tag>
-         
         <tag>读写分离</tag>
          
         <tag>orm</tag>
+         
+        <tag>django</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.javabin.cn/2018/django_autoreload.html</loc>
+    <lastmod>2024-03-11T14:49:03.594Z</lastmod>
+    <data>
+        <display>
+        <title>Django 源码学习之autoreload(二)</title>
+        <pubTime>2018-04-29T19:37:12.000Z</pubTime>
+        
+        <tag>python</tag>
+         
+        <tag>django</tag>
+         
+        <tag>源码</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.javabin.cn/2019/django_sql_detail.html</loc>
+    <lastmod>2024-03-11T14:49:03.594Z</lastmod>
+    <data>
+        <display>
+        <title>django中查看指定函数的SQL日志</title>
+        <pubTime>2019-07-02T16:31:30.000Z</pubTime>
+        
+        <tag>总结</tag>
+         
+        <tag>django</tag>
          
          
            
@@ -1581,25 +1581,6 @@
         <tag>微服务</tag>
          
         <tag>服务治理</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://www.javabin.cn/2019/celery_repeat.html</loc>
-    <lastmod>2024-03-11T14:49:03.593Z</lastmod>
-    <data>
-        <display>
-        <title>由celery任务重复执行引起的对幂等性的思考</title>
-        <pubTime>2019-07-11T13:55:17.000Z</pubTime>
-        
-        <tag>总结</tag>
-         
-        <tag>幂等性</tag>
          
          
            
@@ -1651,18 +1632,16 @@
 
     
   <url>
-    <loc>http://www.javabin.cn/2019/bin_search_tree.html</loc>
-    <lastmod>2024-03-11T14:49:03.592Z</lastmod>
+    <loc>http://www.javabin.cn/2019/celery_repeat.html</loc>
+    <lastmod>2024-03-11T14:49:03.593Z</lastmod>
     <data>
         <display>
-        <title>二叉搜索树的原理和实现[Python实现]</title>
-        <pubTime>2019-07-29T18:52:47.000Z</pubTime>
+        <title>由celery任务重复执行引起的对幂等性的思考</title>
+        <pubTime>2019-07-11T13:55:17.000Z</pubTime>
         
         <tag>总结</tag>
          
-        <tag>算法</tag>
-         
-        <tag>二叉查找树</tag>
+        <tag>幂等性</tag>
          
          
            
@@ -1754,6 +1733,27 @@
 
     
   <url>
+    <loc>http://www.javabin.cn/2019/bin_search_tree.html</loc>
+    <lastmod>2024-03-11T14:49:03.592Z</lastmod>
+    <data>
+        <display>
+        <title>二叉搜索树的原理和实现[Python实现]</title>
+        <pubTime>2019-07-29T18:52:47.000Z</pubTime>
+        
+        <tag>总结</tag>
+         
+        <tag>算法</tag>
+         
+        <tag>二叉查找树</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.javabin.cn/2018/awk_val.html</loc>
     <lastmod>2024-03-11T14:49:03.591Z</lastmod>
     <data>
@@ -1777,27 +1777,6 @@
 
     
   <url>
-    <loc>http://www.javabin.cn/2019/bin_search.html</loc>
-    <lastmod>2024-03-11T14:49:03.591Z</lastmod>
-    <data>
-        <display>
-        <title>二分查找算法原理[Python实现]</title>
-        <pubTime>2019-07-29T12:14:32.000Z</pubTime>
-        
-        <tag>总结</tag>
-         
-        <tag>算法</tag>
-         
-        <tag>二分查找</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>http://www.javabin.cn/2018/base_sort.html</loc>
     <lastmod>2024-03-11T14:49:03.591Z</lastmod>
     <data>
@@ -1812,6 +1791,27 @@
         <tag>冒泡排序</tag>
          
         <tag>插入排序</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.javabin.cn/2019/bin_search.html</loc>
+    <lastmod>2024-03-11T14:49:03.591Z</lastmod>
+    <data>
+        <display>
+        <title>二分查找算法原理[Python实现]</title>
+        <pubTime>2019-07-29T12:14:32.000Z</pubTime>
+        
+        <tag>总结</tag>
+         
+        <tag>算法</tag>
+         
+        <tag>二分查找</tag>
          
          
            
