@@ -6,7 +6,7 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://www.javabin.cn">
-  <title>【大模型-04】增强 大模型自身能力的方式：微调 | 除了代码也想写点其他的</title>
+  <title>【大模型-04】增强大模型自身能力的方式：微调 | 除了代码也想写点其他的</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
   
@@ -17,7 +17,7 @@
   <meta name="description" content="上一篇博客讲了通过RAG，WORKFLOW和AGENT来增强大模型应用的能力，但是对于部分大模型不擅长的特殊领域问题，并不能很好的解决。本篇将通过实战微调qwen2:1.5b模型, 讲解如何通过微调来增加大模型自身能力，为大模型灌入指定的知识。演示通过llama-factory和编写代码两种方式来对大模型进行微调，实现修改大模型自我认知和为大模型添加智能家居控制功能。同时演示大模型微调的一般顺序：">
 <meta name="keywords" content="微调,人工智能,大模型,lora,qwen2,训练大模型,微调大模型,llama-factory">
 <meta property="og:type" content="article">
-<meta property="og:title" content="【大模型-04】增强 大模型自身能力的方式：微调">
+<meta property="og:title" content="【大模型-04】增强大模型自身能力的方式：微调">
 <meta property="og:url" content="http://www.javabin.cn/2024/2024_llm_04_fine_tuning.html">
 <meta property="og:site_name" content="除了代码也想写点其他的">
 <meta property="og:description" content="上一篇博客讲了通过RAG，WORKFLOW和AGENT来增强大模型应用的能力，但是对于部分大模型不擅长的特殊领域问题，并不能很好的解决。本篇将通过实战微调qwen2:1.5b模型, 讲解如何通过微调来增加大模型自身能力，为大模型灌入指定的知识。演示通过llama-factory和编写代码两种方式来对大模型进行微调，实现修改大模型自我认知和为大模型添加智能家居控制功能。同时演示大模型微调的一般顺序：">
@@ -29,9 +29,9 @@
 <meta property="og:image" content="http://www.javabin.cn/photo_2024/llm_04_fine_tuning_target2.png">
 <meta property="og:image" content="http://www.javabin.cn/photo_2024/llm_04_fine_tuning_predict.png">
 <meta property="og:image" content="http://www.javabin.cn/photo_2024/llm_04_fine_tuning_train.png">
-<meta property="og:updated_time" content="2024-07-23T01:04:48.840Z">
+<meta property="og:updated_time" content="2024-07-24T15:00:04.517Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="【大模型-04】增强 大模型自身能力的方式：微调">
+<meta name="twitter:title" content="【大模型-04】增强大模型自身能力的方式：微调">
 <meta name="twitter:description" content="上一篇博客讲了通过RAG，WORKFLOW和AGENT来增强大模型应用的能力，但是对于部分大模型不擅长的特殊领域问题，并不能很好的解决。本篇将通过实战微调qwen2:1.5b模型, 讲解如何通过微调来增加大模型自身能力，为大模型灌入指定的知识。演示通过llama-factory和编写代码两种方式来对大模型进行微调，实现修改大模型自我认知和为大模型添加智能家居控制功能。同时演示大模型微调的一般顺序：">
 <meta name="twitter:image" content="http://www.javabin.cn/photo_2024/llm_04_fine_tuning_target1.png">
   
@@ -211,7 +211,7 @@ var _hmt = _hmt || [];
         
   
     <h1 class="article-title" itemprop="name">
-      【大模型-04】增强 大模型自身能力的方式：微调
+      【大模型-04】增强大模型自身能力的方式：微调
     </h1>
   
 
@@ -226,7 +226,7 @@ var _hmt = _hmt || [];
     <div class="article-entry" itemprop="articleBody">
 	   
 		 
-	<img src="/photo_2024/llm_04_fine_tuning.png" width="500px" title="【大模型-04】增强 大模型自身能力的方式：微调"/>
+	<img src="/photo_2024/llm_04_fine_tuning.png" width="500px" title="【大模型-04】增强大模型自身能力的方式：微调"/>
 
 		
       
@@ -446,9 +446,9 @@ Build cuda_11.8.r11.8/compiler.31833905_0
         return tokenizer.batch_decode(generated_ids, skip_special_tokens=True)[0]
 
 
-    def predict(mode_dir):
-        tokenizer = AutoTokenizer.from_pretrained(mode_dir, use_fast=False, trust_remote_code=True)
-        model = AutoModelForCausalLM.from_pretrained(mode_dir, device_map=&quot;auto&quot;, torch_dtype=torch.bfloat16)
+    def predict(model_dir):
+        tokenizer = AutoTokenizer.from_pretrained(model_dir, use_fast=False, trust_remote_code=True)
+        model = AutoModelForCausalLM.from_pretrained(model_dir, device_map=&quot;auto&quot;, torch_dtype=torch.bfloat16)
 
         instruction = &#39;你是一个聊天助手&#39;
         print(&#39;请输入问题后按回车：&#39;)
@@ -463,7 +463,7 @@ Build cuda_11.8.r11.8/compiler.31833905_0
 
 
     if __name__ == &#39;__main__&#39;:
-        predict(mode_dir=r&#39;L:\code\py\ft_qwen1.5b\LLaMA-Factory\qwen2_home_control&#39;)
+        predict(model_dir=r&#39;L:\code\py\ft_qwen1.5b\LLaMA-Factory\qwen2_home_control&#39;)
 </code></pre>
 <p>测试输出示例: <img src="/photo_2024/llm_04_fine_tuning_predict.png" alt=""></p>
 <h3 id="编写python脚本进行微调"><a href="#编写python脚本进行微调" class="headerlink" title="编写python脚本进行微调"></a>编写python脚本进行微调</h3><p>上面我们尝试了使用llama-factory的web界面来进行微调训练，接下来我们不依赖任何外部脚本和工具，编写一个python训练脚本来对模型进行训练。</p>
@@ -582,9 +582,9 @@ Build cuda_11.8.r11.8/compiler.31833905_0
         return tokenizer.batch_decode(generated_ids, skip_special_tokens=True)[0]
 
 
-    def predict(mode_dir):
-        tokenizer = AutoTokenizer.from_pretrained(mode_dir, use_fast=False, trust_remote_code=True)
-        model = AutoModelForCausalLM.from_pretrained(mode_dir, device_map=&quot;auto&quot;, torch_dtype=torch.bfloat16)
+    def predict(model_dir):
+        tokenizer = AutoTokenizer.from_pretrained(model_dir, use_fast=False, trust_remote_code=True)
+        model = AutoModelForCausalLM.from_pretrained(model_dir, device_map=&quot;auto&quot;, torch_dtype=torch.bfloat16)
         model = PeftModel.from_pretrained(model, model_id=&quot;./output/Qwen2_1_5/checkpoint-200&quot;)
 
         instruction = &#39;你是一个聊天助手&#39;
@@ -739,6 +739,15 @@ Build cuda_11.8.r11.8/compiler.31833905_0
 
   
 <nav id="article-nav">
+  
+    <a href="/2024/2024_llm_05_ops.html" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          【大模型-05】大模型部署和加速方式：vllm
+        
+      </div>
+    </a>
   
   
     <a href="/2024/2024_llm_03_dify.html" id="article-nav-older" class="article-nav-link-wrap">
@@ -1301,11 +1310,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">agent</a>
+                <a href="javascript:void(0)" class="js-tag color1">qwen2</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">程序</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">ChatGPT-Next-Web</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1325,35 +1338,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">qwen2</a>
+                <a href="javascript:void(0)" class="js-tag color1">部署大模型</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">ChatGPT-Next-Web</a>
+                <a href="javascript:void(0)" class="js-tag color1">加速大模型</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">总结</a>
+                <a href="javascript:void(0)" class="js-tag color3">运维</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">算法</a>
+                <a href="javascript:void(0)" class="js-tag color5">vllm</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">二叉查找树</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">平衡二叉树</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">AVL</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">硬件</a>
+                <a href="javascript:void(0)" class="js-tag color1">agent</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1362,6 +1363,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">python</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">总结</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">硬件</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1389,11 +1398,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">数据结构</a>
+                <a href="javascript:void(0)" class="js-tag color3">算法</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">二叉树</a>
+                <a href="javascript:void(0)" class="js-tag color1">二叉查找树</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">平衡二叉树</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">AVL</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">二分查找</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1405,10 +1426,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">二分查找</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">书单</a>
               </li>
              
@@ -1417,7 +1434,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">缓存</a>
+                <a href="javascript:void(0)" class="js-tag color4">幂等性</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">数据结构</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">二叉树</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1445,11 +1470,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">游记</a>
+                <a href="javascript:void(0)" class="js-tag color2">django</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">生活</a>
+                <a href="javascript:void(0)" class="js-tag color3">源码</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">缓存</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">dify</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">RAG</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1465,23 +1502,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">幂等性</a>
+                <a href="javascript:void(0)" class="js-tag color3">游记</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">读写分离</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">orm</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">django</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">源码</a>
+                <a href="javascript:void(0)" class="js-tag color3">生活</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1497,6 +1522,22 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">报错</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">全文检索</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">读写分离</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">orm</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">C语言</a>
               </li>
              
@@ -1509,27 +1550,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">报错</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">全文检索</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">压力测试</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">dify</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">RAG</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">git</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1545,23 +1566,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">技巧</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">git</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">架构</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">grpc</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">技巧</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">https</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">生产环境</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1581,15 +1598,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">面试</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">激光雷达</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">机器人</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">面试</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">https</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">生产环境</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1601,19 +1626,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">leetcode</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">KNN算法</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">postgresql</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">运维</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1629,15 +1646,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">memcache</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">压测</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">归并排序</a>
+                <a href="javascript:void(0)" class="js-tag color4">leetcode</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1646,6 +1655,30 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">数据迁移</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">归并排序</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">单元测试</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">工作</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">网络</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">ndnSIM</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">仿真</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1669,10 +1702,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">单元测试</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">pgsql</a>
               </li>
              
@@ -1681,27 +1710,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">网络</a>
+                <a href="javascript:void(0)" class="js-tag color4">memcache</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">ndnSIM</a>
+                <a href="javascript:void(0)" class="js-tag color3">压测</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">仿真</a>
+                <a href="javascript:void(0)" class="js-tag color3">索引</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">快速排序</a>
+                <a href="javascript:void(0)" class="js-tag color3">序列</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">倒排索引</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1717,7 +1742,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">索引</a>
+                <a href="javascript:void(0)" class="js-tag color5">快速排序</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">倒排索引</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1729,7 +1758,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">序列</a>
+                <a href="javascript:void(0)" class="js-tag color3">事物</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1738,22 +1767,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">celery</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">工作</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">正则表达式</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">事物</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">sql</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1773,23 +1786,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">sql</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">多线程</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">测评</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">科技</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">虚拟现实</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">高性能</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1806,6 +1807,26 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">斯米兰</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">正则表达式</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">高性能</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">测评</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">科技</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">虚拟现实</a>
               </li>
              
               <li class="article-tag-list-item">
