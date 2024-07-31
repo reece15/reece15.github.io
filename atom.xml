@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.javabin.cn/"/>
-  <updated>2024-07-31T15:27:15.665Z</updated>
+  <updated>2024-07-31T16:40:13.705Z</updated>
   <id>http://www.javabin.cn/</id>
   
   <author>
@@ -21,9 +21,9 @@
     <link href="http://www.javabin.cn/2024/2024_llm_07_graphrag.html"/>
     <id>http://www.javabin.cn/2024/2024_llm_07_graphrag.html</id>
     <published>2024-07-31T14:31:04.000Z</published>
-    <updated>2024-07-31T15:27:15.665Z</updated>
+    <updated>2024-07-31T16:40:13.705Z</updated>
     
-    <content type="html"><![CDATA[<p>本篇将本地配置微软的graphrag软件包，并使用graphrag对小说进行索引后进行数据的检索。</p><h2 id="本篇内容"><a href="#本篇内容" class="headerlink" title="本篇内容:"></a>本篇内容:</h2><ul><li>什么是graphrag</li><li>配置graphrag<ul><li>部署本地embedding服务bge</li><li>部署本地大模型服务qwen2:7b</li><li>配置测试graphrag</li></ul></li><li>数据存储格式<a id="more"></a></li></ul><h2 id="什么是graphrag"><a href="#什么是graphrag" class="headerlink" title="什么是graphrag"></a>什么是graphrag</h2><p>graphrag是一种基于图的rag技术，是传统rag的优化版本。传统的rag使用embedding模型为文档块生成embedding向量后存入向量数据库，在查询时为查询语句也生成embedding向量，通过查找出数据库内与查询向量最相接近的文档块向量来检索出语义最相关的文档块。而graphrag会先抽取出文档块内的人物，地点，事件等组成实体间的关系网络，在查询时通过实体关系查询出和上下文相关的子图，最后通过大模型整合为连贯的最终输出。</p><p>graphrag检索出的信息不再是孤立的，而是相互之间有关联的，所以相关文档块的上下文更加丰富，没有传统RAG东拼西凑的感觉。</p><p>graphrag支持两种查询方式：global和local。</p><ul><li>Local查询方式： 主要针对需要理解文档中特定实体的问题，通过结合AI提取的知识图谱和原始文档的文本块生成答案。这种方法适用于需要对文档中提到的特定实体有所理解的问题，例如询问某种草药的治疗特性 。</li><li>Global查询方式：在所有AI生成的社区报告中进行搜索，以map-reduce的方式生成答案。这是一种资源密集型方法，但通常能够很好地回答那些需要对数据集整体有全面理解的问题，例如询问在某个笔记本中提到的草药最重要的价值 </li></ul><p>GraphRAG的索引和查询包括了几个关键步骤：</p><ul><li>将源文档分割成文本块</li><li>从文本块中提取实体和关系实例</li><li>为每个图元素生成摘要</li><li>使用社区检测算法将图划分为社区</li><li>为每个社区生成摘要</li><li>利用社区摘要生成局部答案</li><li>汇总这些局部答案以生成全局答案 </li></ul><h2 id="配置graphrag"><a href="#配置graphrag" class="headerlink" title="配置graphrag"></a>配置graphrag</h2><p>本地部署graphrag需要配置embedding服务和大模型服务，由于graphrag生成索引和进行查询时会消耗大量token, 为了更经济实用，我们将本地部署大模型和embedding模型。</p><h3 id="部署embedding服务"><a href="#部署embedding服务" class="headerlink" title="部署embedding服务"></a>部署embedding服务</h3><h4 id="安装依赖"><a href="#安装依赖" class="headerlink" title="安装依赖"></a>安装依赖</h4><pre><code class="shell">pip3 install modelscope fastapi FlagEmbedding pydantic uvicorn</code></pre><h4 id="编写embedding服务端代码"><a href="#编写embedding服务端代码" class="headerlink" title="编写embedding服务端代码"></a>编写embedding服务端代码</h4><p>将以下代码保存到bge.py</p><pre><code class="python">    import os    from typing import List, Union    from fastapi import FastAPI    from modelscope import snapshot_download    from FlagEmbedding import FlagModel    from pydantic import BaseModel    model_dir = snapshot_download(&quot;AI-ModelScope/bge-large-zh-v1.5&quot;, revision=&#39;master&#39;, local_dir=&#39;./bge&#39;)    model = FlagModel(model_dir, use_fp16=True)    app = FastAPI()    BATCH_SIZE = int(os.environ.get(&#39;EMBEDDING_BATCH_SIZE&#39;, 256))    class EmbeddingData(BaseModel):        input: Union[List, str]    @app.post(&quot;/embeddings&quot;)    async def get_embedding(data: EmbeddingData):        embeddings = model.encode(data.input, batch_size=BATCH_SIZE)        if isinstance(data.input, str):            embeddings = [embeddings]        return {            &#39;data&#39;: [{&#39;embedding&#39;: item.tolist(), &#39;index&#39;: index, &#39;object&#39;: &#39;embedding&#39;} for index, item in enumerate(embeddings)],            &quot;object&quot;: &quot;list&quot;,            &quot;model&quot;: &quot;bge&quot;,            &quot;usage&quot;: {                &quot;prompt_tokens&quot;: 0,                &quot;total_tokens&quot;: 0            }        }</code></pre><h4 id="启动服务"><a href="#启动服务" class="headerlink" title="启动服务"></a>启动服务</h4><p>在bge.py同目录执行：</p><pre><code class="shell">uvicorn bge:app --host 0.0.0.0 --port 3001</code></pre><p>此时embedding模型服务将运行在本机3001端口</p><h3 id="部署大模型服务"><a href="#部署大模型服务" class="headerlink" title="部署大模型服务"></a>部署大模型服务</h3><p>可參考blog <code>【大模型-01】本地部署qwen2模型+集成聊天界面ChatGPT-Next-Web（无显卡也可运行）</code>来使用ollama本地运行qwen2:7b。</p><h3 id="配置graphrag-1"><a href="#配置graphrag-1" class="headerlink" title="配置graphrag"></a>配置graphrag</h3><h4 id="安装依赖-1"><a href="#安装依赖-1" class="headerlink" title="安装依赖"></a>安装依赖</h4><pre><code class="shell">pip3 install graphrag</code></pre><h4 id="初始化目录"><a href="#初始化目录" class="headerlink" title="初始化目录"></a>初始化目录</h4><pre><code class="shell">python -m graphrag.index --init --root ./data# 创建输入目录mkdir -p ./data/input</code></pre><p>将准备好的小说，复制到./data/input目录内，注意文件格式为txt,编码为utf-8。graphrag配置文件中配置了默认会从input目录读取文件进行索引。</p><h4 id="配置大模型接口"><a href="#配置大模型接口" class="headerlink" title="配置大模型接口"></a>配置大模型接口</h4><p>打开./data/settings.yaml修改以下配置: </p><ul><li>llm.model: 改为 <code>qwen2:7b</code></li><li>llm.api_base: 改为 <code>http://127.0.0.1:11434/v1</code></li></ul><pre><code class="yaml">llm:  model: qwen2:7b  api_base: http://127.0.0.1:11434/v1  model_supports_json: false</code></pre><h4 id="配置embedding接口"><a href="#配置embedding接口" class="headerlink" title="配置embedding接口"></a>配置embedding接口</h4><ul><li>embeddings.llm.model: 改为 <code>bge</code></li><li>embeddings.llm.api_base: 改为 <code>http://127.0.0.1:3001</code></li></ul><pre><code class="yaml">    embeddings:      llm:        model: bge        api_base: http://127.0.0.1:3001</code></pre><h4 id="生成索引"><a href="#生成索引" class="headerlink" title="生成索引"></a>生成索引</h4><p>配置好后我们就可以执行命令来生成索引数据，这个过程会花费很长时间，初次测试建议先用小文件进行测试。</p><pre><code class="shell">python -m graphrag.index --root ./data</code></pre><h4 id="查询"><a href="#查询" class="headerlink" title="查询"></a>查询</h4><p>建立索引完成后，就可以通过local和global查询方式来检索我们的问题：</p><pre><code class="shell">python -m graphrag.query --root .\data\ --method local &quot;韩立是谁？&quot;python -m graphrag.query --root .\data\ --method global &quot;这篇小说讲的什么&quot;</code></pre><h2 id="数据格式"><a href="#数据格式" class="headerlink" title="数据格式"></a>数据格式</h2><p>graphgrag的知识图谱相关数据都存储在目录<code>data/output/20240731-202342/artifacts/</code>目录下的<code>.parquet</code>文件中，pycharm中可以下载安装<code>avro/parquet viewr</code>进行查看。以下是部分文件的说明和结构：</p><h3 id="create-final-nodes-parquet"><a href="#create-final-nodes-parquet" class="headerlink" title="create_final_nodes.parquet"></a>create_final_nodes.parquet</h3><p>知识图谱中的各种节点信息,包括节点的说明，名称，类型等。<br><img src="/photo_2024/llm_07_graphrag_node.png" alt=""></p><h3 id="create-final-entities-parquet"><a href="#create-final-entities-parquet" class="headerlink" title="create_final_entities.parquet"></a>create_final_entities.parquet</h3><p>知识图谱中的实体信息<br><img src="/photo_2024/llm_07_graphrag_entity.png" alt=""></p><h3 id="create-final-relationships-parquet"><a href="#create-final-relationships-parquet" class="headerlink" title="create_final_relationships.parquet"></a>create_final_relationships.parquet</h3><p>知识图谱中的关系信息<br><img src="/photo_2024/llm_07_graphrag_relation.png" alt=""></p><h3 id="create-final-community-reports-parquet"><a href="#create-final-community-reports-parquet" class="headerlink" title="create_final_community_reports.parquet"></a>create_final_community_reports.parquet</h3><p>生成的各个社区的标题和描述</p><h2 id="相关资料"><a href="#相关资料" class="headerlink" title="相关资料"></a>相关资料</h2><blockquote><p>graphrag github项目: <a href="https://github.com/microsoft/graphrag" target="_blank" rel="noopener">https://github.com/microsoft/graphrag</a></p><p>graphrag文档：<a href="https://microsoft.github.io/graphrag/" target="_blank" rel="noopener">https://microsoft.github.io/graphrag/</a></p></blockquote>]]></content>
+    <content type="html"><![CDATA[<p>本篇将本地配置微软的graphrag软件包，并使用graphrag对小说进行索引后进行数据的检索。</p><h2 id="本篇内容"><a href="#本篇内容" class="headerlink" title="本篇内容:"></a>本篇内容:</h2><ul><li>什么是graphrag</li><li>配置graphrag<ul><li>部署本地embedding服务bge</li><li>部署本地大模型服务qwen2:7b</li><li>配置测试graphrag</li></ul></li><li>数据存储格式</li><li>使用neo4j可视化知识图谱<a id="more"></a></li></ul><h2 id="什么是graphrag"><a href="#什么是graphrag" class="headerlink" title="什么是graphrag"></a>什么是graphrag</h2><p>graphrag是一种基于图的rag技术，是传统rag的优化版本。传统的rag使用embedding模型为文档块生成embedding向量后存入向量数据库，在查询时为查询语句也生成embedding向量，通过查找出数据库内与查询向量最相接近的文档块向量来检索出语义最相关的文档块。而graphrag会先抽取出文档块内的人物，地点，事件等组成实体间的关系网络，在查询时通过实体关系查询出和上下文相关的子图，最后通过大模型整合为连贯的最终输出。</p><p>graphrag检索出的信息不再是孤立的，而是相互之间有关联的，所以相关文档块的上下文更加丰富，没有传统RAG东拼西凑的感觉。</p><p>graphrag支持两种查询方式：global和local。</p><ul><li>Local查询方式： 主要针对需要理解文档中特定实体的问题，通过结合AI提取的知识图谱和原始文档的文本块生成答案。这种方法适用于需要对文档中提到的特定实体有所理解的问题，例如询问某种草药的治疗特性 。</li><li>Global查询方式：在所有AI生成的社区报告中进行搜索，以map-reduce的方式生成答案。这是一种资源密集型方法，但通常能够很好地回答那些需要对数据集整体有全面理解的问题，例如询问在某个笔记本中提到的草药最重要的价值 </li></ul><p>GraphRAG的索引和查询包括了几个关键步骤：</p><ul><li>将源文档分割成文本块</li><li>从文本块中提取实体和关系实例</li><li>为每个图元素生成摘要</li><li>使用社区检测算法将图划分为社区</li><li>为每个社区生成摘要</li><li>利用社区摘要生成局部答案</li><li>汇总这些局部答案以生成全局答案 </li></ul><h2 id="配置graphrag"><a href="#配置graphrag" class="headerlink" title="配置graphrag"></a>配置graphrag</h2><p>本地部署graphrag需要配置embedding服务和大模型服务，由于graphrag生成索引和进行查询时会消耗大量token, 为了更经济实用，我们将本地部署大模型和embedding模型。</p><h3 id="部署embedding服务"><a href="#部署embedding服务" class="headerlink" title="部署embedding服务"></a>部署embedding服务</h3><h4 id="安装依赖"><a href="#安装依赖" class="headerlink" title="安装依赖"></a>安装依赖</h4><pre><code class="shell">pip3 install modelscope fastapi FlagEmbedding pydantic uvicorn</code></pre><h4 id="编写embedding服务端代码"><a href="#编写embedding服务端代码" class="headerlink" title="编写embedding服务端代码"></a>编写embedding服务端代码</h4><p>将以下代码保存到bge.py</p><pre><code class="python">    import os    from typing import List, Union    from fastapi import FastAPI    from modelscope import snapshot_download    from FlagEmbedding import FlagModel    from pydantic import BaseModel    model_dir = snapshot_download(&quot;AI-ModelScope/bge-large-zh-v1.5&quot;, revision=&#39;master&#39;, local_dir=&#39;./bge&#39;)    model = FlagModel(model_dir, use_fp16=True)    app = FastAPI()    BATCH_SIZE = int(os.environ.get(&#39;EMBEDDING_BATCH_SIZE&#39;, 256))    class EmbeddingData(BaseModel):        input: Union[List, str]    @app.post(&quot;/embeddings&quot;)    async def get_embedding(data: EmbeddingData):        embeddings = model.encode(data.input, batch_size=BATCH_SIZE)        if isinstance(data.input, str):            embeddings = [embeddings]        return {            &#39;data&#39;: [{&#39;embedding&#39;: item.tolist(), &#39;index&#39;: index, &#39;object&#39;: &#39;embedding&#39;} for index, item in enumerate(embeddings)],            &quot;object&quot;: &quot;list&quot;,            &quot;model&quot;: &quot;bge&quot;,            &quot;usage&quot;: {                &quot;prompt_tokens&quot;: 0,                &quot;total_tokens&quot;: 0            }        }</code></pre><h4 id="启动服务"><a href="#启动服务" class="headerlink" title="启动服务"></a>启动服务</h4><p>在bge.py同目录执行：</p><pre><code class="shell">uvicorn bge:app --host 0.0.0.0 --port 3001</code></pre><p>此时embedding模型服务将运行在本机3001端口</p><h3 id="部署大模型服务"><a href="#部署大模型服务" class="headerlink" title="部署大模型服务"></a>部署大模型服务</h3><p>可參考blog <code>【大模型-01】本地部署qwen2模型+集成聊天界面ChatGPT-Next-Web（无显卡也可运行）</code>来使用ollama本地运行qwen2:7b。</p><h3 id="配置graphrag-1"><a href="#配置graphrag-1" class="headerlink" title="配置graphrag"></a>配置graphrag</h3><h4 id="安装依赖-1"><a href="#安装依赖-1" class="headerlink" title="安装依赖"></a>安装依赖</h4><pre><code class="shell">pip3 install graphrag</code></pre><h4 id="初始化目录"><a href="#初始化目录" class="headerlink" title="初始化目录"></a>初始化目录</h4><pre><code class="shell">python -m graphrag.index --init --root ./data# 创建输入目录mkdir -p ./data/input</code></pre><p>将准备好的小说，复制到./data/input目录内，注意文件格式为txt,编码为utf-8。graphrag配置文件中配置了默认会从input目录读取文件进行索引。</p><h4 id="配置大模型接口"><a href="#配置大模型接口" class="headerlink" title="配置大模型接口"></a>配置大模型接口</h4><p>打开./data/settings.yaml修改以下配置: </p><ul><li>llm.model: 改为 <code>qwen2:7b</code></li><li>llm.api_base: 改为 <code>http://127.0.0.1:11434/v1</code></li></ul><pre><code class="yaml">llm:  model: qwen2:7b  api_base: http://127.0.0.1:11434/v1  model_supports_json: false</code></pre><h4 id="配置embedding接口"><a href="#配置embedding接口" class="headerlink" title="配置embedding接口"></a>配置embedding接口</h4><ul><li>embeddings.llm.model: 改为 <code>bge</code></li><li>embeddings.llm.api_base: 改为 <code>http://127.0.0.1:3001</code></li></ul><pre><code class="yaml">    embeddings:      llm:        model: bge        api_base: http://127.0.0.1:3001</code></pre><h4 id="生成索引"><a href="#生成索引" class="headerlink" title="生成索引"></a>生成索引</h4><p>配置好后我们就可以执行命令来生成索引数据，这个过程会花费很长时间，初次测试建议先用小文件进行测试。</p><pre><code class="shell">python -m graphrag.index --root ./data</code></pre><h4 id="查询"><a href="#查询" class="headerlink" title="查询"></a>查询</h4><p>建立索引完成后，就可以通过local和global查询方式来检索我们的问题：</p><pre><code class="shell">python -m graphrag.query --root .\data\ --method local &quot;韩立是谁？&quot;python -m graphrag.query --root .\data\ --method global &quot;这篇小说讲的什么&quot;</code></pre><h2 id="数据格式"><a href="#数据格式" class="headerlink" title="数据格式"></a>数据格式</h2><p>graphrag的知识图谱相关数据都存储在目录<code>data/output/20240731-202342/artifacts/</code>目录下的<code>.parquet</code>文件中，pycharm中可以下载安装<code>avro/parquet viewr</code>进行查看。以下是部分文件的说明和结构：</p><h3 id="create-final-nodes-parquet"><a href="#create-final-nodes-parquet" class="headerlink" title="create_final_nodes.parquet"></a>create_final_nodes.parquet</h3><p>知识图谱中的各种节点信息,包括节点的说明，名称，类型等。<br><img src="/photo_2024/llm_07_graphrag_node.png" alt=""></p><h3 id="create-final-entities-parquet"><a href="#create-final-entities-parquet" class="headerlink" title="create_final_entities.parquet"></a>create_final_entities.parquet</h3><p>知识图谱中的实体信息<br><img src="/photo_2024/llm_07_graphrag_entity.png" alt=""></p><h3 id="create-final-relationships-parquet"><a href="#create-final-relationships-parquet" class="headerlink" title="create_final_relationships.parquet"></a>create_final_relationships.parquet</h3><p>知识图谱中的关系信息<br><img src="/photo_2024/llm_07_graphrag_relation.png" alt=""></p><h3 id="create-final-community-reports-parquet"><a href="#create-final-community-reports-parquet" class="headerlink" title="create_final_community_reports.parquet"></a>create_final_community_reports.parquet</h3><p>生成的各个社区的标题和描述</p><h2 id="使用neo4j可视化知识图谱"><a href="#使用neo4j可视化知识图谱" class="headerlink" title="使用neo4j可视化知识图谱"></a>使用neo4j可视化知识图谱</h2><p>我们将.parquet文件转换为csv后可导入neo4j中查看实体间的关系。如何转换数据和导入neo4j，我们将在下一篇blog中说明。</p><p><img src="/photo_2024/llm_07_graphrag_neo4j.png" alt=""></p><h2 id="相关资料"><a href="#相关资料" class="headerlink" title="相关资料"></a>相关资料</h2><blockquote><p>graphrag github项目: <a href="https://github.com/microsoft/graphrag" target="_blank" rel="noopener">https://github.com/microsoft/graphrag</a></p><p>graphrag文档：<a href="https://microsoft.github.io/graphrag/" target="_blank" rel="noopener">https://microsoft.github.io/graphrag/</a></p></blockquote>]]></content>
     
     <summary type="html">
     
@@ -36,20 +36,21 @@
 &lt;li&gt;配置测试graphrag&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
-&lt;li&gt;数据存储格式
+&lt;li&gt;数据存储格式&lt;/li&gt;
+&lt;li&gt;使用neo4j可视化知识图谱
     
     </summary>
     
     
-      <category term="学习" scheme="http://www.javabin.cn/tags/study/"/>
+      <category term="graphrag" scheme="http://www.javabin.cn/tags/graphrag/"/>
+    
+      <category term="RAG" scheme="http://www.javabin.cn/tags/RAG/"/>
     
       <category term="大模型" scheme="http://www.javabin.cn/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/"/>
     
       <category term="程序" scheme="http://www.javabin.cn/tags/%E7%A8%8B%E5%BA%8F/"/>
     
-      <category term="RAG" scheme="http://www.javabin.cn/tags/RAG/"/>
-    
-      <category term="graphrag" scheme="http://www.javabin.cn/tags/graphrag/"/>
+      <category term="学习" scheme="http://www.javabin.cn/tags/study/"/>
     
   </entry>
   
@@ -89,9 +90,11 @@
     </summary>
     
     
+      <category term="大模型" scheme="http://www.javabin.cn/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/"/>
+    
       <category term="学习" scheme="http://www.javabin.cn/tags/study/"/>
     
-      <category term="大模型" scheme="http://www.javabin.cn/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/"/>
+      <category term="编程" scheme="http://www.javabin.cn/tags/%E7%BC%96%E7%A8%8B/"/>
     
       <category term="AWQ" scheme="http://www.javabin.cn/tags/AWQ/"/>
     
@@ -100,8 +103,6 @@
       <category term="Bitsandbytes" scheme="http://www.javabin.cn/tags/Bitsandbytes/"/>
     
       <category term="量化大模型" scheme="http://www.javabin.cn/tags/%E9%87%8F%E5%8C%96%E5%A4%A7%E6%A8%A1%E5%9E%8B/"/>
-    
-      <category term="编程" scheme="http://www.javabin.cn/tags/%E7%BC%96%E7%A8%8B/"/>
     
   </entry>
   
@@ -194,17 +195,17 @@
     </summary>
     
     
-      <category term="学习" scheme="http://www.javabin.cn/tags/study/"/>
-    
       <category term="大模型" scheme="http://www.javabin.cn/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/"/>
     
-      <category term="编程" scheme="http://www.javabin.cn/tags/%E7%BC%96%E7%A8%8B/"/>
+      <category term="学习" scheme="http://www.javabin.cn/tags/study/"/>
     
       <category term="微调" scheme="http://www.javabin.cn/tags/%E5%BE%AE%E8%B0%83/"/>
     
       <category term="lora" scheme="http://www.javabin.cn/tags/lora/"/>
     
       <category term="llama-factory" scheme="http://www.javabin.cn/tags/llama-factory/"/>
+    
+      <category term="编程" scheme="http://www.javabin.cn/tags/%E7%BC%96%E7%A8%8B/"/>
     
   </entry>
   
@@ -261,15 +262,15 @@
     </summary>
     
     
-      <category term="学习" scheme="http://www.javabin.cn/tags/study/"/>
+      <category term="RAG" scheme="http://www.javabin.cn/tags/RAG/"/>
     
       <category term="大模型" scheme="http://www.javabin.cn/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/"/>
     
       <category term="程序" scheme="http://www.javabin.cn/tags/%E7%A8%8B%E5%BA%8F/"/>
     
-      <category term="dify" scheme="http://www.javabin.cn/tags/dify/"/>
+      <category term="学习" scheme="http://www.javabin.cn/tags/study/"/>
     
-      <category term="RAG" scheme="http://www.javabin.cn/tags/RAG/"/>
+      <category term="dify" scheme="http://www.javabin.cn/tags/dify/"/>
     
       <category term="agent" scheme="http://www.javabin.cn/tags/agent/"/>
     
@@ -296,11 +297,11 @@
     </summary>
     
     
-      <category term="学习" scheme="http://www.javabin.cn/tags/study/"/>
-    
       <category term="大模型" scheme="http://www.javabin.cn/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/"/>
     
       <category term="程序" scheme="http://www.javabin.cn/tags/%E7%A8%8B%E5%BA%8F/"/>
+    
+      <category term="学习" scheme="http://www.javabin.cn/tags/study/"/>
     
       <category term="agent" scheme="http://www.javabin.cn/tags/agent/"/>
     
@@ -327,13 +328,13 @@
     </summary>
     
     
-      <category term="学习" scheme="http://www.javabin.cn/tags/study/"/>
-    
       <category term="大模型" scheme="http://www.javabin.cn/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/"/>
     
-      <category term="qwen2" scheme="http://www.javabin.cn/tags/qwen2/"/>
-    
       <category term="程序" scheme="http://www.javabin.cn/tags/%E7%A8%8B%E5%BA%8F/"/>
+    
+      <category term="学习" scheme="http://www.javabin.cn/tags/study/"/>
+    
+      <category term="qwen2" scheme="http://www.javabin.cn/tags/qwen2/"/>
     
       <category term="ChatGPT-Next-Web" scheme="http://www.javabin.cn/tags/ChatGPT-Next-Web/"/>
     
@@ -620,9 +621,9 @@
     </summary>
     
     
-      <category term="硬件" scheme="http://www.javabin.cn/tags/%E7%A1%AC%E4%BB%B6/"/>
-    
       <category term="总结" scheme="http://www.javabin.cn/tags/%E6%80%BB%E7%BB%93/"/>
+    
+      <category term="硬件" scheme="http://www.javabin.cn/tags/%E7%A1%AC%E4%BB%B6/"/>
     
   </entry>
   
@@ -709,9 +710,9 @@
     </summary>
     
     
-      <category term="总结" scheme="http://www.javabin.cn/tags/%E6%80%BB%E7%BB%93/"/>
-    
       <category term="python" scheme="http://www.javabin.cn/tags/python/"/>
+    
+      <category term="总结" scheme="http://www.javabin.cn/tags/%E6%80%BB%E7%BB%93/"/>
     
       <category term="爬虫" scheme="http://www.javabin.cn/tags/%E7%88%AC%E8%99%AB/"/>
     
@@ -766,9 +767,9 @@
     </summary>
     
     
-      <category term="总结" scheme="http://www.javabin.cn/tags/%E6%80%BB%E7%BB%93/"/>
-    
       <category term="python" scheme="http://www.javabin.cn/tags/python/"/>
+    
+      <category term="总结" scheme="http://www.javabin.cn/tags/%E6%80%BB%E7%BB%93/"/>
     
       <category term="单元测试" scheme="http://www.javabin.cn/tags/%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/"/>
     
