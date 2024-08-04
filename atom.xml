@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.javabin.cn/"/>
-  <updated>2024-07-31T16:40:13.705Z</updated>
+  <updated>2024-08-04T09:01:44.575Z</updated>
   <id>http://www.javabin.cn/</id>
   
   <author>
@@ -17,13 +17,54 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>【大模型-08】使用graphrag构建知识图谱并导入neo4j</title>
+    <link href="http://www.javabin.cn/2024/2024_llm_08_graphrag_neo4j.html"/>
+    <id>http://www.javabin.cn/2024/2024_llm_08_graphrag_neo4j.html</id>
+    <published>2024-08-04T06:24:00.000Z</published>
+    <updated>2024-08-04T09:01:44.575Z</updated>
+    
+    <content type="html"><![CDATA[<p>本篇使用graphrag构建知识图谱，并将知识图谱数据导入neo4j。步骤为先将小说《凡人修仙传》（这里只做示例，其他txt文档也可以）通过graphrag进行索引，再将人物，法宝，地点，技能等重要实体从graphrag数据中解析出，最后导入neo4j中查看。</p><h2 id="本篇内容"><a href="#本篇内容" class="headerlink" title="本篇内容:"></a>本篇内容:</h2><ul><li>什么是neo4j</li><li>部署neo4j</li><li>异常问题处理<ul><li>json报错</li><li>提取的数据异常</li></ul></li><li>parquet文件转换为csv</li><li>csv导入neo4j</li><li>使用neo4j查看知识图谱<a id="more"></a></li></ul><h2 id="什么是neo4j"><a href="#什么是neo4j" class="headerlink" title="什么是neo4j"></a>什么是neo4j</h2><p>Neo4j是一个流行的图形数据库管理系统，它使用图论来存储和查询数据。与传统的关系型数据库不同，Neo4j使用节点和边来表示数据，其中节点代表实体，边代表实体之间的关系。这种数据模型非常适合处理复杂的关系网络，如社交网络、推荐系统、供应链管理等。</p><p>Neo4j的主要特点包括：</p><ul><li>图数据库：基于图的数据模型，非常适合存储和查询复杂的关系数据。</li><li>灵活的数据模型：可以动态添加或修改节点和边，适应不断变化的数据需求。</li><li>高性能查询：使用Cypher查询语言，提供了高性能的图查询能力。</li><li>实时性：支持实时数据更新和查询，适用于需要快速响应的应用场景。</li><li>社区和商业支持：拥有活跃的开发者社区和商业支持，易于学习和使用。</li></ul><p>Neo4j广泛应用于各种领域，包括金融、电信、生命科学、社交网络等，帮助企业和开发者高效地解决复杂的数据关系问题。</p><h2 id="部署neo4j"><a href="#部署neo4j" class="headerlink" title="部署neo4j"></a>部署neo4j</h2><p>为了简单，我们直接使用docker部署neo4j</p><ul><li>创建docker-compose文件，将以下内容保存到docker-compose.yml</li></ul><pre><code class="yaml">    version: &#39;3.8&#39;  # 根据你的Docker Compose版本选择合适的版本号    services:      neo4j:        image: neo4j  # 这里假设使用官方的Neo4j镜像        container_name: neo4j        ports:          - &quot;7474:7474&quot;  # 浏览器访问端口          - &quot;7687:7687&quot;  # 接口使用的端口        environment:          - NEO4J_AUTH=neo4j/reece123456  # 设置Neo4j的认证信息        volumes:          - ./neo4j/data:/data  # 数据卷          - ./neo4j/logs:/logs    # 日志卷          - ./neo4j/import:/var/lib/neo4j/import  # 导入卷        deploy:          mode: replicated          replicas: 1        networks:          - neo4j-network    networks:      neo4j-network:        driver: bridge</code></pre><ul><li>启动容器: 执行<code>docker compose -f .\docker-compose.yml up -d</code> 启动neo4j容器</li><li>访问地址：浏览器打开 <a href="http://127.0.0.1:7474" target="_blank" rel="noopener">http://127.0.0.1:7474</a> 后输入配置的用户名密码<code>neo4j/reece123456</code>后即可访问neo4j</li></ul><h2 id="异常问题处理"><a href="#异常问题处理" class="headerlink" title="异常问题处理"></a>异常问题处理</h2><h3 id="json报错"><a href="#json报错" class="headerlink" title="json报错"></a>json报错</h3><p>由于模型能力问题，偶尔会返回不正常的json格式，导致解析失败。可在<code>.\data\output\20240804-130723\reports\indexing-engine.log</code>日志内看到<code>RuntimeError: Failed to generate valid JSON output</code>等异常。以下是解决方法：</p><ul><li>不支持json格式返回的模型，需要设置<code>model_supports_json:false</code></li><li>需要修改json解析函数，在解析json前处理掉不正常的输出.修改<code>.venv\Lib\site-packages\graphrag\llm\openai\utils.py</code></li></ul><pre><code class="python">    def try_parse_json_object(input: str) -&gt; dict:        &quot;&quot;&quot;Generate JSON-string output using best-attempt prompting &amp; parsing techniques.&quot;&quot;&quot;        try:            clean_json = clean_up_json(input)            result = json.loads(clean_json)        except json.JSONDecodeError:            log.exception(&quot;error loading json, json=%s&quot;, input)            raise        else:            if not isinstance(result, dict):                raise TypeError            return result    def clean_up_json(json_str: str) -&gt; str:        &quot;&quot;&quot;Clean up json string.&quot;&quot;&quot;        json_str = (            json_str.replace(&quot;\\n&quot;, &quot;&quot;)            .replace(&quot;\n&quot;, &quot;&quot;)            .replace(&quot;\r&quot;, &quot;&quot;)            .replace(&#39;&quot;[{&#39;, &quot;[{&quot;)            .replace(&#39;}]&quot;&#39;, &quot;}]&quot;)            .replace(&quot;\\&quot;, &quot;&quot;)            .replace(&quot;{{", "{")            .replace("}}&quot;, &quot;}&quot;)            .strip()        )        # Remove JSON Markdown Frame        if json_str.startswith(&quot;```json&quot;):            json_str = json_str[len(&quot;```json&quot;):]        if json_str.endswith(&quot;```&quot;):            json_str = json_str[: len(json_str) - len(&quot;```&quot;)]        return json_str</code></pre><h3 id="提取的数据异常"><a href="#提取的数据异常" class="headerlink" title="提取的数据异常"></a>提取的数据异常</h3><p>由于模型能力问题和系统提示词太长，导致偶尔提取出关系异常，可修改提示词或者对异常数据进行过滤。</p><h3 id="parquet文件转换为csv"><a href="#parquet文件转换为csv" class="headerlink" title="parquet文件转换为csv"></a>parquet文件转换为csv</h3><p>在此之前需要按上篇blog内容将准备的小说内容使用graphrag进行索引，获取到graphrag生成的parquet文件。</p><p>parquet文件可使用pandas转换为csv文件，然后使用neo4j的<code>LOAD CSV</code>方法来将数据导入neo4j。parquet转换csv的脚本如下:</p><pre><code class="python">    import os    import pandas as pd    import csv    def parquet2csv(input_dir, output_dir):        for filename in os.listdir(input_dir):            if not filename.lower().endswith(&#39;.parquet&#39;):                continue            path = os.path.join(input_dir, filename)            print(f&#39;start convert {path}...&#39;)            data_frame = pd.read_parquet(path)            csv_path = os.path.join(output_dir, path.replace(&#39;.parquet&#39;, &#39;.csv&#39;))            data_frame.to_csv(csv_path, index=False, escapechar=&#39;\\&#39;, quoting=csv.QUOTE_ALL)    if __name__ == &#39;__main__&#39;:        parquet2csv(            r&#39;F:\code\py\graph_rag_test\data\output\20240803-070956\artifacts&#39;,            r&#39;F:\code\py\graph_rag_test\neo4j\import&#39;        )</code></pre><h3 id="csv导入neo4j"><a href="#csv导入neo4j" class="headerlink" title="csv导入neo4j"></a>csv导入neo4j</h3><p>这次我们只需要查看小说里的人物,法宝,地点等重要事情之间的关系，只导入entities和relationships。</p><p>对于大模型提取出的多的不相干实体，先进行下过滤。下面的脚本将删除非中文名称的实体和类型不在<code>ENTITY_TYPES</code>内的实体，并将结果重新导出到<code>.fixed.csv</code>文件。</p><pre><code class="python">    import os    import re    import pandas as pd    import csv    P_BAD_NAME = re.compile(        r&#39;^[^\u4e00-\u9fa5]+$&#39;    )    ENTITY_TYPES = set([&#39;PERSON&#39;, &#39;EVENT&#39;, &#39;ORGANIZATION&#39;, &#39;GEO&#39;, &#39;CONCEPT&#39;, &#39;OBJECT&#39;, &#39;SKILL&#39;, &#39;TECHNOLOGY&#39;, &#39;AUTHOR&#39;, &#39;BOOK&#39;, &#39;PRODUCT&#39;, &#39;ITEM&#39;, &#39;ARTIFACT&#39;])    def validate(relation_file, entity_file):        bad_names = {}        entities = []        with open(entity_file, &#39;rt&#39;, encoding=&#39;utf-8&#39;) as file:            reader = csv.DictReader(file)            entity_header = reader.fieldnames            for row in reader:                if P_BAD_NAME.search(row[&#39;name&#39;]) or row[&#39;type&#39;] not in ENTITY_TYPES:                    print(row[&#39;name&#39;])                    bad_names[row[&#39;name&#39;]] = row                else:                    entities.append(row)        with open(entity_file.replace(&#39;.csv&#39;, &#39;.fixed.csv&#39;), &#39;wt&#39;, encoding=&#39;utf-8&#39;) as file:            writer = csv.DictWriter(file, fieldnames=entity_header)            writer.writeheader()            writer.writerows(entities)        relations = []        with open(relation_file, &#39;rt&#39;, encoding=&#39;utf-8&#39;) as file:            reader = csv.DictReader(file)            relation_header = reader.fieldnames            for row in reader:                if row[&#39;source&#39;] in bad_names or row[&#39;target&#39;] in bad_names:                    continue                relations.append(row)        with open(relation_file.replace(&#39;.csv&#39;, &#39;.fixed.csv&#39;), &#39;wt&#39;, encoding=&#39;utf-8&#39;) as file:            writer = csv.DictWriter(file, fieldnames=relation_header)            writer.writeheader()            writer.writerows(relations)    if __name__ == &#39;__main__&#39;:        validate(            r&#39;F:\code\py\graph_rag_test\neo4j\import\create_final_relationships.csv&#39;,            r&#39;F:\code\py\graph_rag_test\neo4j\import\create_final_entities.csv&#39;        )</code></pre><p>然后将csv数据导入neo4j。打开neo4j web管理界面，执行以下代码即可导入数据。</p><pre><code class="shell">LOAD CSV WITH HEADERS FROM &#39;file:///create_final_entities.fixed.csv&#39; AS rowCREATE (e:Entity {    id: row.id,    name: row.name,    type: row.type,    description: row.description});LOAD CSV WITH HEADERS FROM &#39;file:///create_final_relationships.fixed.csv&#39; AS rowCREATE (r:Relationship {    source: row.source,    target: row.target,    weight: toFloat(row.weight),    description: row.description,    id: row.id,    source_degree: toInteger(row.source_degree),    target_degree: toInteger(row.target_degree),    rank: toInteger(row.rank)});CREATE INDEX FOR (e:Entity) ON (e.id);CREATE INDEX FOR (r:Relationship) ON (r.id);MATCH (r:Relationship)MATCH (source:Entity {name: r.source})MATCH (target:Entity {name: r.target})CREATE (source)-[:RELATES_TO]-&gt;(target);</code></pre><h3 id="使用neo4j查看知识图谱"><a href="#使用neo4j查看知识图谱" class="headerlink" title="使用neo4j查看知识图谱"></a>使用neo4j查看知识图谱</h3><p>打开neo4j web管理页面后执行以下语句即可查询并可视化知识图谱。</p><p>查询所有关系，展示前10000个</p><pre><code class="shell">MATCH (e1:Entity)-[r:RELATES_TO]-&gt;(e2:Entity)RETURN e1, r, e2LIMIT 10000;</code></pre><p><img src="/photo_2024/llm_08_neo4j_graph_all.svg" alt=""></p><p>查询人物之间的关系</p><pre><code class="shell">MATCH (e1:Entity)-[r:RELATES_TO]-&gt;(e2:Entity)WHERE e1.type = &#39;PERSON&#39; AND e2.type = &#39;PERSON&#39;RETURN e1, r, e2LIMIT 10000;</code></pre><p><img src="/photo_2024/llm_08_neo4j_graph_person.svg" alt=""></p><p>查询 南宫婉 的关系：</p><pre><code class="shell">MATCH (e1:Entity{name:&quot;南宫婉&quot;})-[r:RELATES_TO]-(e2:Entity)RETURN e1, r, e2LIMIT 10000;</code></pre><p><img src="/photo_2024/llm_08_neo4j_nangongwan.png" alt=""></p><p>如果neo4j只能看到前300个节点，可在界面左下角的设置中将<code>Initial Node Display， Max neighbours from vis interaction，Result view max rows，Max record fields</code>调整大一点。</p><h2 id="相关资料"><a href="#相关资料" class="headerlink" title="相关资料"></a>相关资料</h2><blockquote><p>neo4j: <a href="https://neo4j.com/docs/" target="_blank" rel="noopener">https://neo4j.com/docs/</a></p></blockquote>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;本篇使用graphrag构建知识图谱，并将知识图谱数据导入neo4j。步骤为先将小说《凡人修仙传》（这里只做示例，其他txt文档也可以）通过graphrag进行索引，再将人物，法宝，地点，技能等重要实体从graphrag数据中解析出，最后导入neo4j中查看。&lt;/p&gt;
+&lt;h2 id=&quot;本篇内容&quot;&gt;&lt;a href=&quot;#本篇内容&quot; class=&quot;headerlink&quot; title=&quot;本篇内容:&quot;&gt;&lt;/a&gt;本篇内容:&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;什么是neo4j&lt;/li&gt;
+&lt;li&gt;部署neo4j&lt;/li&gt;
+&lt;li&gt;异常问题处理&lt;ul&gt;
+&lt;li&gt;json报错&lt;/li&gt;
+&lt;li&gt;提取的数据异常&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;parquet文件转换为csv&lt;/li&gt;
+&lt;li&gt;csv导入neo4j&lt;/li&gt;
+&lt;li&gt;使用neo4j查看知识图谱
+    
+    </summary>
+    
+    
+      <category term="大模型" scheme="http://www.javabin.cn/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/"/>
+    
+      <category term="学习" scheme="http://www.javabin.cn/tags/study/"/>
+    
+      <category term="程序" scheme="http://www.javabin.cn/tags/%E7%A8%8B%E5%BA%8F/"/>
+    
+      <category term="graphrag" scheme="http://www.javabin.cn/tags/graphrag/"/>
+    
+      <category term="neo4j" scheme="http://www.javabin.cn/tags/neo4j/"/>
+    
+      <category term="知识图谱" scheme="http://www.javabin.cn/tags/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1/"/>
+    
+  </entry>
+  
+  <entry>
     <title>【大模型-07】本地使用graphrag进行知识检索</title>
     <link href="http://www.javabin.cn/2024/2024_llm_07_graphrag.html"/>
     <id>http://www.javabin.cn/2024/2024_llm_07_graphrag.html</id>
     <published>2024-07-31T14:31:04.000Z</published>
-    <updated>2024-07-31T16:40:13.705Z</updated>
+    <updated>2024-08-02T11:18:25.130Z</updated>
     
-    <content type="html"><![CDATA[<p>本篇将本地配置微软的graphrag软件包，并使用graphrag对小说进行索引后进行数据的检索。</p><h2 id="本篇内容"><a href="#本篇内容" class="headerlink" title="本篇内容:"></a>本篇内容:</h2><ul><li>什么是graphrag</li><li>配置graphrag<ul><li>部署本地embedding服务bge</li><li>部署本地大模型服务qwen2:7b</li><li>配置测试graphrag</li></ul></li><li>数据存储格式</li><li>使用neo4j可视化知识图谱<a id="more"></a></li></ul><h2 id="什么是graphrag"><a href="#什么是graphrag" class="headerlink" title="什么是graphrag"></a>什么是graphrag</h2><p>graphrag是一种基于图的rag技术，是传统rag的优化版本。传统的rag使用embedding模型为文档块生成embedding向量后存入向量数据库，在查询时为查询语句也生成embedding向量，通过查找出数据库内与查询向量最相接近的文档块向量来检索出语义最相关的文档块。而graphrag会先抽取出文档块内的人物，地点，事件等组成实体间的关系网络，在查询时通过实体关系查询出和上下文相关的子图，最后通过大模型整合为连贯的最终输出。</p><p>graphrag检索出的信息不再是孤立的，而是相互之间有关联的，所以相关文档块的上下文更加丰富，没有传统RAG东拼西凑的感觉。</p><p>graphrag支持两种查询方式：global和local。</p><ul><li>Local查询方式： 主要针对需要理解文档中特定实体的问题，通过结合AI提取的知识图谱和原始文档的文本块生成答案。这种方法适用于需要对文档中提到的特定实体有所理解的问题，例如询问某种草药的治疗特性 。</li><li>Global查询方式：在所有AI生成的社区报告中进行搜索，以map-reduce的方式生成答案。这是一种资源密集型方法，但通常能够很好地回答那些需要对数据集整体有全面理解的问题，例如询问在某个笔记本中提到的草药最重要的价值 </li></ul><p>GraphRAG的索引和查询包括了几个关键步骤：</p><ul><li>将源文档分割成文本块</li><li>从文本块中提取实体和关系实例</li><li>为每个图元素生成摘要</li><li>使用社区检测算法将图划分为社区</li><li>为每个社区生成摘要</li><li>利用社区摘要生成局部答案</li><li>汇总这些局部答案以生成全局答案 </li></ul><h2 id="配置graphrag"><a href="#配置graphrag" class="headerlink" title="配置graphrag"></a>配置graphrag</h2><p>本地部署graphrag需要配置embedding服务和大模型服务，由于graphrag生成索引和进行查询时会消耗大量token, 为了更经济实用，我们将本地部署大模型和embedding模型。</p><h3 id="部署embedding服务"><a href="#部署embedding服务" class="headerlink" title="部署embedding服务"></a>部署embedding服务</h3><h4 id="安装依赖"><a href="#安装依赖" class="headerlink" title="安装依赖"></a>安装依赖</h4><pre><code class="shell">pip3 install modelscope fastapi FlagEmbedding pydantic uvicorn</code></pre><h4 id="编写embedding服务端代码"><a href="#编写embedding服务端代码" class="headerlink" title="编写embedding服务端代码"></a>编写embedding服务端代码</h4><p>将以下代码保存到bge.py</p><pre><code class="python">    import os    from typing import List, Union    from fastapi import FastAPI    from modelscope import snapshot_download    from FlagEmbedding import FlagModel    from pydantic import BaseModel    model_dir = snapshot_download(&quot;AI-ModelScope/bge-large-zh-v1.5&quot;, revision=&#39;master&#39;, local_dir=&#39;./bge&#39;)    model = FlagModel(model_dir, use_fp16=True)    app = FastAPI()    BATCH_SIZE = int(os.environ.get(&#39;EMBEDDING_BATCH_SIZE&#39;, 256))    class EmbeddingData(BaseModel):        input: Union[List, str]    @app.post(&quot;/embeddings&quot;)    async def get_embedding(data: EmbeddingData):        embeddings = model.encode(data.input, batch_size=BATCH_SIZE)        if isinstance(data.input, str):            embeddings = [embeddings]        return {            &#39;data&#39;: [{&#39;embedding&#39;: item.tolist(), &#39;index&#39;: index, &#39;object&#39;: &#39;embedding&#39;} for index, item in enumerate(embeddings)],            &quot;object&quot;: &quot;list&quot;,            &quot;model&quot;: &quot;bge&quot;,            &quot;usage&quot;: {                &quot;prompt_tokens&quot;: 0,                &quot;total_tokens&quot;: 0            }        }</code></pre><h4 id="启动服务"><a href="#启动服务" class="headerlink" title="启动服务"></a>启动服务</h4><p>在bge.py同目录执行：</p><pre><code class="shell">uvicorn bge:app --host 0.0.0.0 --port 3001</code></pre><p>此时embedding模型服务将运行在本机3001端口</p><h3 id="部署大模型服务"><a href="#部署大模型服务" class="headerlink" title="部署大模型服务"></a>部署大模型服务</h3><p>可參考blog <code>【大模型-01】本地部署qwen2模型+集成聊天界面ChatGPT-Next-Web（无显卡也可运行）</code>来使用ollama本地运行qwen2:7b。</p><h3 id="配置graphrag-1"><a href="#配置graphrag-1" class="headerlink" title="配置graphrag"></a>配置graphrag</h3><h4 id="安装依赖-1"><a href="#安装依赖-1" class="headerlink" title="安装依赖"></a>安装依赖</h4><pre><code class="shell">pip3 install graphrag</code></pre><h4 id="初始化目录"><a href="#初始化目录" class="headerlink" title="初始化目录"></a>初始化目录</h4><pre><code class="shell">python -m graphrag.index --init --root ./data# 创建输入目录mkdir -p ./data/input</code></pre><p>将准备好的小说，复制到./data/input目录内，注意文件格式为txt,编码为utf-8。graphrag配置文件中配置了默认会从input目录读取文件进行索引。</p><h4 id="配置大模型接口"><a href="#配置大模型接口" class="headerlink" title="配置大模型接口"></a>配置大模型接口</h4><p>打开./data/settings.yaml修改以下配置: </p><ul><li>llm.model: 改为 <code>qwen2:7b</code></li><li>llm.api_base: 改为 <code>http://127.0.0.1:11434/v1</code></li></ul><pre><code class="yaml">llm:  model: qwen2:7b  api_base: http://127.0.0.1:11434/v1  model_supports_json: false</code></pre><h4 id="配置embedding接口"><a href="#配置embedding接口" class="headerlink" title="配置embedding接口"></a>配置embedding接口</h4><ul><li>embeddings.llm.model: 改为 <code>bge</code></li><li>embeddings.llm.api_base: 改为 <code>http://127.0.0.1:3001</code></li></ul><pre><code class="yaml">    embeddings:      llm:        model: bge        api_base: http://127.0.0.1:3001</code></pre><h4 id="生成索引"><a href="#生成索引" class="headerlink" title="生成索引"></a>生成索引</h4><p>配置好后我们就可以执行命令来生成索引数据，这个过程会花费很长时间，初次测试建议先用小文件进行测试。</p><pre><code class="shell">python -m graphrag.index --root ./data</code></pre><h4 id="查询"><a href="#查询" class="headerlink" title="查询"></a>查询</h4><p>建立索引完成后，就可以通过local和global查询方式来检索我们的问题：</p><pre><code class="shell">python -m graphrag.query --root .\data\ --method local &quot;韩立是谁？&quot;python -m graphrag.query --root .\data\ --method global &quot;这篇小说讲的什么&quot;</code></pre><h2 id="数据格式"><a href="#数据格式" class="headerlink" title="数据格式"></a>数据格式</h2><p>graphrag的知识图谱相关数据都存储在目录<code>data/output/20240731-202342/artifacts/</code>目录下的<code>.parquet</code>文件中，pycharm中可以下载安装<code>avro/parquet viewr</code>进行查看。以下是部分文件的说明和结构：</p><h3 id="create-final-nodes-parquet"><a href="#create-final-nodes-parquet" class="headerlink" title="create_final_nodes.parquet"></a>create_final_nodes.parquet</h3><p>知识图谱中的各种节点信息,包括节点的说明，名称，类型等。<br><img src="/photo_2024/llm_07_graphrag_node.png" alt=""></p><h3 id="create-final-entities-parquet"><a href="#create-final-entities-parquet" class="headerlink" title="create_final_entities.parquet"></a>create_final_entities.parquet</h3><p>知识图谱中的实体信息<br><img src="/photo_2024/llm_07_graphrag_entity.png" alt=""></p><h3 id="create-final-relationships-parquet"><a href="#create-final-relationships-parquet" class="headerlink" title="create_final_relationships.parquet"></a>create_final_relationships.parquet</h3><p>知识图谱中的关系信息<br><img src="/photo_2024/llm_07_graphrag_relation.png" alt=""></p><h3 id="create-final-community-reports-parquet"><a href="#create-final-community-reports-parquet" class="headerlink" title="create_final_community_reports.parquet"></a>create_final_community_reports.parquet</h3><p>生成的各个社区的标题和描述</p><h2 id="使用neo4j可视化知识图谱"><a href="#使用neo4j可视化知识图谱" class="headerlink" title="使用neo4j可视化知识图谱"></a>使用neo4j可视化知识图谱</h2><p>我们将.parquet文件转换为csv后可导入neo4j中查看实体间的关系。如何转换数据和导入neo4j，我们将在下一篇blog中说明。</p><p><img src="/photo_2024/llm_07_graphrag_neo4j.png" alt=""></p><h2 id="相关资料"><a href="#相关资料" class="headerlink" title="相关资料"></a>相关资料</h2><blockquote><p>graphrag github项目: <a href="https://github.com/microsoft/graphrag" target="_blank" rel="noopener">https://github.com/microsoft/graphrag</a></p><p>graphrag文档：<a href="https://microsoft.github.io/graphrag/" target="_blank" rel="noopener">https://microsoft.github.io/graphrag/</a></p></blockquote>]]></content>
+    <content type="html"><![CDATA[<p>本篇将本地配置微软的graphrag软件包，并使用graphrag对小说进行索引后进行数据的检索。</p><h2 id="本篇内容"><a href="#本篇内容" class="headerlink" title="本篇内容:"></a>本篇内容:</h2><ul><li>什么是graphrag</li><li>配置graphrag<ul><li>部署本地embedding服务bge</li><li>部署本地大模型服务qwen2:7b</li><li>配置测试graphrag</li></ul></li><li>数据存储格式</li><li>使用neo4j可视化知识图谱<a id="more"></a></li></ul><h2 id="什么是graphrag"><a href="#什么是graphrag" class="headerlink" title="什么是graphrag"></a>什么是graphrag</h2><p>graphrag是一种基于图的rag技术，是传统rag的优化版本。传统的rag使用embedding模型为文档块生成embedding向量后存入向量数据库，在查询时为查询语句也生成embedding向量，通过查找出数据库内与查询向量最相接近的文档块向量来检索出语义最相关的文档块。而graphrag会先抽取出文档块内的人物，地点，事件等组成实体间的关系网络，在查询时通过实体关系查询出和上下文相关的子图，最后通过大模型整合为连贯的最终输出。</p><p>graphrag检索出的信息不再是孤立的，而是相互之间有关联的，所以相关文档块的上下文更加丰富，没有传统RAG东拼西凑的感觉。</p><p>graphrag支持两种查询方式：global和local。</p><ul><li>Local查询方式： 主要针对需要理解文档中特定实体的问题，通过结合AI提取的知识图谱和原始文档的文本块生成答案。这种方法适用于需要对文档中提到的特定实体有所理解的问题，例如询问某种草药的治疗特性 。</li><li>Global查询方式：在所有AI生成的社区报告中进行搜索，以map-reduce的方式生成答案。这是一种资源密集型方法，但通常能够很好地回答那些需要对数据集整体有全面理解的问题，例如询问在某个笔记本中提到的草药最重要的价值 </li></ul><p>GraphRAG的索引和查询包括了几个关键步骤：</p><ul><li>将源文档分割成文本块</li><li>从文本块中提取实体和关系实例</li><li>为每个图元素生成摘要</li><li>使用社区检测算法将图划分为社区</li><li>为每个社区生成摘要</li><li>利用社区摘要生成局部答案</li><li>汇总这些局部答案以生成全局答案 </li></ul><h2 id="配置graphrag"><a href="#配置graphrag" class="headerlink" title="配置graphrag"></a>配置graphrag</h2><p>本地部署graphrag需要配置embedding服务和大模型服务，由于graphrag生成索引和进行查询时会消耗大量token, 为了更经济实用，我们将本地部署大模型和embedding模型。</p><h3 id="部署embedding服务"><a href="#部署embedding服务" class="headerlink" title="部署embedding服务"></a>部署embedding服务</h3><h4 id="安装依赖"><a href="#安装依赖" class="headerlink" title="安装依赖"></a>安装依赖</h4><pre><code class="shell">pip3 install modelscope fastapi FlagEmbedding pydantic uvicorn</code></pre><h4 id="编写embedding服务端代码"><a href="#编写embedding服务端代码" class="headerlink" title="编写embedding服务端代码"></a>编写embedding服务端代码</h4><p>将以下代码保存到bge.py</p><pre><code class="python">    import os    from typing import List, Union    from fastapi import FastAPI    from modelscope import snapshot_download    from FlagEmbedding import FlagModel    from pydantic import BaseModel    model_dir = snapshot_download(&quot;AI-ModelScope/bge-large-zh-v1.5&quot;, revision=&#39;master&#39;, local_dir=&#39;./bge&#39;)    model = FlagModel(model_dir, use_fp16=True)    app = FastAPI()    BATCH_SIZE = int(os.environ.get(&#39;EMBEDDING_BATCH_SIZE&#39;, 256))    class EmbeddingData(BaseModel):        input: Union[List, str]    @app.post(&quot;/embeddings&quot;)    async def get_embedding(data: EmbeddingData):        embeddings = model.encode(data.input, batch_size=BATCH_SIZE)        if isinstance(data.input, str):            embeddings = [embeddings]        return {            &#39;data&#39;: [{&#39;embedding&#39;: item.tolist(), &#39;index&#39;: index, &#39;object&#39;: &#39;embedding&#39;} for index, item in enumerate(embeddings)],            &quot;object&quot;: &quot;list&quot;,            &quot;model&quot;: &quot;bge&quot;,            &quot;usage&quot;: {                &quot;prompt_tokens&quot;: 0,                &quot;total_tokens&quot;: 0            }        }</code></pre><h4 id="启动服务"><a href="#启动服务" class="headerlink" title="启动服务"></a>启动服务</h4><p>在bge.py同目录执行：</p><pre><code class="shell">uvicorn bge:app --host 0.0.0.0 --port 3001</code></pre><p>此时embedding模型服务将运行在本机3001端口</p><h3 id="部署大模型服务"><a href="#部署大模型服务" class="headerlink" title="部署大模型服务"></a>部署大模型服务</h3><p>可參考blog <code>【大模型-01】本地部署qwen2模型+集成聊天界面ChatGPT-Next-Web（无显卡也可运行）</code>来使用ollama本地运行qwen2:7b。</p><h3 id="配置graphrag-1"><a href="#配置graphrag-1" class="headerlink" title="配置graphrag"></a>配置graphrag</h3><h4 id="安装依赖-1"><a href="#安装依赖-1" class="headerlink" title="安装依赖"></a>安装依赖</h4><pre><code class="shell">pip3 install graphrag</code></pre><h4 id="初始化目录"><a href="#初始化目录" class="headerlink" title="初始化目录"></a>初始化目录</h4><pre><code class="shell">python -m graphrag.index --init --root ./data# 创建输入目录mkdir -p ./data/input</code></pre><p>将准备好的小说，复制到./data/input目录内，注意文件格式为txt,编码为utf-8。graphrag配置文件中配置了默认会从input目录读取文件进行索引。</p><h4 id="配置大模型接口"><a href="#配置大模型接口" class="headerlink" title="配置大模型接口"></a>配置大模型接口</h4><p>打开./data/settings.yaml修改以下配置: </p><ul><li>llm.model: 改为 <code>qwen2:7b</code></li><li>llm.api_base: 改为 <code>http://127.0.0.1:11434/v1</code></li></ul><pre><code class="yaml">llm:  model: qwen2:7b  api_base: http://127.0.0.1:11434/v1  model_supports_json: false  max_tokens: 32768</code></pre><h4 id="配置embedding接口"><a href="#配置embedding接口" class="headerlink" title="配置embedding接口"></a>配置embedding接口</h4><ul><li>embeddings.llm.model: 改为 <code>bge</code></li><li>embeddings.llm.api_base: 改为 <code>http://127.0.0.1:3001</code></li></ul><pre><code class="yaml">    embeddings:      llm:        model: bge        api_base: http://127.0.0.1:3001</code></pre><h4 id="生成索引"><a href="#生成索引" class="headerlink" title="生成索引"></a>生成索引</h4><p>配置好后我们就可以执行命令来生成索引数据，这个过程会花费很长时间，初次测试建议先用小文件进行测试。</p><pre><code class="shell">python -m graphrag.index --root ./data</code></pre><h4 id="查询"><a href="#查询" class="headerlink" title="查询"></a>查询</h4><p>建立索引完成后，就可以通过local和global查询方式来检索我们的问题：</p><pre><code class="shell">python -m graphrag.query --root .\data\ --method local &quot;韩立是谁？&quot;python -m graphrag.query --root .\data\ --method global &quot;这篇小说讲的什么&quot;</code></pre><h2 id="数据格式"><a href="#数据格式" class="headerlink" title="数据格式"></a>数据格式</h2><p>graphrag的知识图谱相关数据都存储在目录<code>data/output/20240731-202342/artifacts/</code>目录下的<code>.parquet</code>文件中，pycharm中可以下载安装<code>avro/parquet viewr</code>进行查看。以下是部分文件的说明和结构：</p><h3 id="create-final-nodes-parquet"><a href="#create-final-nodes-parquet" class="headerlink" title="create_final_nodes.parquet"></a>create_final_nodes.parquet</h3><p>知识图谱中的各种节点信息,包括节点的说明，名称，类型等。<br><img src="/photo_2024/llm_07_graphrag_node.png" alt=""></p><h3 id="create-final-entities-parquet"><a href="#create-final-entities-parquet" class="headerlink" title="create_final_entities.parquet"></a>create_final_entities.parquet</h3><p>知识图谱中的实体信息<br><img src="/photo_2024/llm_07_graphrag_entity.png" alt=""></p><h3 id="create-final-relationships-parquet"><a href="#create-final-relationships-parquet" class="headerlink" title="create_final_relationships.parquet"></a>create_final_relationships.parquet</h3><p>知识图谱中的关系信息<br><img src="/photo_2024/llm_07_graphrag_relation.png" alt=""></p><h3 id="create-final-community-reports-parquet"><a href="#create-final-community-reports-parquet" class="headerlink" title="create_final_community_reports.parquet"></a>create_final_community_reports.parquet</h3><p>生成的各个社区的标题和描述</p><h2 id="使用neo4j可视化知识图谱"><a href="#使用neo4j可视化知识图谱" class="headerlink" title="使用neo4j可视化知识图谱"></a>使用neo4j可视化知识图谱</h2><p>我们将.parquet文件转换为csv后可导入neo4j中查看实体间的关系。如何转换数据和导入neo4j，我们将在下一篇blog中说明。</p><p><img src="/photo_2024/llm_07_graphrag_neo4j.png" alt=""></p><h2 id="相关资料"><a href="#相关资料" class="headerlink" title="相关资料"></a>相关资料</h2><blockquote><p>graphrag github项目: <a href="https://github.com/microsoft/graphrag" target="_blank" rel="noopener">https://github.com/microsoft/graphrag</a></p><p>graphrag文档：<a href="https://microsoft.github.io/graphrag/" target="_blank" rel="noopener">https://microsoft.github.io/graphrag/</a></p></blockquote>]]></content>
     
     <summary type="html">
     
@@ -42,15 +83,15 @@
     </summary>
     
     
-      <category term="graphrag" scheme="http://www.javabin.cn/tags/graphrag/"/>
-    
-      <category term="RAG" scheme="http://www.javabin.cn/tags/RAG/"/>
-    
       <category term="大模型" scheme="http://www.javabin.cn/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/"/>
+    
+      <category term="学习" scheme="http://www.javabin.cn/tags/study/"/>
     
       <category term="程序" scheme="http://www.javabin.cn/tags/%E7%A8%8B%E5%BA%8F/"/>
     
-      <category term="学习" scheme="http://www.javabin.cn/tags/study/"/>
+      <category term="graphrag" scheme="http://www.javabin.cn/tags/graphrag/"/>
+    
+      <category term="RAG" scheme="http://www.javabin.cn/tags/RAG/"/>
     
   </entry>
   
@@ -92,9 +133,9 @@
     
       <category term="大模型" scheme="http://www.javabin.cn/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/"/>
     
-      <category term="学习" scheme="http://www.javabin.cn/tags/study/"/>
-    
       <category term="编程" scheme="http://www.javabin.cn/tags/%E7%BC%96%E7%A8%8B/"/>
+    
+      <category term="学习" scheme="http://www.javabin.cn/tags/study/"/>
     
       <category term="AWQ" scheme="http://www.javabin.cn/tags/AWQ/"/>
     
@@ -195,17 +236,17 @@
     </summary>
     
     
-      <category term="大模型" scheme="http://www.javabin.cn/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/"/>
-    
-      <category term="学习" scheme="http://www.javabin.cn/tags/study/"/>
-    
       <category term="微调" scheme="http://www.javabin.cn/tags/%E5%BE%AE%E8%B0%83/"/>
+    
+      <category term="大模型" scheme="http://www.javabin.cn/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/"/>
     
       <category term="lora" scheme="http://www.javabin.cn/tags/lora/"/>
     
       <category term="llama-factory" scheme="http://www.javabin.cn/tags/llama-factory/"/>
     
       <category term="编程" scheme="http://www.javabin.cn/tags/%E7%BC%96%E7%A8%8B/"/>
+    
+      <category term="学习" scheme="http://www.javabin.cn/tags/study/"/>
     
   </entry>
   
@@ -262,15 +303,15 @@
     </summary>
     
     
-      <category term="RAG" scheme="http://www.javabin.cn/tags/RAG/"/>
-    
       <category term="大模型" scheme="http://www.javabin.cn/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/"/>
-    
-      <category term="程序" scheme="http://www.javabin.cn/tags/%E7%A8%8B%E5%BA%8F/"/>
     
       <category term="学习" scheme="http://www.javabin.cn/tags/study/"/>
     
+      <category term="程序" scheme="http://www.javabin.cn/tags/%E7%A8%8B%E5%BA%8F/"/>
+    
       <category term="dify" scheme="http://www.javabin.cn/tags/dify/"/>
+    
+      <category term="RAG" scheme="http://www.javabin.cn/tags/RAG/"/>
     
       <category term="agent" scheme="http://www.javabin.cn/tags/agent/"/>
     
@@ -299,9 +340,9 @@
     
       <category term="大模型" scheme="http://www.javabin.cn/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/"/>
     
-      <category term="程序" scheme="http://www.javabin.cn/tags/%E7%A8%8B%E5%BA%8F/"/>
-    
       <category term="学习" scheme="http://www.javabin.cn/tags/study/"/>
+    
+      <category term="程序" scheme="http://www.javabin.cn/tags/%E7%A8%8B%E5%BA%8F/"/>
     
       <category term="agent" scheme="http://www.javabin.cn/tags/agent/"/>
     
@@ -330,11 +371,11 @@
     
       <category term="大模型" scheme="http://www.javabin.cn/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/"/>
     
-      <category term="程序" scheme="http://www.javabin.cn/tags/%E7%A8%8B%E5%BA%8F/"/>
-    
       <category term="学习" scheme="http://www.javabin.cn/tags/study/"/>
     
       <category term="qwen2" scheme="http://www.javabin.cn/tags/qwen2/"/>
+    
+      <category term="程序" scheme="http://www.javabin.cn/tags/%E7%A8%8B%E5%BA%8F/"/>
     
       <category term="ChatGPT-Next-Web" scheme="http://www.javabin.cn/tags/ChatGPT-Next-Web/"/>
     
@@ -463,9 +504,9 @@
     </summary>
     
     
-      <category term="总结" scheme="http://www.javabin.cn/tags/%E6%80%BB%E7%BB%93/"/>
-    
       <category term="运维" scheme="http://www.javabin.cn/tags/%E8%BF%90%E7%BB%B4/"/>
+    
+      <category term="总结" scheme="http://www.javabin.cn/tags/%E6%80%BB%E7%BB%93/"/>
     
       <category term="postgresql" scheme="http://www.javabin.cn/tags/postgresql/"/>
     
@@ -506,9 +547,9 @@
     </summary>
     
     
-      <category term="总结" scheme="http://www.javabin.cn/tags/%E6%80%BB%E7%BB%93/"/>
-    
       <category term="运维" scheme="http://www.javabin.cn/tags/%E8%BF%90%E7%BB%B4/"/>
+    
+      <category term="总结" scheme="http://www.javabin.cn/tags/%E6%80%BB%E7%BB%93/"/>
     
       <category term="milvus" scheme="http://www.javabin.cn/tags/milvus/"/>
     
@@ -621,9 +662,9 @@
     </summary>
     
     
-      <category term="总结" scheme="http://www.javabin.cn/tags/%E6%80%BB%E7%BB%93/"/>
-    
       <category term="硬件" scheme="http://www.javabin.cn/tags/%E7%A1%AC%E4%BB%B6/"/>
+    
+      <category term="总结" scheme="http://www.javabin.cn/tags/%E6%80%BB%E7%BB%93/"/>
     
   </entry>
   
@@ -710,9 +751,9 @@
     </summary>
     
     
-      <category term="python" scheme="http://www.javabin.cn/tags/python/"/>
-    
       <category term="总结" scheme="http://www.javabin.cn/tags/%E6%80%BB%E7%BB%93/"/>
+    
+      <category term="python" scheme="http://www.javabin.cn/tags/python/"/>
     
       <category term="爬虫" scheme="http://www.javabin.cn/tags/%E7%88%AC%E8%99%AB/"/>
     
@@ -767,9 +808,9 @@
     </summary>
     
     
-      <category term="python" scheme="http://www.javabin.cn/tags/python/"/>
-    
       <category term="总结" scheme="http://www.javabin.cn/tags/%E6%80%BB%E7%BB%93/"/>
+    
+      <category term="python" scheme="http://www.javabin.cn/tags/python/"/>
     
       <category term="单元测试" scheme="http://www.javabin.cn/tags/%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/"/>
     
@@ -818,32 +859,6 @@
       <category term="总结" scheme="http://www.javabin.cn/tags/%E6%80%BB%E7%BB%93/"/>
     
       <category term="性能优化" scheme="http://www.javabin.cn/tags/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>pgsql中的日期处理</title>
-    <link href="http://www.javabin.cn/2019/sql_date.html"/>
-    <id>http://www.javabin.cn/2019/sql_date.html</id>
-    <published>2019-10-06T15:10:54.000Z</published>
-    <updated>2024-03-11T14:49:03.612Z</updated>
-    
-    <content type="html"><![CDATA[<p>总结下数据库中的日期处理<a id="more"></a></p><ul><li>字符串日期转时间: <code>select &#39;20190202&#39;::DATE;</code> 或 <code>select DATE(&#39;20190202&#39;);</code></li><li>当前日期: <code>select CURRENT_DATE</code></li><li>按月/月初:<code>select DATE_TRUNC(&#39;month&#39;, &#39;20191111&#39;::DATE);</code> 或 <code>select substr(&#39;20191111&#39;, 0,7);</code></li><li>按年/年初:<code>select DATE_TRUNC(&#39;year&#39;, &#39;20191111&#39;::DATE);</code> 或 <code>select substr(&#39;20191111&#39;, 0,5);</code></li><li>按季度/季初:<code>select DATE_TRUNC(&#39;quarter&#39;, &#39;20191111&#39;::DATE);</code></li><li>月末:(加一个周期后减一天)<code>select DATE_TRUNC(&#39;month&#39;, &#39;20190211&#39;::DATE)+INTERVAL &#39;1&#39; MONTH - INTERVAL &#39;1&#39; DAY;</code></li><li>年末:<code>select DATE_TRUNC(&#39;year&#39;, &#39;20190211&#39;::DATE)+INTERVAL &#39;1&#39; YEAR - INTERVAL &#39;1&#39; DAY;</code></li><li>季末:<code>select DATE_TRUNC(&#39;quarter&#39;, &#39;20190211&#39;::DATE)+INTERVAL &#39;3&#39; month - INTERVAL &#39;1&#39; DAY;</code></li><li>取表中最后一天/最后一次更新的数据作为最终数据。在每日报表，每日更新表中，取最后一天的数据作为统计使用的数据: <ul><li>创建测试表，学生每日测试成绩表，每位学生的数据每日更新一次:<code>create table student_score (id int, name varchar(25), score int, t varchar(12))</code></li><li>创建测试数据: <code>insert into student_score select generate_series(1,100) as key, (random()*(10^3))::text, (random()*100)::int, CURRENT_DATE + (random()*100)::int - 50;</code></li><li>测试语句，取最后一天的数据作为最终数据:<code>with time_end as (select t from student_score order by t desc limit 1) select name, score from student_score where t=(select *from time_end);</code></li></ul></li></ul>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;总结下数据库中的日期处理
-    
-    </summary>
-    
-    
-      <category term="总结" scheme="http://www.javabin.cn/tags/%E6%80%BB%E7%BB%93/"/>
-    
-      <category term="数据库" scheme="http://www.javabin.cn/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
-    
-      <category term="pgsql" scheme="http://www.javabin.cn/tags/pgsql/"/>
-    
-      <category term="sql" scheme="http://www.javabin.cn/tags/sql/"/>
     
   </entry>
   
