@@ -5,7 +5,7 @@
     
   <url>
     <loc>http://www.javabin.cn/2024/2024_llm_09_vllm_or_sglang.html</loc>
-    <lastmod>2024-08-06T16:00:51.294Z</lastmod>
+    <lastmod>2024-08-06T17:34:03.698Z</lastmod>
     <data>
         <display>
         <title>【大模型-09】sglang和vllm在qwen2:1.5b微调模型上的性能测试</title>
@@ -92,6 +92,8 @@
          
         <tag>大模型</tag>
          
+        <tag>编程</tag>
+         
         <tag>AWQ</tag>
          
         <tag>GPTQ</tag>
@@ -99,8 +101,6 @@
         <tag>Bitsandbytes</tag>
          
         <tag>量化大模型</tag>
-         
-        <tag>编程</tag>
          
          
            
@@ -121,13 +121,13 @@
          
         <tag>大模型</tag>
          
-        <tag>编程</tag>
-         
         <tag>微调</tag>
          
         <tag>lora</tag>
          
         <tag>llama-factory</tag>
+         
+        <tag>编程</tag>
          
          
            
@@ -150,11 +150,11 @@
          
         <tag>程序</tag>
          
-        <tag>agent</tag>
-         
         <tag>dify</tag>
          
         <tag>RAG</tag>
+         
+        <tag>agent</tag>
          
          
            
@@ -485,6 +485,27 @@
 
     
   <url>
+    <loc>http://www.javabin.cn/2019/rabbitmq_ack.html</loc>
+    <lastmod>2024-03-11T14:49:03.612Z</lastmod>
+    <data>
+        <display>
+        <title>rabbitmq如何确保消息不丢失</title>
+        <pubTime>2019-07-08T14:10:30.000Z</pubTime>
+        
+        <tag>总结</tag>
+         
+        <tag>rabbitmq</tag>
+         
+        <tag>消息队列</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.javabin.cn/2019/re_zero.html</loc>
     <lastmod>2024-03-11T14:49:03.612Z</lastmod>
     <data>
@@ -520,27 +541,6 @@
         <tag>pgsql</tag>
          
         <tag>sql</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://www.javabin.cn/2019/rabbitmq_ack.html</loc>
-    <lastmod>2024-03-11T14:49:03.612Z</lastmod>
-    <data>
-        <display>
-        <title>rabbitmq如何确保消息不丢失</title>
-        <pubTime>2019-07-08T14:10:30.000Z</pubTime>
-        
-        <tag>总结</tag>
-         
-        <tag>rabbitmq</tag>
-         
-        <tag>消息队列</tag>
          
          
            
@@ -600,29 +600,6 @@
         <tag>总结</tag>
          
         <tag>性能优化</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://www.javabin.cn/2019/python_xmpp.html</loc>
-    <lastmod>2024-03-11T14:49:03.610Z</lastmod>
-    <data>
-        <display>
-        <title>python如何使用xmpp发送和接收IM消息</title>
-        <pubTime>2019-06-25T22:53:58.000Z</pubTime>
-        
-        <tag>总结</tag>
-         
-        <tag>xmpp</tag>
-         
-        <tag>im</tag>
-         
-        <tag>模块</tag>
          
          
            
@@ -703,18 +680,20 @@
 
     
   <url>
-    <loc>http://www.javabin.cn/2019/pgsql_lock.html</loc>
-    <lastmod>2024-03-11T14:49:03.609Z</lastmod>
+    <loc>http://www.javabin.cn/2019/python_xmpp.html</loc>
+    <lastmod>2024-03-11T14:49:03.610Z</lastmod>
     <data>
         <display>
-        <title>pgsql中的锁类型</title>
-        <pubTime>2019-07-21T14:14:59.000Z</pubTime>
+        <title>python如何使用xmpp发送和接收IM消息</title>
+        <pubTime>2019-06-25T22:53:58.000Z</pubTime>
         
         <tag>总结</tag>
          
-        <tag>锁</tag>
+        <tag>xmpp</tag>
          
-        <tag>pgsql</tag>
+        <tag>im</tag>
+         
+        <tag>模块</tag>
          
          
            
@@ -734,6 +713,27 @@
         <tag>总结</tag>
          
         <tag>数据库</tag>
+         
+        <tag>pgsql</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.javabin.cn/2019/pgsql_lock.html</loc>
+    <lastmod>2024-03-11T14:49:03.609Z</lastmod>
+    <data>
+        <display>
+        <title>pgsql中的锁类型</title>
+        <pubTime>2019-07-21T14:14:59.000Z</pubTime>
+        
+        <tag>总结</tag>
+         
+        <tag>锁</tag>
          
         <tag>pgsql</tag>
          
@@ -894,6 +894,27 @@
 
     
   <url>
+    <loc>http://www.javabin.cn/2018/ns2755.html</loc>
+    <lastmod>2024-03-11T14:49:03.607Z</lastmod>
+    <data>
+        <display>
+        <title>win10安装任何安装包提示error code is 2755错误，解决方法</title>
+        <pubTime>2018-04-23T15:57:58.000Z</pubTime>
+        
+        <tag>win10</tag>
+         
+        <tag>error</tag>
+         
+        <tag>日常使用</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.javabin.cn/2016/ndnsiminstall.html</loc>
     <lastmod>2024-03-11T14:49:03.607Z</lastmod>
     <data>
@@ -917,27 +938,6 @@
 
     
   <url>
-    <loc>http://www.javabin.cn/2018/ns2755.html</loc>
-    <lastmod>2024-03-11T14:49:03.607Z</lastmod>
-    <data>
-        <display>
-        <title>win10安装任何安装包提示error code is 2755错误，解决方法</title>
-        <pubTime>2018-04-23T15:57:58.000Z</pubTime>
-        
-        <tag>win10</tag>
-         
-        <tag>error</tag>
-         
-        <tag>日常使用</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>http://www.javabin.cn/2018/one_year.html</loc>
     <lastmod>2024-03-11T14:49:03.607Z</lastmod>
     <data>
@@ -945,9 +945,9 @@
         <title>工作一年总结</title>
         <pubTime>2018-08-08T17:08:33.000Z</pubTime>
         
-        <tag>感悟</tag>
-         
         <tag>生活</tag>
+         
+        <tag>感悟</tag>
          
         <tag>工作</tag>
          
@@ -999,27 +999,6 @@
 
     
   <url>
-    <loc>http://www.javabin.cn/2019/merge_sort.html</loc>
-    <lastmod>2024-03-11T14:49:03.606Z</lastmod>
-    <data>
-        <display>
-        <title>归并排序的原理和实现[Python实现]</title>
-        <pubTime>2019-08-06T16:42:52.000Z</pubTime>
-        
-        <tag>总结</tag>
-         
-        <tag>算法</tag>
-         
-        <tag>归并排序</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>http://www.javabin.cn/2023/milvus_mirror.html</loc>
     <lastmod>2024-03-11T14:49:03.606Z</lastmod>
     <data>
@@ -1043,18 +1022,18 @@
 
     
   <url>
-    <loc>http://www.javabin.cn/2018/knn_mnist02.html</loc>
-    <lastmod>2024-03-11T14:49:03.605Z</lastmod>
+    <loc>http://www.javabin.cn/2019/merge_sort.html</loc>
+    <lastmod>2024-03-11T14:49:03.606Z</lastmod>
     <data>
         <display>
-        <title>使用mnist数据集测试knn算法(二)</title>
-        <pubTime>2018-05-09T06:12:12.000Z</pubTime>
+        <title>归并排序的原理和实现[Python实现]</title>
+        <pubTime>2019-08-06T16:42:52.000Z</pubTime>
         
-        <tag>机器学习</tag>
+        <tag>总结</tag>
          
-        <tag>knn算法</tag>
+        <tag>算法</tag>
          
-        <tag>mnist数据集</tag>
+        <tag>归并排序</tag>
          
          
            
@@ -1085,6 +1064,48 @@
 
     
   <url>
+    <loc>http://www.javabin.cn/2018/leetcode564.html</loc>
+    <lastmod>2024-03-11T14:49:03.605Z</lastmod>
+    <data>
+        <display>
+        <title>leecode 564.寻找最近的回文数</title>
+        <pubTime>2018-11-24T16:02:47.000Z</pubTime>
+        
+        <tag>总结</tag>
+         
+        <tag>算法</tag>
+         
+        <tag>leetcode</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.javabin.cn/2018/knn_mnist02.html</loc>
+    <lastmod>2024-03-11T14:49:03.605Z</lastmod>
+    <data>
+        <display>
+        <title>使用mnist数据集测试knn算法(二)</title>
+        <pubTime>2018-05-09T06:12:12.000Z</pubTime>
+        
+        <tag>机器学习</tag>
+         
+        <tag>knn算法</tag>
+         
+        <tag>mnist数据集</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.javabin.cn/2023/lightdb_postgis.html</loc>
     <lastmod>2024-03-11T14:49:03.605Z</lastmod>
     <data>
@@ -1103,27 +1124,6 @@
         <tag>lightdb</tag>
          
         <tag>数据库迁移</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://www.javabin.cn/2018/leetcode564.html</loc>
-    <lastmod>2024-03-11T14:49:03.605Z</lastmod>
-    <data>
-        <display>
-        <title>leecode 564.寻找最近的回文数</title>
-        <pubTime>2018-11-24T16:02:47.000Z</pubTime>
-        
-        <tag>总结</tag>
-         
-        <tag>算法</tag>
-         
-        <tag>leetcode</tag>
          
          
            
@@ -1190,23 +1190,6 @@
 
     
   <url>
-    <loc>http://www.javabin.cn/2018/json_datetime.html</loc>
-    <lastmod>2024-03-11T14:49:03.604Z</lastmod>
-    <data>
-        <display>
-        <title>json 序列化时 如何序列化datetime</title>
-        <pubTime>2018-08-17T18:03:19.000Z</pubTime>
-        
-        <tag>python</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>http://www.javabin.cn/2018/knn_mnist.html</loc>
     <lastmod>2024-03-11T14:49:03.604Z</lastmod>
     <data>
@@ -1228,18 +1211,14 @@
 
     
   <url>
-    <loc>http://www.javabin.cn/2018/hls_flcd2.html</loc>
-    <lastmod>2024-03-11T14:49:03.603Z</lastmod>
+    <loc>http://www.javabin.cn/2018/json_datetime.html</loc>
+    <lastmod>2024-03-11T14:49:03.604Z</lastmod>
     <data>
         <display>
-        <title>调试使用HLS-LFCD2激光雷达</title>
-        <pubTime>2018-06-20T10:07:19.000Z</pubTime>
+        <title>json 序列化时 如何序列化datetime</title>
+        <pubTime>2018-08-17T18:03:19.000Z</pubTime>
         
-        <tag>学习</tag>
-         
-        <tag>激光雷达</tag>
-         
-        <tag>机器人</tag>
+        <tag>python</tag>
          
          
            
@@ -1263,6 +1242,27 @@
         <tag>架构</tag>
          
         <tag>grpc</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.javabin.cn/2018/hls_flcd2.html</loc>
+    <lastmod>2024-03-11T14:49:03.603Z</lastmod>
+    <data>
+        <display>
+        <title>调试使用HLS-LFCD2激光雷达</title>
+        <pubTime>2018-06-20T10:07:19.000Z</pubTime>
+        
+        <tag>学习</tag>
+         
+        <tag>激光雷达</tag>
+         
+        <tag>机器人</tag>
          
          
            
@@ -1320,6 +1320,23 @@
 
     
   <url>
+    <loc>http://www.javabin.cn/2018/git_pr.html</loc>
+    <lastmod>2024-03-11T14:49:03.602Z</lastmod>
+    <data>
+        <display>
+        <title>github撤销已经提交的pr中的commit</title>
+        <pubTime>2018-09-06T11:49:31.000Z</pubTime>
+        
+        <tag>GIT</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.javabin.cn/2016/github2gitcafe.html</loc>
     <lastmod>2024-03-11T14:49:03.602Z</lastmod>
     <data>
@@ -1330,23 +1347,6 @@
         <tag>学习</tag>
          
         <tag>技巧</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://www.javabin.cn/2018/git_pr.html</loc>
-    <lastmod>2024-03-11T14:49:03.602Z</lastmod>
-    <data>
-        <display>
-        <title>github撤销已经提交的pr中的commit</title>
-        <pubTime>2018-09-06T11:49:31.000Z</pubTime>
-        
-        <tag>GIT</tag>
          
          
            
@@ -1375,29 +1375,6 @@
 
     
   <url>
-    <loc>http://www.javabin.cn/2018/es_install.html</loc>
-    <lastmod>2024-03-11T14:49:03.597Z</lastmod>
-    <data>
-        <display>
-        <title>elasticsearch 入坑(一) 搭建elasticsearch环境</title>
-        <pubTime>2018-12-13T12:24:36.000Z</pubTime>
-        
-        <tag>总结</tag>
-         
-        <tag>linux</tag>
-         
-        <tag>elasticsearch</tag>
-         
-        <tag>全文检索</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>http://www.javabin.cn/2018/es_rally.html</loc>
     <lastmod>2024-03-11T14:49:03.597Z</lastmod>
     <data>
@@ -1414,6 +1391,29 @@
         <tag>全文检索</tag>
          
         <tag>压力测试</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.javabin.cn/2018/es_install.html</loc>
+    <lastmod>2024-03-11T14:49:03.597Z</lastmod>
+    <data>
+        <display>
+        <title>elasticsearch 入坑(一) 搭建elasticsearch环境</title>
+        <pubTime>2018-12-13T12:24:36.000Z</pubTime>
+        
+        <tag>总结</tag>
+         
+        <tag>linux</tag>
+         
+        <tag>elasticsearch</tag>
+         
+        <tag>全文检索</tag>
          
          
            
@@ -1463,25 +1463,6 @@
 
     
   <url>
-    <loc>http://www.javabin.cn/2019/elastic_search_size.html</loc>
-    <lastmod>2024-03-11T14:49:03.596Z</lastmod>
-    <data>
-        <display>
-        <title>elasticsearch中如何依据字符串长度过滤</title>
-        <pubTime>2019-09-23T13:11:24.000Z</pubTime>
-        
-        <tag>总结</tag>
-         
-        <tag>elasticsearch</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>http://www.javabin.cn/2018/effective_python.html</loc>
     <lastmod>2024-03-11T14:49:03.596Z</lastmod>
     <data>
@@ -1492,29 +1473,6 @@
         <tag>书单</tag>
          
         <tag>看书</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://www.javabin.cn/2019/es_95.html</loc>
-    <lastmod>2024-03-11T14:49:03.596Z</lastmod>
-    <data>
-        <display>
-        <title>elasticsearch报错FORBIDDEN/12/index read-only / allow delete</title>
-        <pubTime>2019-06-25T22:21:21.000Z</pubTime>
-        
-        <tag>总结</tag>
-         
-        <tag>elasticsearch</tag>
-         
-        <tag>报错</tag>
-         
-        <tag>全文检索</tag>
          
          
            
@@ -1540,6 +1498,48 @@
         <tag>elasticsearch</tag>
          
         <tag>全文检索</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.javabin.cn/2019/es_95.html</loc>
+    <lastmod>2024-03-11T14:49:03.596Z</lastmod>
+    <data>
+        <display>
+        <title>elasticsearch报错FORBIDDEN/12/index read-only / allow delete</title>
+        <pubTime>2019-06-25T22:21:21.000Z</pubTime>
+        
+        <tag>总结</tag>
+         
+        <tag>elasticsearch</tag>
+         
+        <tag>全文检索</tag>
+         
+        <tag>报错</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.javabin.cn/2019/elastic_search_size.html</loc>
+    <lastmod>2024-03-11T14:49:03.596Z</lastmod>
+    <data>
+        <display>
+        <title>elasticsearch中如何依据字符串长度过滤</title>
+        <pubTime>2019-09-23T13:11:24.000Z</pubTime>
+        
+        <tag>总结</tag>
+         
+        <tag>elasticsearch</tag>
          
          
            
@@ -1614,6 +1614,27 @@
 
     
   <url>
+    <loc>http://www.javabin.cn/2018/django_autoreload.html</loc>
+    <lastmod>2024-03-11T14:49:03.594Z</lastmod>
+    <data>
+        <display>
+        <title>Django 源码学习之autoreload(二)</title>
+        <pubTime>2018-04-29T19:37:12.000Z</pubTime>
+        
+        <tag>python</tag>
+         
+        <tag>django</tag>
+         
+        <tag>源码</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.javabin.cn/2019/dark_time.html</loc>
     <lastmod>2024-03-11T14:49:03.594Z</lastmod>
     <data>
@@ -1628,27 +1649,6 @@
         <tag>暗时间</tag>
          
         <tag>感悟</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://www.javabin.cn/2018/django_autoreload.html</loc>
-    <lastmod>2024-03-11T14:49:03.594Z</lastmod>
-    <data>
-        <display>
-        <title>Django 源码学习之autoreload(二)</title>
-        <pubTime>2018-04-29T19:37:12.000Z</pubTime>
-        
-        <tag>python</tag>
-         
-        <tag>django</tag>
-         
-        <tag>源码</tag>
          
          
            
@@ -1719,27 +1719,6 @@
 
     
   <url>
-    <loc>http://www.javabin.cn/2019/consul_grpc.html</loc>
-    <lastmod>2024-03-11T14:49:03.593Z</lastmod>
-    <data>
-        <display>
-        <title>基于consul实现grpc服务注册和发现</title>
-        <pubTime>2019-07-23T14:48:10.000Z</pubTime>
-        
-        <tag>总结</tag>
-         
-        <tag>微服务</tag>
-         
-        <tag>服务治理</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>http://www.javabin.cn/2016/caffe.html</loc>
     <lastmod>2024-03-11T14:49:03.593Z</lastmod>
     <data>
@@ -1754,6 +1733,27 @@
         <tag>机器学习</tag>
          
         <tag>caffe</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.javabin.cn/2019/consul_grpc.html</loc>
+    <lastmod>2024-03-11T14:49:03.593Z</lastmod>
+    <data>
+        <display>
+        <title>基于consul实现grpc服务注册和发现</title>
+        <pubTime>2019-07-23T14:48:10.000Z</pubTime>
+        
+        <tag>总结</tag>
+         
+        <tag>微服务</tag>
+         
+        <tag>服务治理</tag>
          
          
            
@@ -1782,20 +1782,18 @@
 
     
   <url>
-    <loc>http://www.javabin.cn/2016/binarytree.html</loc>
+    <loc>http://www.javabin.cn/2019/bin_search_tree.html</loc>
     <lastmod>2024-03-11T14:49:03.592Z</lastmod>
     <data>
         <display>
-        <title>二叉树、完全二叉树，满二叉树</title>
-        <pubTime>2016-05-28T03:42:19.000Z</pubTime>
+        <title>二叉搜索树的原理和实现[Python实现]</title>
+        <pubTime>2019-07-29T18:52:47.000Z</pubTime>
         
-        <tag>学习</tag>
+        <tag>总结</tag>
          
         <tag>算法</tag>
          
-        <tag>数据结构</tag>
-         
-        <tag>二叉树</tag>
+        <tag>二叉查找树</tag>
          
          
            
@@ -1824,18 +1822,20 @@
 
     
   <url>
-    <loc>http://www.javabin.cn/2019/bin_search_tree.html</loc>
+    <loc>http://www.javabin.cn/2016/binarytree.html</loc>
     <lastmod>2024-03-11T14:49:03.592Z</lastmod>
     <data>
         <display>
-        <title>二叉搜索树的原理和实现[Python实现]</title>
-        <pubTime>2019-07-29T18:52:47.000Z</pubTime>
+        <title>二叉树、完全二叉树，满二叉树</title>
+        <pubTime>2016-05-28T03:42:19.000Z</pubTime>
         
-        <tag>总结</tag>
+        <tag>学习</tag>
          
         <tag>算法</tag>
          
-        <tag>二叉查找树</tag>
+        <tag>数据结构</tag>
+         
+        <tag>二叉树</tag>
          
          
            
@@ -1908,6 +1908,27 @@
 
     
   <url>
+    <loc>http://www.javabin.cn/2019/bin_search.html</loc>
+    <lastmod>2024-03-11T14:49:03.591Z</lastmod>
+    <data>
+        <display>
+        <title>二分查找算法原理[Python实现]</title>
+        <pubTime>2019-07-29T12:14:32.000Z</pubTime>
+        
+        <tag>总结</tag>
+         
+        <tag>算法</tag>
+         
+        <tag>二分查找</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.javabin.cn/2018/base_sort.html</loc>
     <lastmod>2024-03-11T14:49:03.591Z</lastmod>
     <data>
@@ -1922,27 +1943,6 @@
         <tag>冒泡排序</tag>
          
         <tag>插入排序</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://www.javabin.cn/2019/bin_search.html</loc>
-    <lastmod>2024-03-11T14:49:03.591Z</lastmod>
-    <data>
-        <display>
-        <title>二分查找算法原理[Python实现]</title>
-        <pubTime>2019-07-29T12:14:32.000Z</pubTime>
-        
-        <tag>总结</tag>
-         
-        <tag>算法</tag>
-         
-        <tag>二分查找</tag>
          
          
            
